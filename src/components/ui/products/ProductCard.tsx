@@ -1,14 +1,13 @@
 import { Box, Typography } from "@mui/material";
 import AppButton from "../../common/Button";
+import { formatCurrency } from "../../utils/FormatCurrency";
+import type { Product } from "../../../types/product";
 
-type ProductCardProps = {
-  image?: string;
-  title: string;
-  specs?: string;
-  price: string;
-};
+interface ProductCardProps {
+  product: Product;
+}
 
-const ProductCard = ({ image, title, specs, price }: ProductCardProps) => {
+const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <Box
       sx={{
@@ -29,23 +28,67 @@ const ProductCard = ({ image, title, specs, price }: ProductCardProps) => {
         },
       }}
     >
-      <Box 
+      <Box
         component="img"
-        src={image || "https://lh3.googleusercontent.com/jn8jzpCISPJuxhVj9idFHpAJebF0QoPDfQDjebh3SxupE6DN3LcNTsxk0SDlGnce7yPg5lHR4iCFoXL-hMbdljGI6QUywVqJ=w230-rw"}
-        alt={title}
+        src={
+          product.image_url ||
+          "https://lh3.googleusercontent.com/jn8jzpCISPJuxhVj9idFHpAJebF0QoPDfQDjebh3SxupE6DN3LcNTsxk0SDlGnce7yPg5lHR4iCFoXL-hMbdljGI6QUywVqJ=w230-rw"
+        }
+        alt={product.name}
         sx={{ width: "100%", height: "auto", objectFit: "contain" }}
       />
-      <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1, gap: 0.5 }}>
-        <Typography variant="caption" sx={{ fontWeight: 500, height: "3em", overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>
-          {title}
-          {specs && <><br />({specs})</>}
-        </Typography>
+      <Box
+        sx={{ display: "flex", flexDirection: "column", flexGrow: 1, gap: 1 }}
+      >
         <Typography
-          variant="body1"
-          sx={{ color: "primary.main", fontWeight: 700, mt: "auto" }}
+          variant="caption"
+          sx={{
+            fontWeight: 500,
+            height: "3em",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+          }}
         >
-          {price}
+          {product.name}
+          {product.specs && (
+            <>
+              <br />({product.specs})
+            </>
+          )}
         </Typography>
+        {product.sale_price !== product.price ? (
+          <>
+            <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "neutral.500",
+                  fontWeight: 500,
+                  textDecoration: "line-through",
+                }}
+              >
+                {formatCurrency(product.price)}
+              </Typography>
+
+              <Typography
+                variant="body1"
+                sx={{ color: "primary.main", fontWeight: 700 }}
+              >
+                {formatCurrency(product.sale_price)}
+              </Typography>
+            </Box>
+          </>
+        ) : (
+          <Typography
+            variant="body1"
+            sx={{ color: "primary.main", fontWeight: 700, mt: "auto" }}
+          >
+            {formatCurrency(product.price)}
+          </Typography>
+        )}
       </Box>
       <AppButton label="Thêm vào giỏ" onClick={() => {}} />
     </Box>
@@ -53,4 +96,3 @@ const ProductCard = ({ image, title, specs, price }: ProductCardProps) => {
 };
 
 export default ProductCard;
-
