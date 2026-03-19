@@ -19,6 +19,7 @@ import {
   ShoppingBag as BagIcon,
   Settings as SettingsIcon,
   Help as HelpIcon,
+  Build as BuildIcon,
 } from '@mui/icons-material';
 
 const drawerWidth = 240;
@@ -44,6 +45,7 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onClose }) => {
           { text: 'Offers', icon: <OfferIcon /> },
           { text: 'My Orders', icon: <BagIcon /> },
           { text: 'Wishlist', icon: <FavoriteIcon /> },
+          { text: 'Build PC', icon: <BuildIcon /> },
         ].map((item) => (
           <ListItem key={item.text} disablePadding>
             <ListItemButton>

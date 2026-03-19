@@ -3,6 +3,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
 import MainLayout from './components/layout/MainLayout';
 import Home from './pages/Home';
+import BuildPC from './pages/BuildPC';
 import './App.css';
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home />} />
+            <Route path="build-pc" element={<BuildPC />} />
             {/* Add more routes here as needed */}
             <Route path="*" element={<div>Page Not Found</div>} />
           </Route>

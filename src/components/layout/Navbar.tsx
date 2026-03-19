@@ -1,12 +1,13 @@
 import { Box, Container, Stack, Link } from '@mui/material';
 
 const categories = [
-  'PC',
-  'Laptop văn phòng',
-  'Laptop gaming',
-  'Máy tính bảng',
-  'Thiết bị âm thanh',
-  'Phụ kiện',
+  { label: 'PC', href: '#' },
+  { label: 'Laptop văn phòng', href: '#' },
+  { label: 'Laptop gaming', href: '#' },
+  { label: 'Máy tính bảng', href: '#' },
+  { label: 'Thiết bị âm thanh', href: '#' },
+  { label: 'Phụ kiện', href: '#' },
+  { label: '🔧 Build PC', href: '/build-pc' },
 ];
 
 const Navbar: React.FC = () => {
@@ -25,21 +26,22 @@ const Navbar: React.FC = () => {
           spacing={4}
           sx={{ py: 1.5, overflowX: 'auto' }}
         >
-          {categories.map((category) => (
+          {categories.map(({ label, href }) => (
             <Link
-              key={category}
-              href="#"
+              key={label}
+              href={href}
               underline="none"
               variant='caption'
               sx={{
-                color: 'text.secondary',
+                color: label.includes('Build PC') ? 'primary.main' : 'text.secondary',
+                fontWeight: label.includes('Build PC') ? 700 : 400,
                 whiteSpace: 'nowrap',
                 '&:hover': {
                   color: 'primary.main',
                 },
               }}
             >
-              {category}
+              {label}
             </Link>
           ))}
         </Stack>

@@ -1,5 +1,6 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, InputBase, Badge, IconButton, Box, styled, alpha } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { AppBar, Toolbar, Typography, InputBase, Badge, IconButton, Box, styled, alpha, Tooltip } from '@mui/material';
 import { Search as SearchIcon, ShoppingCart as ShoppingCartIcon, Person as PersonIcon, Menu as MenuIcon, Build } from '@mui/icons-material';
 
 const Search = styled('div')(({ theme }) => ({
@@ -47,6 +48,8 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
+  const navigate = useNavigate();
+
   return (
     <AppBar position="sticky" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
       <Toolbar>
@@ -65,6 +68,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
           noWrap
           component="div"
           sx={{ display: { xs: 'none', sm: 'block' }, fontWeight: 700, cursor: 'pointer' }}
+          onClick={() => navigate('/')}
         >
           GALAXY STORE
         </Typography>
@@ -90,11 +94,19 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
               <PersonIcon sx={{ fontSize: 24 }} />
             </Badge>
           </IconButton>
-          <IconButton size="large" edge="end" color="inherit">
-           <Badge badgeContent={0} color="error">
-            <Build sx={{ fontSize: 24 }} />
-           </Badge>
-          </IconButton>
+          <Tooltip title="Build PC">
+            <IconButton
+              size="large"
+              edge="end"
+              color="inherit"
+              onClick={() => navigate('/build-pc')}
+              id="header-build-pc-btn"
+            >
+              <Badge badgeContent={0} color="error">
+                <Build sx={{ fontSize: 24 }} />
+              </Badge>
+            </IconButton>
+          </Tooltip>
         </Box>
       </Toolbar>
     </AppBar>
@@ -102,3 +114,4 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
 };
 
 export default Header;
+
