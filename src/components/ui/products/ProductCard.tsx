@@ -1,7 +1,15 @@
-import { Box, Typography } from "@mui/material";
-import AppButton from "../../common/Button";
+import {
+  Box,
+  Card,
+  CardContent,
+  CardMedia,
+  Chip,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { formatCurrency } from "../../utils/FormatCurrency";
 import type { Product } from "../../../types/product";
+import AppButton from "../../common/Button";
 
 interface ProductCardProps {
   product: Product;
@@ -9,89 +17,98 @@ interface ProductCardProps {
 
 const ProductCard = ({ product }: ProductCardProps) => {
   return (
-    <Box
+    <Card
+      elevation={0}
       sx={{
+        borderRadius: 2,
+        height: "100%",
         display: "flex",
         flexDirection: "column",
-        gap: 1,
-        border: "1px solid #efefef",
-        borderRadius: 2,
-        px: 2,
-        pb: 2,
-        width: "100%",
-        maxWidth: 240,
-        backgroundColor: "white",
-        transition: "transform 0.2s, box-shadow 0.2s",
+        transition: "transform 0.2s, box-shadow 0.2s, border-color 0.2s",
         "&:hover": {
-          transform: "translateY(-5px)",
-          boxShadow: 2,
+          transform: "translateY(-4px)",
+          boxShadow: 3,
         },
+        position: "relative",
+        overflow: "visible",
+        py: 2,
       }}
     >
-      <Box
+      <CardMedia
         component="img"
-        src={
-          product.image_url ||
-          "https://lh3.googleusercontent.com/jn8jzpCISPJuxhVj9idFHpAJebF0QoPDfQDjebh3SxupE6DN3LcNTsxk0SDlGnce7yPg5lHR4iCFoXL-hMbdljGI6QUywVqJ=w230-rw"
-        }
+        image={product.image_url}
         alt={product.name}
-        sx={{ width: "100%", height: "auto", objectFit: "contain" }}
+        sx={{
+          height: 160,
+          objectFit: "contain",
+          p: 2,
+          bgcolor: "neutral.50",
+        }}
+        onError={(e) => {
+          (e.target as HTMLImageElement).src =
+            "https://via.placeholder.com/200x160?text=No+Image";
+        }}
       />
-      <Box
-        sx={{ display: "flex", flexDirection: "column", flexGrow: 1, gap: 1 }}
+      <CardContent
+        sx={{
+          flexGrow: 1,
+          px: 2,
+          py: 1.5,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
       >
-        <Typography
-          variant="caption"
+       <Box sx={{ display: "flex", flexDirection: "column", gap: 1}}>
+         <Chip
+          label={product.brand_id}
+          size="small"
           sx={{
-            fontWeight: 500,
-            height: "3em",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
+            mb: 0.5,
+            fontSize: 10,
+            height: 20,
+            width: "fit-content",
+            bgcolor: "primary.main",
+            color: "white",
+            fontWeight: 700,
+          }}
+        />
+        <Tooltip title={product.name} placement="top">
+          <Typography
+            variant="caption"
+            sx={{
+              fontWeight: 600,
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+              lineHeight: 1.4,
+              mb: 0.5,
+              fontSize: 13,
+            }}
+          >
+            {product.name}
+          </Typography>
+        </Tooltip>
+       </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "left",
+            gap: 1,
           }}
         >
-          {product.name}
-          {product.specs && (
-            <>
-              <br />({product.specs})
-            </>
-          )}
-        </Typography>
-        {product.sale_price !== product.price ? (
-          <>
-            <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-              <Typography
-                variant="body2"
-                sx={{
-                  color: "neutral.500",
-                  fontWeight: 500,
-                  textDecoration: "line-through",
-                }}
-              >
-                {formatCurrency(product.price)}
-              </Typography>
-
-              <Typography
-                variant="body1"
-                sx={{ color: "primary.main", fontWeight: 700 }}
-              >
-                {formatCurrency(product.sale_price)}
-              </Typography>
-            </Box>
-          </>
-        ) : (
           <Typography
             variant="body1"
-            sx={{ color: "primary.main", fontWeight: 700, mt: "auto" }}
+            sx={{ color: "primary.main", fontWeight: 700, mt: 1 }}
           >
             {formatCurrency(product.price)}
           </Typography>
-        )}
-      </Box>
-      <AppButton label="Thêm vào giỏ" onClick={() => {}} />
-    </Box>
+          <AppButton label="Thêm vào giỏ hàng" onClick={() => {}} />
+        </Box>
+      </CardContent>
+    </Card>
   );
 };
 

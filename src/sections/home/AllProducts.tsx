@@ -30,24 +30,24 @@ const AllProductsSection = ({
             justifyContent: "space-between",
             alignItems: "center",
             width: "100%",
-            backgroundColor: "neutral.100",
+            backgroundColor: "primary.main",
             px: 3,
-            py: 1.5,
+            py: 2,
           }}
         >
-          <Typography variant="h3" sx={{ fontWeight: 700, color: "neutral.900" }}>
+          <Typography variant="h3" sx={{ fontWeight: 700, color: "white" }}>
             Tất Cả Sản Phẩm
           </Typography>
           <FormControl
             sx={{
               minWidth: 200,
               "& .MuiOutlinedInput-root": {
-                color: "neutral.900",
-                "& fieldset": { borderColor: "neutral.400" },
+                color: "white",
+                "& fieldset": { borderColor: "white" },
                 "&:hover fieldset": { borderColor: "primary.main" },
               },
-              "& .MuiInputLabel-root": { color: "neutral-600" },
-              "& .MuiSelect-icon": { color: "neutral.900" },
+              "& .MuiInputLabel-root": { color: "white" },
+              "& .MuiSelect-icon": { color: "white" },
             }}
           >
             <InputLabel id="sort-label">Sắp xếp theo</InputLabel>
@@ -69,7 +69,7 @@ const AllProductsSection = ({
           container
           spacing={2}
           sx={{
-            background: "linear-gradient(180deg, #ece9e6 0%, #ffffff 100%)",
+            background: "linear-gradient(180deg, #fdfdfdff 0%, #ffffff 100%)",
             px: 2,
             py: 4,
           }}

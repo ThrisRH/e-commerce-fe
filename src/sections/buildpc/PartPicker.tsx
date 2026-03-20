@@ -36,7 +36,6 @@ const PartPicker: React.FC<PartPickerProps> = ({
 
   return (
     <Box id={`part-picker-${category}`} sx={{ mb: 4 }}>
-      {/* Section header */}
       <Box
         sx={{
           display: 'flex',
@@ -63,7 +62,6 @@ const PartPicker: React.FC<PartPickerProps> = ({
         )}
       </Box>
 
-      {/* Parts grid */}
       <Grid container spacing={2}>
         {filtered.map((part) => {
           const isSelected = selected?.id === part.id;
