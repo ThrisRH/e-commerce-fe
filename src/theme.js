@@ -1,14 +1,5 @@
 import { createTheme } from '@mui/material/styles';
 
-declare module '@mui/material/styles' {
-  interface Palette {
-    neutral: Palette['primary'];
-  }
-  interface PaletteOptions {
-    neutral?: PaletteOptions['primary'];
-  }
-}
-
 const theme = createTheme({
   palette: {
     primary: {
@@ -31,7 +22,7 @@ const theme = createTheme({
       700: '#616161',
       800: '#424242',
       900: '#212121',
-      main: '#9e9e9e', // default main to 500
+      main: '#9e9e9e',
     },
     background: {
       default: '#fafafa',

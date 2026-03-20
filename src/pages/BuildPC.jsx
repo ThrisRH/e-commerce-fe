@@ -8,12 +8,12 @@ import {
   Snackbar,
 } from '@mui/material';
 import { Build } from '@mui/icons-material';
-import type { PCPart, SelectedParts, PartCategory } from '../types/buildpc';
-import { PARTS_CATALOG } from '../sections/buildpc/buildpc.data';
+import { SelectedParts } from '../models/BuildPC';
+import { PARTS_CATALOG } from '../sections/buildpc/buildpc.data.js';
 import PartPicker from '../sections/buildpc/PartPicker';
 import BuildSummary from '../sections/buildpc/BuildSummary';
 
-const PART_SECTIONS: { category: PartCategory; title: string }[] = [
+const PART_SECTIONS = [
   { category: 'cpu', title: '🖥️ Bộ xử lý (CPU)' },
   { category: 'mainboard', title: '🔌 Bo mạch chủ (Mainboard)' },
   { category: 'ram', title: '💾 Bộ nhớ RAM' },
@@ -24,35 +24,34 @@ const PART_SECTIONS: { category: PartCategory; title: string }[] = [
   { category: 'cooler', title: '❄️ Tản nhiệt (Cooler)' },
 ];
 
-const INITIAL_SELECTED: SelectedParts = {
-  cpu: null,
-  mainboard: null,
-  ram: null,
-  storage: null,
-  gpu: null,
-  psu: null,
-  case: null,
-  cooler: null,
-};
+const INITIAL_SELECTED = new SelectedParts();
 
-const BuildPC: React.FC = () => {
-  const [selected, setSelected] = useState<SelectedParts>(INITIAL_SELECTED);
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: 'success' | 'info' | 'warning';
-  }>({ open: false, message: '', severity: 'success' });
+const BuildPC = () => {
+  const [selected, setSelected] = useState(INITIAL_SELECTED);
+  const [snackbar, setSnackbar] = useState({ 
+    open: false, 
+    message: '', 
+    severity: 'success' 
+  });
 
-  const handleSelect = (part: PCPart) => {
-    setSelected((prev) => ({ ...prev, [part.category]: part }));
+  const handleSelect = (part) => {
+    setSelected((prev) => {
+      const next = new SelectedParts(prev);
+      next[part.category] = part;
+      return next;
+    });
   };
 
-  const handleRemove = (cat: PartCategory) => {
-    setSelected((prev) => ({ ...prev, [cat]: null }));
+  const handleRemove = (cat) => {
+    setSelected((prev) => {
+      const next = new SelectedParts(prev);
+      next[cat] = null;
+      return next;
+    });
   };
 
   const handleReset = () => {
-    setSelected(INITIAL_SELECTED);
+    setSelected(new SelectedParts());
     setSnackbar({ open: true, message: 'Đã xóa toàn bộ cấu hình.', severity: 'info' });
   };
 

@@ -24,12 +24,8 @@ import {
 
 const drawerWidth = 240;
 
-interface SidebarProps {
-  mobileOpen: boolean;
-  onClose: () => void;
-}
 
-const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onClose }) => {
+const Sidebar = ({ mobileOpen, onClose }) => {
   const drawer = (
     <div>
       <Toolbar>

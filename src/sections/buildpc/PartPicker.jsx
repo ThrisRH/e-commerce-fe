@@ -13,18 +13,8 @@ import {
 } from '@mui/material';
 import { AddCircleOutline, CheckCircle } from '@mui/icons-material';
 import { formatCurrency } from '../../components/utils/FormatCurrency';
-import type { PCPart, PartCategory } from '../../types/buildpc';
 
-interface PartPickerProps {
-  category: PartCategory;
-  title: string;
-  parts: PCPart[];
-  selected: PCPart | null;
-  onSelect: (part: PCPart) => void;
-  onRemove: () => void;
-}
-
-const PartPicker: React.FC<PartPickerProps> = ({
+const PartPicker = ({
   category,
   title,
   parts,
@@ -112,7 +102,7 @@ const PartPicker: React.FC<PartPickerProps> = ({
                     bgcolor: 'neutral.50',
                   }}
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src =
+                    e.target.src =
                       'https://via.placeholder.com/200x160?text=No+Image';
                   }}
                 />

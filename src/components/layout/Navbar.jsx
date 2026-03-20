@@ -10,7 +10,7 @@ const categories = [
   { label: '🔧 Build PC', href: '/build-pc' },
 ];
 
-const Navbar: React.FC = () => {
+const Navbar = () => {
   return (
     <Box
       sx={{

@@ -21,9 +21,8 @@ import {
   WarningAmber,
 } from '@mui/icons-material';
 import { formatCurrency } from '../../components/utils/FormatCurrency';
-import type { PCPart, SelectedParts, PartCategory } from '../../types/buildpc';
 
-const CATEGORY_LABELS: Record<PartCategory, string> = {
+const CATEGORY_LABELS = {
   cpu: 'CPU',
   mainboard: 'Mainboard',
   ram: 'RAM',
@@ -34,20 +33,13 @@ const CATEGORY_LABELS: Record<PartCategory, string> = {
   cooler: 'Tản nhiệt',
 };
 
-interface BuildSummaryProps {
-  selected: SelectedParts;
-  onRemove: (cat: PartCategory) => void;
-  onReset: () => void;
-  onAddToCart: () => void;
-}
-
-const BuildSummary: React.FC<BuildSummaryProps> = ({
+const BuildSummary = ({
   selected,
   onRemove,
   onReset,
   onAddToCart,
 }) => {
-  const parts = Object.entries(selected) as [PartCategory, PCPart | null][];
+  const parts = Object.entries(selected);
 
   const total = parts.reduce((sum, [, part]) => sum + (part?.price ?? 0), 0);
 

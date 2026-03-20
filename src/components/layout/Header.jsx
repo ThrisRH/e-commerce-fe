@@ -43,11 +43,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-interface HeaderProps {
-  onMenuClick: () => void;
-}
 
-const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
+const Header = ({ onMenuClick }) => {
   const navigate = useNavigate();
 
   return (

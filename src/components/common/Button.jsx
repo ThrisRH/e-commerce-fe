@@ -1,11 +1,6 @@
 import { Button } from "@mui/material";
 
-type AppButtonProps = {
-  label: string;
-  onClick: () => void;
-};
-
-const AppButton = ({ label, onClick }: AppButtonProps) => {
+const AppButton = ({ label, onClick }) => {
   return (
     <Button
       onClick={onClick}

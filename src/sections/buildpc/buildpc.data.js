@@ -1,6 +1,4 @@
-import type { PCPart } from '../../types/buildpc';
-
-export const PARTS_CATALOG: PCPart[] = [
+export const PARTS_CATALOG = [
   // === CPU ===
   {
     id: 1,

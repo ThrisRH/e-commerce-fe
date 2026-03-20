@@ -2,14 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Container, Box, CircularProgress } from "@mui/material";
 import banner1 from "../assets/images/banner1.png";
 import AllProductsSection from "../sections/home/AllProducts";
-import type { Product } from "../types/product";
 import { fetchProducts } from "../api/products/ProductApi";
 import { enqueueSnackbar } from "notistack";
 
-const Home: React.FC = () => {
-  const [sortOrder, setSortOrder] = useState<"latest" | "oldest">("latest");
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+const Home = () => {
+  const [sortOrder, setSortOrder] = useState("latest");
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);

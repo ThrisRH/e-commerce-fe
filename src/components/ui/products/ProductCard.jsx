@@ -8,14 +8,9 @@ import {
   Typography,
 } from "@mui/material";
 import { formatCurrency } from "../../utils/FormatCurrency";
-import type { Product } from "../../../types/product";
 import AppButton from "../../common/Button";
 
-interface ProductCardProps {
-  product: Product;
-}
-
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({ product }) => {
   return (
     <Card
       elevation={0}
@@ -45,8 +40,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           bgcolor: "neutral.50",
         }}
         onError={(e) => {
-          (e.target as HTMLImageElement).src =
-            "https://via.placeholder.com/200x160?text=No+Image";
+          e.target.src = "https://via.placeholder.com/200x160?text=No+Image";
         }}
       />
       <CardContent

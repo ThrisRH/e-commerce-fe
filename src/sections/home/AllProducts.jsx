@@ -8,19 +8,12 @@ import {
   MenuItem,
 } from "@mui/material";
 import ProductCard from "../../components/ui/products/ProductCard";
-import type { Product } from "../../types/product";
-
-interface AllProductsSectionProps {
-  products: Product[];
-  sortOrder: "latest" | "oldest";
-  onSortChange: (order: "latest" | "oldest") => void;
-}
 
 const AllProductsSection = ({
   products,
   sortOrder,
   onSortChange,
-}: AllProductsSectionProps) => {
+}) => {
   return (
     <Box id="all-products">
       <Box sx={{ mb: 6, borderRadius: 1, overflow: "hidden" }}>
@@ -56,9 +49,7 @@ const AllProductsSection = ({
               value={sortOrder}
               label="Sắp xếp theo"
               size="small"
-              onChange={(e) =>
-                onSortChange(e.target.value as "latest" | "oldest")
-              }
+              onChange={(e) => onSortChange(e.target.value)}
             >
               <MenuItem value="latest">Mới nhất</MenuItem>
               <MenuItem value="oldest">Cũ nhất</MenuItem>

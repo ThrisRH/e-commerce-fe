@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Container, Grid, Typography, Link, IconButton, Stack, Divider } from '@mui/material';
 import { Facebook, Twitter, Instagram, GitHub } from '@mui/icons-material';
 
-const Footer: React.FC = () => {
+const Footer = () => {
   return (
     <Box
       component="footer"
