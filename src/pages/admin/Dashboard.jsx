@@ -27,21 +27,7 @@ const AdminDashboard = () => {
         Tổng Quan Hệ Thống
       </Typography>
       
-      <Grid container spacing={3} sx={{ mb: 6 }}>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard title="Sản phẩm" value="124" icon={<Inventory />} color="primary" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard title="Danh mục" value="12" icon={<Category />} color="success" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard title="Người dùng" value="1,240" icon={<People />} color="info" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard title="Đơn hàng" value="45" icon={<ShoppingCart />} color="warning" />
-        </Grid>
-      </Grid>
-
+      
       <Paper 
         elevation={0} 
         sx={{ 

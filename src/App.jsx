@@ -4,7 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { Box, CircularProgress } from '@mui/material';
 import theme from './theme';
 import MainLayout from './components/layout/MainLayout';
-import AdminLayout from './components/layout/AdminLayout';
+import AdminLayout from './components/layout/admin/AdminLayout';
 import Home from './pages/Home';
 import BuildPC from './pages/BuildPC';
 import './App.css';

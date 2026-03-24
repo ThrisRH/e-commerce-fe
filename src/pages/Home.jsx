@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Container, Box, CircularProgress } from "@mui/material";
-import banner1 from "../assets/images/banner1.png";
 import AllProductsSection from "../sections/home/AllProducts";
 import { fetchProducts } from "../api/products/ProductApi";
 import { enqueueSnackbar } from "notistack";
+import Product from "@/models/Product";
 
 const Home = () => {
   const [sortOrder, setSortOrder] = useState("latest");
+  /** @type {[Product[], Function]} */
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -43,7 +44,7 @@ const Home = () => {
     <Container maxWidth="xl" sx={{ py: 4 }}>
       <Box
         component="img"
-        src={banner1}
+        src={"@/assets/images/banner1.png"}
         alt="banner1"
         sx={{
           width: "100%",
