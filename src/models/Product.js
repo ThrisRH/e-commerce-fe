@@ -1,4 +1,15 @@
-export default class Product {
+import Brand from "./Brand";
+import Category from "./Category";
+import { Meta } from "./MetaData/Meta";
+
+export class ProductResponse {
+  constructor(data = {}) {
+    this.data = data?.data ?? [];
+    this.meta = new Meta(data?.meta);
+  }
+}
+
+export class Product {
   constructor(data = {}) {
     this.id = data?.id || 0;
     this.name = data?.name || "";
@@ -7,8 +18,8 @@ export default class Product {
     this.price = Number(data?.price) || 0;
     this.image_url = data?.image_url || "";
 
-    this.category = data?.category ?? { id: 0, name: "" };
-    this.brand = data?.brand ?? { id: 0, name: "" };
+    this.category = new Category(data?.category);
+    this.brand = new Brand(data?.brand);
 
     this.attributes = data?.attributes ?? [];
 

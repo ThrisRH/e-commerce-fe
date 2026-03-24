@@ -1,14 +1,14 @@
 import axios from "axios";
-import Product from "../../models/Product";
+import { ProductResponse } from "../../models/Product";
 
-export const fetchProducts = async () => {
+export const fetchProducts = async (page = 1) => {
   const response = await axios.get(
-    `${import.meta.env.VITE_API_URL}/api/products`,
+    `${import.meta.env.VITE_API_URL}/api/products?page=${page}`,
   );
 
   if (!response.data || !response.data.data) {
     throw new Error("Failed to fetch products");
   }
 
-  return Product.fromJson(response.data.data.data || response.data.data);
+  return new ProductResponse(response.data);
 };

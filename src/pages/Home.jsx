@@ -3,7 +3,7 @@ import { Container, Box, CircularProgress } from "@mui/material";
 import AllProductsSection from "../sections/home/AllProducts";
 import { fetchProducts } from "../api/products/ProductApi";
 import { enqueueSnackbar } from "notistack";
-import Product from "@/models/Product";
+import { Product } from "@/models/Product";
 
 const Home = () => {
   const [sortOrder, setSortOrder] = useState("latest");
