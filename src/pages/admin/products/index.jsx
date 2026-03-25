@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Typography,
-  Container,
-  Paper,
-  List,
-  ListItem,
-  ListItemText,
-} from "@mui/material";
+import { Box, Typography, Container } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { fetchProducts } from "@/api/products/ProductApi";
 import { ProductResponse } from "@/models/Product";
 import { enqueueSnackbar } from "notistack";
 import { formatCurrency } from "@/components/utils/FormatCurrency";
+import { useNavigate } from "react-router-dom";
 
 const columns = [
   { field: "name", headerName: "Name", width: 300 },
@@ -52,6 +45,8 @@ const columns = [
 ];
 
 const ProductsManagement = () => {
+  const navigate = useNavigate();
+
   /** @type {[ProductResponse, Function]} */
   const [products, setProducts] = useState(new ProductResponse());
   const [isLoading, setIsLoading] = useState(true);
@@ -102,6 +97,7 @@ const ProductsManagement = () => {
             sortModel: [{ field: "name", sort: "asc" }],
           },
         }}
+        onRowClick={(params) => navigate(`/admin/products/${params.row.id}`)}
       />
     </Container>
   );

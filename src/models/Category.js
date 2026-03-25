@@ -10,6 +10,7 @@ export default class Category {
     this.sort_order = data.sort_order ?? 0;
     this.created_at = data.created_at ?? "";
     this.updated_at = data.updated_at ?? "";
+    this.attributes = data.attributes ?? [];
   }
 
   static fromJson(json) {

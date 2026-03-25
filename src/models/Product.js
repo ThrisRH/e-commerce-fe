@@ -1,3 +1,4 @@
+import Attribute from "./Attribute";
 import Brand from "./Brand";
 import Category from "./Category";
 import { Meta } from "./MetaData/Meta";
@@ -21,7 +22,7 @@ export class Product {
     this.category = new Category(data?.category);
     this.brand = new Brand(data?.brand);
 
-    this.attributes = data?.attributes ?? [];
+    this.attributes = Attribute.fromJson(data?.attributes) || [];
 
     this.is_active = data?.is_active || false;
     this.stock = data?.stock || 0;
