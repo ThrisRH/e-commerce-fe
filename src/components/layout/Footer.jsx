@@ -1,85 +1,143 @@
-import React from 'react';
-import { Box, Container, Grid, Typography, Link, IconButton, Stack, Divider } from '@mui/material';
-import { Facebook, Twitter, Instagram, GitHub } from '@mui/icons-material';
+import React from "react";
+import {
+  Layout,
+  Row,
+  Col,
+  Typography,
+  Space,
+  Button,
+  Divider,
+  Input,
+} from "antd";
+import {
+  FacebookFilled,
+  TwitterOutlined,
+  InstagramOutlined,
+  GithubFilled,
+  SendOutlined,
+} from "@ant-design/icons";
+
+const { Footer: AntFooter } = Layout;
+const { Title, Text, Link } = Typography;
 
 const Footer = () => {
   return (
-    <Box
-      component="footer"
-      sx={{
-        bgcolor: 'grey.100',
-        color: 'text.secondary',
-        py: 6,
-        mt: 'auto',
-        borderTop: 1,
-        borderColor: 'divider',
+    <AntFooter
+      style={{
+        backgroundColor: "#f5f5f5",
+        color: "#595959",
+        padding: "64px 50px 32px",
       }}
     >
-      <Container maxWidth="xl">
-        <Grid container spacing={4}>
-          <Grid size={{ xs: 12, sm: 4 }}>
-            <Typography variant="h6" color="text.primary" gutterBottom sx={{ fontWeight: 700 }}>
+      <div style={{ maxWidth: 1440, margin: "0 auto", width: "100%" }}>
+        <Row gutter={[32, 32]}>
+          <Col xs={24} sm={8}>
+            <Title level={4} style={{ color: "#262626", fontWeight: 700 }}>
               GALAXY STORE
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 2 }}>
-              Your one-stop destination for the latest in electronics, fashion, and home essentials. 
-              Quality products, delivered to your doorstep.
-            </Typography>
-            <Stack direction="row" spacing={1}>
-              <IconButton size="small" color="inherit"><Facebook /></IconButton>
-              <IconButton size="small" color="inherit"><Twitter /></IconButton>
-              <IconButton size="small" color="inherit"><Instagram /></IconButton>
-              <IconButton size="small" color="inherit"><GitHub /></IconButton>
-            </Stack>
-          </Grid>
-          <Grid size={{ xs: 6, sm: 2 }}>
-            <Typography variant="subtitle1" color="text.primary" gutterBottom sx={{ fontWeight: 600 }}>
+            </Title>
+            <Text
+              type="secondary"
+              style={{ display: "block", marginBottom: 24, maxWidth: 300 }}
+            >
+              Your one-stop destination for the latest in electronics, fashion,
+              and home essentials. Quality products, delivered to your doorstep.
+            </Text>
+            <Space size="large">
+              <Link href="#" style={{ fontSize: 20, color: "#595959" }}>
+                <FacebookFilled />
+              </Link>
+              <Link href="#" style={{ fontSize: 20, color: "#595959" }}>
+                <TwitterOutlined />
+              </Link>
+              <Link href="#" style={{ fontSize: 20, color: "#595959" }}>
+                <InstagramOutlined />
+              </Link>
+              <Link href="#" style={{ fontSize: 20, color: "#595959" }}>
+                <GithubFilled />
+              </Link>
+            </Space>
+          </Col>
+
+          <Col xs={12} sm={4}>
+            <Title level={5} style={{ color: "#262626", marginBottom: 24 }}>
               Shop
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              <Link href="#" color="inherit" underline="hover">Electronics</Link>
-              <Link href="#" color="inherit" underline="hover">Fashion</Link>
-              <Link href="#" color="inherit" underline="hover">Home</Link>
-              <Link href="#" color="inherit" underline="hover">Deals</Link>
-            </Box>
-          </Grid>
-          <Grid size={{ xs: 6, sm: 2 }}>
-            <Typography variant="subtitle1" color="text.primary" gutterBottom sx={{ fontWeight: 600 }}>
+            </Title>
+            <Space direction="vertical" size="middle">
+              <Link href="#" style={{ color: "#595959" }}>
+                Electronics
+              </Link>
+              <Link href="#" style={{ color: "#595959" }}>
+                Fashion
+              </Link>
+              <Link href="#" style={{ color: "#595959" }}>
+                Home
+              </Link>
+              <Link href="#" style={{ color: "#595959" }}>
+                Deals
+              </Link>
+            </Space>
+          </Col>
+
+          <Col xs={12} sm={4}>
+            <Title level={5} style={{ color: "#262626", marginBottom: 24 }}>
               Support
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              <Link href="#" color="inherit" underline="hover">Help Center</Link>
-              <Link href="#" color="inherit" underline="hover">Track Order</Link>
-              <Link href="#" color="inherit" underline="hover">Returns</Link>
-              <Link href="#" color="inherit" underline="hover">Shipping Info</Link>
-            </Box>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 4 }}>
-            <Typography variant="subtitle1" color="text.primary" gutterBottom sx={{ fontWeight: 600 }}>
+            </Title>
+            <Space direction="vertical" size="middle">
+              <Link href="#" style={{ color: "#595959" }}>
+                Help Center
+              </Link>
+              <Link href="#" style={{ color: "#595959" }}>
+                Track Order
+              </Link>
+              <Link href="#" style={{ color: "#595959" }}>
+                Returns
+              </Link>
+              <Link href="#" style={{ color: "#595959" }}>
+                Shipping Info
+              </Link>
+            </Space>
+          </Col>
+
+          <Col xs={24} sm={8}>
+            <Title level={5} style={{ color: "#262626", marginBottom: 24 }}>
               Newsletter
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              Subscribe to stay updated with our latest offers and product launches.
-            </Typography>
-            {/* Newsletter input placeholder */}
-            <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
-              <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-                Join 50,000+ happy customers
-              </Typography>
-            </Box>
-          </Grid>
-        </Grid>
-        <Divider sx={{ my: 4 }} />
-        <Typography variant="body2" align="center">
-          {'Copyright © '}
-          <Link color="inherit" href="#">
-            Galaxy Store
-          </Link>{' '}
-          {new Date().getFullYear()}
-          {'. All rights reserved.'}
-        </Typography>
-      </Container>
-    </Box>
+            </Title>
+            <Text
+              type="secondary"
+              style={{ display: "block", marginBottom: 24 }}
+            >
+              Subscribe to stay updated with our latest offers and product
+              launches.
+            </Text>
+            <div style={{ display: "flex", gap: 8 }}>
+              <Input
+                placeholder="Enter your email"
+                style={{ borderRadius: 4, height: 40 }}
+              />
+              <Button
+                type="primary"
+                icon={<SendOutlined />}
+                style={{ height: 40 }}
+              />
+            </div>
+            <Text
+              type="secondary"
+              style={{ fontSize: 12, marginTop: 16, display: "block" }}
+            >
+              Join 50,000+ happy customers
+            </Text>
+          </Col>
+        </Row>
+
+        <Divider style={{ margin: "48px 0 24px" }} />
+
+        <div style={{ textAlign: "center" }}>
+          <Text type="secondary">
+            © {new Date().getFullYear()} Galaxy Store. All rights reserved.
+          </Text>
+        </div>
+      </div>
+    </AntFooter>
   );
 };
 

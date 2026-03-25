@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from "@mui/material";
-import ProductCard from "../../components/ui/products/ProductCard";
+import ProductCard from "../../components/ui/products/product-card";
 
 const BestSellerSection = ({ bestSellers }) => {
   return (

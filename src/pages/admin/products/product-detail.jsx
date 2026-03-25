@@ -4,9 +4,9 @@ import {
   fetchCategoryById,
 } from "@/api/categories/CategoryApi";
 import { fetchProductById, updateProduct } from "@/api/products/ProductApi";
-import Brand from "@/models/Brand";
-import Category from "@/models/Category";
-import { Product } from "@/models/Product";
+import Brand from "@/models/brand";
+import Category from "@/models/category";
+import { Product } from "@/models/product";
 import {
   Box,
   Button,
@@ -35,7 +35,7 @@ import {
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import AppButton from "@/components/common/Button";
+import AppButton from "@/components/common/button";
 import AppInput from "@/components/common/input";
 
 const PREDEFINED_ATTRIBUTE_UNITS = [

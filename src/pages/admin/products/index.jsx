@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Container } from "@mui/material";
+import { Typography, Breadcrumb, Card, Button, Space } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+import { Box } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { fetchProducts } from "@/api/products/ProductApi";
-import { ProductResponse } from "@/models/Product";
+import { ProductResponse } from "@/models/product";
 import { enqueueSnackbar } from "notistack";
 import { formatCurrency } from "@/components/utils/FormatCurrency";
 import { useNavigate } from "react-router-dom";
+
+const { Title } = Typography;
 
 const columns = [
   { field: "name", headerName: "Name", width: 300 },
@@ -40,8 +44,8 @@ const columns = [
     valueGetter: (value, row) =>
       row?.is_active == 1 ? "Selling" : "Stop Selling",
   },
-  { field: "created_at", headerName: "Created At", width: 100 },
-  { field: "updated_at", headerName: "Updated At", width: 100 },
+  { field: "created_at", headerName: "Created At", width: 150 },
+  { field: "updated_at", headerName: "Updated At", width: 150 },
 ];
 
 const ProductsManagement = () => {
@@ -70,36 +74,65 @@ const ProductsManagement = () => {
   }, [paginationModel]);
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Typography
-        variant="h2"
-        sx={{ mb: 4, fontWeight: 700, color: "neutral.900" }}
-      >
-        Quản Lý Sản Phẩm
-      </Typography>
-
-      <DataGrid
-        rows={products.data}
-        columns={columns}
-        loading={isLoading}
-        rowCount={products.meta.total}
-        pageSizeOptions={[10]}
-        paginationMode="server"
-        paginationModel={paginationModel}
-        onPaginationModelChange={setPaginationModel}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: products.meta.per_page,
-            },
-          },
-          sorting: {
-            sortModel: [{ field: "name", sort: "asc" }],
-          },
+    <Space direction="vertical" style={{ width: "100%" }} size="large">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
-        onRowClick={(params) => navigate(`/admin/products/${params.row.id}`)}
-      />
-    </Container>
+      >
+        <div>
+          <Breadcrumb
+            items={[{ title: "Admin" }, { title: "Quản Lý Sản Phẩm" }]}
+          />
+          <Title level={2} style={{ margin: "8px 0 0" }}>
+            Quản Lý Sản Phẩm
+          </Title>
+        </div>
+        <Button type="primary" icon={<PlusOutlined />} size="large">
+          Thêm Sản Phẩm
+        </Button>
+      </div>
+
+      <Card
+        style={{
+          borderRadius: 8,
+          boxShadow:
+            "0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02)",
+        }}
+        bodyStyle={{ padding: 0 }}
+      >
+        <Box sx={{ height: 600, width: "100%" }}>
+          <DataGrid
+            rows={products.data}
+            columns={columns}
+            loading={isLoading}
+            rowCount={products.meta.total}
+            pageSizeOptions={[10, 25, 50]}
+            paginationMode="server"
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 10,
+                },
+              },
+            }}
+            onRowClick={(params) =>
+              navigate(`/admin/products/${params.row.id}`)
+            }
+            sx={{
+              border: "none",
+              "& .MuiDataGrid-cell:focus": {
+                outline: "none",
+              },
+            }}
+          />
+        </Box>
+      </Card>
+    </Space>
   );
 };
 

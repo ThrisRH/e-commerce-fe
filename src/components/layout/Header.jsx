@@ -1,114 +1,114 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, InputBase, Badge, IconButton, Box, styled, alpha, Tooltip } from '@mui/material';
-import { Search as SearchIcon, ShoppingCart as ShoppingCartIcon, Person as PersonIcon, Menu as MenuIcon, Build } from '@mui/icons-material';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { Layout, Input, Badge, Button, Space, Typography, Tooltip } from "antd";
+import {
+  ShoppingCartOutlined,
+  UserOutlined,
+  MenuOutlined,
+  BuildOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(3),
-    width: 'auto',
-  },
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    fontSize: '12px',
-    [theme.breakpoints.up('md')]: {
-      width: '500px',
-    },
-  },
-}));
-
+const { Header: AntHeader } = Layout;
+const { Title } = Typography;
 
 const Header = ({ onMenuClick }) => {
   const navigate = useNavigate();
 
   return (
-    <AppBar position="sticky" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-      <Toolbar>
-        <IconButton
-          size="large"
-          edge="start"
-          color="inherit"
-          aria-label="open drawer"
-          sx={{ mr: 2, display: { md: 'none' } }}
+    <AntHeader
+      style={{
+        display: "flex",
+        alignItems: "center",
+        padding: "0 50px",
+        backgroundColor: "#e53935",
+        height: 64,
+        position: "sticky",
+        top: 0,
+        zIndex: 1000,
+        width: "100%",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          width: "100%",
+          maxWidth: 1440,
+          margin: "0 auto",
+        }}
+      >
+        <Button
+          type="text"
+          icon={<MenuOutlined style={{ color: "white", fontSize: 20 }} />}
           onClick={onMenuClick}
-        >
-          <MenuIcon />
-        </IconButton>
-        <Typography
-          variant="h6"
-          noWrap
-          component="div"
-          sx={{ display: { xs: 'none', sm: 'block' }, fontWeight: 700, cursor: 'pointer' }}
-          onClick={() => navigate('/')}
+          className="mobile-menu-btn"
+          style={{ display: "none", marginRight: 16 }}
+        />
+
+        <Title
+          level={4}
+          style={{
+            color: "white",
+            margin: 0,
+            cursor: "pointer",
+            fontWeight: 800,
+            whiteSpace: "nowrap",
+          }}
+          onClick={() => navigate("/")}
         >
           GALAXY STORE
-        </Typography>
-        <Box sx={{ flexGrow: 1 }} />
-        <Search>
-          <SearchIconWrapper>
-            <SearchIcon />
-          </SearchIconWrapper>
-          <StyledInputBase
+        </Title>
+
+        <div style={{ flex: 1, margin: "0 40px", maxWidth: 600 }}>
+          <Input
+            prefix={<SearchOutlined />}
             placeholder="Search products, brands and more..."
-            inputProps={{ 'aria-label': 'search' }}
+            className="search-input"
+            variant="filled"
+            style={{ borderRadius: 8, height: 40, backgroundColor: "white" }}
           />
-        </Search>
-        <Box sx={{ flexGrow: 1 }} />
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <IconButton size="large" edge="end" color="inherit">
-            <Badge badgeContent={10} color="error">
-              <ShoppingCartIcon sx={{ fontSize: 24 }} />
-            </Badge>
-          </IconButton>
-          <IconButton size="large" edge="end" color="inherit">
-            <Badge badgeContent={0} color="error">
-              <PersonIcon sx={{ fontSize: 24 }} />
-            </Badge>
-          </IconButton>
+        </div>
+
+        <Space size="large" style={{ color: "white" }}>
+          <Badge count={10} size="small" offset={[5, 5]}>
+            <Button
+              type="text"
+              icon={
+                <ShoppingCartOutlined
+                  style={{ color: "white", fontSize: 24 }}
+                />
+              }
+              onClick={() => {}}
+            />
+          </Badge>
+
+          <Button
+            type="text"
+            icon={<UserOutlined style={{ color: "white", fontSize: 24 }} />}
+            onClick={() => {}}
+          />
+
           <Tooltip title="Build PC">
-            <IconButton
-              size="large"
-              edge="end"
-              color="inherit"
-              onClick={() => navigate('/build-pc')}
-              id="header-build-pc-btn"
-            >
-              <Badge badgeContent={0} color="error">
-                <Build sx={{ fontSize: 24 }} />
-              </Badge>
-            </IconButton>
+            <Button
+              type="text"
+              icon={<BuildOutlined style={{ color: "white", fontSize: 22 }} />}
+              onClick={() => navigate("/build-pc")}
+            />
           </Tooltip>
-        </Box>
-      </Toolbar>
-    </AppBar>
+        </Space>
+      </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .mobile-menu-btn { display: block !important; }
+          Title { font-size: 16px !important; }
+          .search-input { display: none !important; }
+        }
+      `}</style>
+    </AntHeader>
   );
 };
 
 export default Header;
-

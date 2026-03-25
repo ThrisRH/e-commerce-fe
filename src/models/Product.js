@@ -1,7 +1,7 @@
-import Attribute from "./Attribute";
-import Brand from "./Brand";
-import Category from "./Category";
-import { Meta } from "./MetaData/Meta";
+import Attribute from "./attribute";
+import Brand from "./brand";
+import Category from "./category";
+import { Meta } from "./MetaData/meta";
 
 export class ProductResponse {
   constructor(data = {}) {

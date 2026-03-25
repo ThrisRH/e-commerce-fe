@@ -3,20 +3,20 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import { Box, CircularProgress } from "@mui/material";
 import theme from "./theme";
-import MainLayout from "./components/layout/MainLayout";
-import AdminLayout from "./components/layout/admin/AdminLayout";
-import Home from "./pages/Home";
-import BuildPC from "./pages/BuildPC";
+import MainLayout from "./components/layout/main-layout";
+import AdminLayout from "./components/layout/admin/admin-layout";
+import Home from "./pages/user/home";
+import BuildPC from "./pages/user/build-pc";
 import "./App.css";
 import { SnackbarProvider } from "notistack";
 import ProductDetail from "./pages/admin/products/product-detail";
 
 // Lazy load admin pages for better initial bundle size
-const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
+const AdminDashboard = lazy(() => import("./pages/admin/dashboard"));
 const ProductsManagement = lazy(() => import("./pages/admin/products"));
-const CategoriesManagement = lazy(() => import("./pages/admin/Categories"));
-const UsersManagement = lazy(() => import("./pages/admin/Users"));
-const OrdersManagement = lazy(() => import("./pages/admin/Orders"));
+const CategoriesManagement = lazy(() => import("./pages/admin/categories"));
+const UsersManagement = lazy(() => import("./pages/admin/users"));
+const OrdersManagement = lazy(() => import("./pages/admin/orders"));
 
 const LoadingFallback = () => (
   <Box

@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { formatCurrency } from "../../utils/FormatCurrency";
-import AppButton from "../../common/Button";
+import AppButton from "../../common/button";
 
 const ProductCard = ({ product }) => {
   return (
@@ -39,9 +39,6 @@ const ProductCard = ({ product }) => {
           p: 2,
           bgcolor: "neutral.50",
         }}
-        onError={(e) => {
-          e.target.src = "https://via.placeholder.com/200x160?text=No+Image";
-        }}
       />
       <CardContent
         sx={{
@@ -53,38 +50,38 @@ const ProductCard = ({ product }) => {
           justifyContent: "space-between",
         }}
       >
-       <Box sx={{ display: "flex", flexDirection: "column", gap: 1}}>
-         <Chip
-          label={product.brand_id}
-          size="small"
-          sx={{
-            mb: 0.5,
-            fontSize: 10,
-            height: 20,
-            width: "fit-content",
-            bgcolor: "primary.main",
-            color: "white",
-            fontWeight: 700,
-          }}
-        />
-        <Tooltip title={product.name} placement="top">
-          <Typography
-            variant="caption"
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+          <Chip
+            label={product.brand_id}
+            size="small"
             sx={{
-              fontWeight: 600,
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-              lineHeight: 1.4,
               mb: 0.5,
-              fontSize: 13,
+              fontSize: 10,
+              height: 20,
+              width: "fit-content",
+              bgcolor: "primary.main",
+              color: "white",
+              fontWeight: 700,
             }}
-          >
-            {product.name}
-          </Typography>
-        </Tooltip>
-       </Box>
+          />
+          <Tooltip title={product.name} placement="top">
+            <Typography
+              variant="caption"
+              sx={{
+                fontWeight: 600,
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+                lineHeight: 1.4,
+                mb: 0.5,
+                fontSize: 13,
+              }}
+            >
+              {product.name}
+            </Typography>
+          </Tooltip>
+        </Box>
         <Box
           sx={{
             display: "flex",

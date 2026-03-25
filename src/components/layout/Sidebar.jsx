@@ -1,106 +1,58 @@
-import React from 'react';
+import React from "react";
+import { Drawer, Menu, Divider, Typography } from "antd";
 import {
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Divider,
-  Toolbar,
-  Box,
-  Typography,
-} from '@mui/material';
-import {
-  Home as HomeIcon,
-  Category as CategoryIcon,
-  LocalOffer as OfferIcon,
-  Favorite as FavoriteIcon,
-  ShoppingBag as BagIcon,
-  Settings as SettingsIcon,
-  Help as HelpIcon,
-  Build as BuildIcon,
-} from '@mui/icons-material';
+  HomeOutlined,
+  AppstoreOutlined,
+  TagOutlined,
+  ShoppingOutlined,
+  HeartOutlined,
+  BuildOutlined,
+  SettingOutlined,
+  QuestionCircleOutlined,
+} from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
-const drawerWidth = 240;
-
+const { Title } = Typography;
 
 const Sidebar = ({ mobileOpen, onClose }) => {
-  const drawer = (
-    <div>
-      <Toolbar>
-        <Typography variant="h6" sx={{ fontWeight: 700, color: 'primary.main' }}>
-          Menu
-        </Typography>
-      </Toolbar>
-      <Divider />
-      <List>
-        {[
-          { text: 'Home', icon: <HomeIcon /> },
-          { text: 'Categories', icon: <CategoryIcon /> },
-          { text: 'Offers', icon: <OfferIcon /> },
-          { text: 'My Orders', icon: <BagIcon /> },
-          { text: 'Wishlist', icon: <FavoriteIcon /> },
-          { text: 'Build PC', icon: <BuildIcon /> },
-        ].map((item) => (
-          <ListItem key={item.text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {[
-          { text: 'Settings', icon: <SettingsIcon /> },
-          { text: 'Help Center', icon: <HelpIcon /> },
-        ].map((item) => (
-          <ListItem key={item.text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </div>
-  );
+  const navigate = useNavigate();
+
+  const menuItems = [
+    { key: "/", icon: <HomeOutlined />, label: "Home" },
+    { key: "/categories", icon: <AppstoreOutlined />, label: "Categories" },
+    { key: "/offers", icon: <TagOutlined />, label: "Offers" },
+    { key: "/orders", icon: <ShoppingOutlined />, label: "My Orders" },
+    { key: "/wishlist", icon: <HeartOutlined />, label: "Wishlist" },
+    { key: "/build-pc", icon: <BuildOutlined />, label: "Build PC" },
+    { type: "divider" },
+    { key: "/settings", icon: <SettingOutlined />, label: "Settings" },
+    { key: "/help", icon: <QuestionCircleOutlined />, label: "Help Center" },
+  ];
 
   return (
-    <Box
-      component="nav"
-      sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
-      aria-label="mailbox folders"
+    <Drawer
+      title={
+        <Title level={4} style={{ margin: 0, color: "#e53935" }}>
+          Menu
+        </Title>
+      }
+      placement="left"
+      onClose={onClose}
+      open={mobileOpen}
+      width={280}
+      bodyStyle={{ padding: 0 }}
     >
-      {/* Mobile drawer */}
-      <Drawer
-        variant="temporary"
-        open={mobileOpen}
-        onClose={onClose}
-        ModalProps={{
-          keepMounted: true, // Better open performance on mobile.
+      <Menu
+        mode="inline"
+        onClick={({ key }) => {
+          if (key.startsWith("/")) {
+            navigate(key);
+            onClose();
+          }
         }}
-        sx={{
-          display: { xs: 'block', md: 'none' },
-          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-        }}
-      >
-        {drawer}
-      </Drawer>
-      {/* Desktop drawer - hidden for now as we have Navbar, but keeping structure for flexibility */}
-      <Drawer
-        variant="permanent"
-        sx={{
-          display: { xs: 'none', md: 'none' }, // Set to 'none' on md if you want only Navbar on desktop
-          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-        }}
-        open
-      >
-        {drawer}
-      </Drawer>
-    </Box>
+        style={{ borderRight: "none" }}
+      />
+    </Drawer>
   );
 };
 

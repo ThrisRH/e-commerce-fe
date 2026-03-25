@@ -1,28 +1,40 @@
-import React from 'react';
-import { Box, Typography, Container, Paper } from '@mui/material';
+import React from "react";
+import { Breadcrumb, Typography, Space, Card, Empty } from "antd";
+import { UserOutlined } from "@ant-design/icons";
+
+const { Title } = Typography;
 
 const UsersManagement = () => {
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Typography variant="h2" sx={{ mb: 4, fontWeight: 700, color: 'neutral.900' }}>
-        Quản Lý Người Dùng
-      </Typography>
-      <Paper 
-        elevation={0} 
-        sx={{ 
-          p: 8, 
-          textAlign: 'center', 
-          borderRadius: 2, 
-          border: '1px dashed', 
-          borderColor: 'neutral.300',
-          bgcolor: 'neutral.50'
+    <Space direction="vertical" style={{ width: "100%" }} size="large">
+      <div>
+        <Breadcrumb
+          items={[{ title: "Admin" }, { title: "Quản Lý Người Dùng" }]}
+        />
+        <Title level={2} style={{ margin: "8px 0 0" }}>
+          Quản Lý Người Dùng
+        </Title>
+      </div>
+
+      <Card
+        style={{
+          borderRadius: 12,
+          padding: 64,
+          textAlign: "center",
+          border: "2px dashed #f0f0f0",
+          backgroundColor: "#fafafa",
         }}
       >
-        <Typography variant="h5" color="neutral.500">
-          Chức năng quản lý người dùng sẽ sớm ra mắt.
-        </Typography>
-      </Paper>
-    </Container>
+        <Empty
+          image={<UserOutlined style={{ fontSize: 64, color: "#bfbfbf" }} />}
+          description={
+            <Typography.Text type="secondary" style={{ fontSize: 18 }}>
+              Chức năng quản lý người dùng sẽ sớm ra mắt.
+            </Typography.Text>
+          }
+        />
+      </Card>
+    </Space>
   );
 };
 

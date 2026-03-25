@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Product, ProductResponse } from "../../models/Product";
+import { Product, ProductResponse } from "../../models/product";
 import { env } from "@/constants/env";
 
 export const fetchProducts = async (page = 1) => {

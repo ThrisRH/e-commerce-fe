@@ -1,52 +1,56 @@
-import { Box, Container, Stack, Link } from '@mui/material';
+import React from "react";
+import { Menu, Layout, Row, Col } from "antd";
+import { useNavigate } from "react-router-dom";
+import { BuildOutlined } from "@ant-design/icons";
 
 const categories = [
-  { label: 'PC', href: '#' },
-  { label: 'Laptop văn phòng', href: '#' },
-  { label: 'Laptop gaming', href: '#' },
-  { label: 'Máy tính bảng', href: '#' },
-  { label: 'Thiết bị âm thanh', href: '#' },
-  { label: 'Phụ kiện', href: '#' },
-  { label: '🔧 Build PC', href: '/build-pc' },
+  { label: "PC", key: "pc" },
+  { label: "Laptop văn phòng", key: "laptop-van-phong" },
+  { label: "Laptop gaming", key: "laptop-gaming" },
+  { label: "Máy tính bảng", key: "may-tinh-bang" },
+  { label: "Thiết bị âm thanh", key: "thiet-bi-am-thanh" },
+  { label: "Phụ kiện", key: "phu-kien" },
+  { label: "🔧 Build PC", key: "/build-pc" },
 ];
 
 const Navbar = () => {
+  const navigate = useNavigate();
+
   return (
-    <Box
-      sx={{
-        bgcolor: 'background.paper',
-        borderBottom: 1,
-        borderColor: 'divider',
-        display: { xs: 'none', md: 'block' },
+    <Layout.Header
+      style={{
+        backgroundColor: "white",
+        borderBottom: "1px solid #f0f0f0",
+        height: 48,
+        display: "flex",
+        alignItems: "center",
+        padding: "0 50px",
       }}
     >
-      <Container maxWidth="xl">
-        <Stack
-          direction="row"
-          spacing={4}
-          sx={{ py: 1.5, overflowX: 'auto' }}
-        >
-          {categories.map(({ label, href }) => (
-            <Link
-              key={label}
-              href={href}
-              underline="none"
-              variant='caption'
-              sx={{
-                color: label.includes('Build PC') ? 'primary.main' : 'text.secondary',
-                fontWeight: label.includes('Build PC') ? 700 : 400,
-                whiteSpace: 'nowrap',
-                '&:hover': {
-                  color: 'primary.main',
-                },
-              }}
-            >
-              {label}
-            </Link>
-          ))}
-        </Stack>
-      </Container>
-    </Box>
+      <div style={{ width: "100%", maxWidth: 1440, margin: "0 auto" }}>
+        <Menu
+          mode="horizontal"
+          style={{
+            borderBottom: "none",
+            height: 48,
+            lineHeight: "48px",
+            fontSize: 13,
+            fontWeight: 500,
+          }}
+          items={categories.map(({ label, key }) => ({
+            key,
+            label,
+            style:
+              key === "/build-pc" ? { color: "#e53935", fontWeight: 700 } : {},
+          }))}
+          onClick={({ key }) => {
+            if (key.startsWith("/")) {
+              navigate(key);
+            }
+          }}
+        />
+      </div>
+    </Layout.Header>
   );
 };
 

@@ -1,5 +1,5 @@
 import axios from "axios";
-import Category from "../../models/Category";
+import Category from "../../models/category";
 
 export const fetchCategories = async () => {
   const response = await axios.get(

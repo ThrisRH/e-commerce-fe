@@ -1,5 +1,5 @@
 import axios from "axios";
-import Brand from "../../models/Brand";
+import Brand from "../../models/brand";
 
 export const fetchBrands = async () => {
   const response = await axios.get(
