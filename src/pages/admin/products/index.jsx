@@ -3,7 +3,7 @@ import { Typography, Breadcrumb, Card, Button, Space } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Box } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { fetchProducts } from "@/api/products/ProductApi";
+import { fetchProducts } from "@/api/products/product-lapi";
 import { ProductResponse } from "@/models/product";
 import { enqueueSnackbar } from "notistack";
 import { formatCurrency } from "@/components/utils/format-currency";

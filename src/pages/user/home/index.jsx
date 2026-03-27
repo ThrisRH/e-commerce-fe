@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Breadcrumb, Typography, Space, Spin, Image } from "antd";
 import AllProductsSection from "../../../sections/home/all-products";
-import { fetchProducts } from "../../../api/products/ProductApi";
+import { fetchProducts } from "../../../api/products/product-lapi";
 import { enqueueSnackbar } from "notistack";
 import { Product } from "@/models/product";
 import banner1 from "@/assets/images/banner1.png"; // Assuming it exists or I can just use placeholder if it's broken
