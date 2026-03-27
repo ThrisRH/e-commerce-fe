@@ -10,6 +10,8 @@ import BuildPC from "./pages/user/build-pc";
 import "./App.css";
 import { SnackbarProvider } from "notistack";
 import ProductDetail from "./pages/admin/products/product-detail";
+import CategoryDetail from "./pages/admin/categories/category-detail";
+
 
 // Lazy load admin pages for better initial bundle size
 const AdminDashboard = lazy(() => import("./pages/admin/dashboard"));
@@ -51,6 +53,8 @@ function App() {
               <Route path="products" element={<ProductsManagement />} />
               <Route path="products/:id" element={<ProductDetail />} />
               <Route path="categories" element={<CategoriesManagement />} />
+              <Route path="categories/:id" element={<CategoryDetail />} />
+
               <Route path="users" element={<UsersManagement />} />
               <Route path="orders" element={<OrdersManagement />} />
             </Route>
