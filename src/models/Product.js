@@ -31,6 +31,26 @@ export class Product {
     this.updated_at = data?.updated_at || "";
   }
 
+  normalize() {
+    return {
+      id: this.id,
+      name: this.name,
+      slug: this.slug,
+      description: this.description,
+      price: this.price,
+      image_url: this.image_url,
+      category_id: this.category?.id ?? null,
+      brand_id: this.brand?.id ?? null,
+      is_active: this.is_active,
+      stock: this.stock,
+      specs: this.specs || "",
+      attributes: (this.attributes || []).map((attr) => ({
+        attribute_id: attr.id,
+        value: attr.value,
+      })),
+    };
+  }
+
   get formattedPrice() {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",

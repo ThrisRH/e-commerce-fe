@@ -1,18 +1,9 @@
-import { fetchBrands } from "@/api/brands/BrandApi";
-import {
-  fetchCategories,
-  fetchCategoryById,
-} from "@/api/categories/CategoryApi";
-import { fetchProductById, updateProduct } from "@/api/products/ProductApi";
-import Brand from "@/models/brand";
-import Category from "@/models/category";
-import { Product } from "@/models/product";
+import { updateProduct } from "@/api/products/ProductApi";
 import {
   Box,
   Button,
   Card,
   CardContent,
-  CircularProgress,
   Container,
   Divider,
   FormControl,
@@ -34,9 +25,11 @@ import {
 } from "@mui/icons-material";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useNavigation, useParams } from "react-router-dom";
 import AppButton from "@/components/common/button";
 import AppInput from "@/components/common/input";
+import useProductDetail from "@/hooks/products/product_detail";
+import Loading from "@/components/ui/state/loading";
 
 const PREDEFINED_ATTRIBUTE_UNITS = [
   "GB",
@@ -54,50 +47,23 @@ const PREDEFINED_ATTRIBUTE_UNITS = [
 
 export default function ProductDetail() {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+
   const [saving, setSaving] = useState(false);
-  const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
 
-  const [attributes, setAttributes] = useState([]);
-
-  const [brands, setBrands] = useState([]);
-
-  /** @type {[Product, Function]} */
-  const [formData, setFormData] = useState(new Product());
-  const [originData, setOriginData] = useState(new Product());
+  const {
+    loading,
+    formData,
+    setFormData,
+    originData,
+    attributes,
+    categories,
+    brands,
+    loadData,
+  } = useProductDetail(id);
 
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        setLoading(true);
-        const productData = await fetchProductById(id);
-
-        if (productData == null) {
-          enqueueSnackbar("Không tìm thấy sản phẩm", { variant: "error" });
-          navigate("/admin/products");
-          return;
-        }
-
-        const [categoriesList, brandData, categoryData] = await Promise.all([
-          fetchCategories(),
-          fetchBrands(),
-          fetchCategoryById(productData.category.id),
-        ]);
-        setFormData(productData);
-        setOriginData(structuredClone(productData));
-        setCategories(
-          Array.isArray(categoriesList) ? categoriesList : [categoriesList],
-        );
-        setBrands(Array.isArray(brandData) ? brandData : [brandData]);
-        setAttributes(categoryData.attributes);
-      } catch (err) {
-        enqueueSnackbar(err.message, { variant: "error" });
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadData();
+    if (id) loadData();
   }, [id]);
 
   const handleChange = (e) => {
@@ -127,7 +93,6 @@ export default function ProductDetail() {
         },
       ],
     }));
-    console.log("formData.attributes: ", formData.attributes);
   };
 
   const removeAttribute = (index) => {
@@ -144,12 +109,8 @@ export default function ProductDetail() {
       }
     });
 
-    console.log("changed: ", changed);
-
     return changed;
   };
-
-  console.log(formData.attributes);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -178,13 +139,15 @@ export default function ProductDetail() {
         specs: formData.specs,
       };
 
-      const changedPayload = getChangedField(originData, payload);
+      const changedPayload = getChangedField(originData.normalize(), payload);
 
       await updateProduct(id, changedPayload);
 
       enqueueSnackbar("Sản phẩm đã được cập nhật thành công!", {
         variant: "success",
       });
+
+      window.location.reload();
     } catch (err) {
       enqueueSnackbar(err.message, { variant: "error" });
     } finally {
@@ -193,18 +156,7 @@ export default function ProductDetail() {
   };
 
   if (loading) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "80vh",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
+    return <Loading />;
   }
 
   return (
