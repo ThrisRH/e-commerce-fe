@@ -6,7 +6,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { fetchProducts } from "@/api/products/ProductApi";
 import { ProductResponse } from "@/models/product";
 import { enqueueSnackbar } from "notistack";
-import { formatCurrency } from "@/components/utils/FormatCurrency";
+import { formatCurrency } from "@/components/utils/format-currency";
 import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;

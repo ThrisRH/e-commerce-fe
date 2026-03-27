@@ -7,7 +7,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { formatCurrency } from "../../utils/FormatCurrency";
+import { formatCurrency } from "../../utils/format-currency";
 import AppButton from "../../common/button";
 
 const ProductCard = ({ product }) => {

@@ -20,7 +20,7 @@ import {
   Box as MuiBox,
 } from "@mui/material";
 import { AddCircleOutline, CheckCircle } from "@mui/icons-material";
-import { formatCurrency } from "../../components/utils/FormatCurrency";
+import { formatCurrency } from "../../components/utils/format-currency";
 
 const { Title, Text } = Typography;
 

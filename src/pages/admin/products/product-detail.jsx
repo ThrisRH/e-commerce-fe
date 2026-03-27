@@ -28,7 +28,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useNavigation, useParams } from "react-router-dom";
 import AppButton from "@/components/common/button";
 import AppInput from "@/components/common/input";
-import useProductDetail from "@/hooks/products/product_detail";
+import useProductDetail from "@/hooks/products/product-detail";
 import Loading from "@/components/ui/state/loading";
 
 const PREDEFINED_ATTRIBUTE_UNITS = [
