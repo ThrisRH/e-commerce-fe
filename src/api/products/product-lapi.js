@@ -39,3 +39,26 @@ export const updateProduct = async (id, data) => {
 
   return new Product(response.data.data);
 };
+export const createProduct = async (data) => {
+  const response = await axios.post(
+    `${import.meta.env.VITE_API_URL}/api/products`,
+    data,
+  );
+
+  if (!response.data || !response.data.data) {
+    throw new Error("Failed to create product");
+  }
+
+  return new Product(response.data.data);
+};
+export const deleteProduct = async (id) => {
+  const response = await axios.delete(
+    `${import.meta.env.VITE_API_URL}/api/products/${id}`,
+  );
+
+  if (response.status !== 200 && response.status !== 204) {
+    throw new Error("Failed to delete product");
+  }
+
+  return response.data;
+};

@@ -8,45 +8,15 @@ import { ProductResponse } from "@/models/product";
 import { enqueueSnackbar } from "notistack";
 import { formatCurrency } from "@/components/utils/format-currency";
 import { useNavigate } from "react-router-dom";
+import CreateProductModal from "./components/create-form";
+import { deleteProduct } from "@/api/products/product-lapi";
+import { DeleteOutlined } from "@ant-design/icons";
+import { Popconfirm } from "antd";
+
 
 const { Title } = Typography;
 
-const columns = [
-  { field: "name", headerName: "Name", width: 300 },
-  { field: "description", headerName: "Description", width: 200 },
-  {
-    field: "price",
-    headerName: "Price",
-    width: 150,
-    valueGetter: (value, row) => formatCurrency(row?.price),
-  },
-  {
-    field: "stock",
-    headerName: "Stock",
-    width: 100,
-  },
-  {
-    field: "category",
-    headerName: "Category",
-    width: 120,
-    valueGetter: (value, row) => row?.category?.name || "",
-  },
-  {
-    field: "brand",
-    headerName: "Brand",
-    width: 120,
-    valueGetter: (value, row) => row?.brand?.name || "",
-  },
-  {
-    field: "is_active",
-    headerName: "Active",
-    width: 100,
-    valueGetter: (value, row) =>
-      row?.is_active == 1 ? "Selling" : "Stop Selling",
-  },
-  { field: "created_at", headerName: "Created At", width: 150 },
-  { field: "updated_at", headerName: "Updated At", width: 150 },
-];
+
 
 const ProductsManagement = () => {
   const navigate = useNavigate();
@@ -58,8 +28,85 @@ const ProductsManagement = () => {
     page: 0,
     pageSize: 10,
   });
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
+  const handleDelete = (id) => {
+    deleteProduct(id)
+      .then(() => {
+        enqueueSnackbar("Xóa sản phẩm thành công", { variant: "success" });
+        loadProducts();
+      })
+      .catch((error) => {
+        enqueueSnackbar("Xóa sản phẩm thất bại: " + error.message, {
+          variant: "error",
+        });
+      });
+  };
+
+  const columns = [
+    { field: "name", headerName: "Name", width: 300 },
+    { field: "description", headerName: "Description", width: 200 },
+    {
+      field: "price",
+      headerName: "Price",
+      width: 150,
+      valueGetter: (value, row) => formatCurrency(row?.price),
+    },
+    {
+      field: "stock",
+      headerName: "Stock",
+      width: 100,
+    },
+    {
+      field: "category",
+      headerName: "Category",
+      width: 120,
+      valueGetter: (value, row) => row?.category?.name || "",
+    },
+    {
+      field: "brand",
+      headerName: "Brand",
+      width: 120,
+      valueGetter: (value, row) => row?.brand?.name || "",
+    },
+    {
+      field: "is_active",
+      headerName: "Active",
+      width: 100,
+      valueGetter: (value, row) =>
+        row?.is_active == 1 ? "Selling" : "Stop Selling",
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 100,
+      sortable: false,
+      renderCell: (params) => (
+        <Space size="middle" onClick={(e) => e.stopPropagation()}>
+          <Popconfirm
+            title="Xóa sản phẩm"
+            description="Bạn có chắc chắn muốn xóa sản phẩm này không?"
+            onConfirm={() => handleDelete(params.row.id)}
+            okText="Yes"
+            cancelText="No"
+            placement="leftTop"
+          >
+            <Button
+              danger
+              icon={<DeleteOutlined />}
+              type="text"
+              size="small"
+            />
+          </Popconfirm>
+        </Space>
+      ),
+    },
+    { field: "created_at", headerName: "Created At", width: 150 },
+    { field: "updated_at", headerName: "Updated At", width: 150 },
+  ];
+
+
+  const loadProducts = () => {
     setIsLoading(true);
     fetchProducts(paginationModel.page + 1)
       .then((data) => {
@@ -71,6 +118,10 @@ const ProductsManagement = () => {
       .finally(() => {
         setIsLoading(false);
       });
+  };
+
+  useEffect(() => {
+    loadProducts();
   }, [paginationModel]);
 
   return (
@@ -90,10 +141,21 @@ const ProductsManagement = () => {
             Quản Lý Sản Phẩm
           </Title>
         </div>
-        <Button type="primary" icon={<PlusOutlined />} size="large">
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          size="large"
+          onClick={() => setIsModalOpen(true)}
+        >
           Thêm Sản Phẩm
         </Button>
       </div>
+
+      <CreateProductModal
+        visible={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={loadProducts}
+      />
 
       <Card
         style={{
