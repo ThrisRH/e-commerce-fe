@@ -1,19 +1,21 @@
-import { Card, Tag, Typography, Button, Tooltip, Space, Flex } from "antd";
+import { Card, Tag, Typography, Tooltip, Flex } from "antd";
+import { useNavigate } from "react-router-dom";
 import "./style.css";
 import { formatCurrency } from "../../utils/format-currency";
 import AppButton from "@/components/common/button";
-import { IconButton } from "@mui/material";
 import BorderButton from "@/components/common/buttons/border-button";
 
-const { Meta } = Card;
-
 const ProductCard = ({ product }) => {
+  const navigate = useNavigate();
+
+  const goToDetail = () => navigate(`/products/${product.id}`);
+
   return (
     <Card
       hoverable
       className="product-card"
       cover={
-        <div className="image-wrapper">
+        <div className="image-wrapper" onClick={goToDetail} style={{ cursor: "pointer" }}>
           <img
             alt={product.name}
             src={product.image_url}
@@ -30,7 +32,11 @@ const ProductCard = ({ product }) => {
           </Tag>
 
           <Tooltip title={product.name}>
-            <Typography.Text className="product-name">
+            <Typography.Text
+              className="product-name"
+              onClick={goToDetail}
+              style={{ cursor: "pointer" }}
+            >
               {product.name}
             </Typography.Text>
           </Tooltip>
@@ -41,9 +47,9 @@ const ProductCard = ({ product }) => {
             {formatCurrency(product.price)}
           </Typography.Title>
 
-          <Flex gap={"small"}>
-            <AppButton label={"Mua ngay"} onClick={undefined} />
-            <BorderButton label={"Thêm giỏ hàng"} onClick={undefined} />
+          <Flex gap="small">
+            <AppButton label="Mua ngay" onClick={goToDetail} />
+            <BorderButton label="Thêm giỏ hàng" onClick={undefined} />
           </Flex>
         </div>
       </div>
