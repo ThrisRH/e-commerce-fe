@@ -19,10 +19,11 @@ import {
   fetchCategories,
   fetchCategoryById,
 } from "@/api/categories/category-lapi";
-
 import { fetchBrands } from "@/api/brands/brand-lapi";
+import { fetchAttributes } from "@/api/attributes/attribute-lapi";
 import { createProduct } from "@/api/products/product-lapi";
 import { enqueueSnackbar } from "notistack";
+
 import InfoStep from "./steps/info-step";
 import ClassificationStep from "./steps/classification-step";
 import AttributeStep from "./steps/attributes-step";
@@ -39,8 +40,12 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
   const [categoryAttributes, setCategoryAttributes] = useState([]);
+  const [extraAttributes, setExtraAttributes] = useState([]);
+  const [attributes, setAttributes] = useState([]);
+
   const [submitting, setSubmitting] = useState(false);
   const [attrLoading, setAttrLoading] = useState(false);
+
 
   useEffect(() => {
     if (visible) {
@@ -53,10 +58,16 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
   const loadInitialData = async () => {
     setLoading(true);
     try {
-      const [cats, brs] = await Promise.all([fetchCategories(), fetchBrands()]);
+      const [cats, brs, attrs] = await Promise.all([
+        fetchCategories(),
+        fetchBrands(),
+        fetchAttributes(),
+      ]);
       setCategories(Array.isArray(cats) ? cats : []);
       setBrands(Array.isArray(brs) ? brs : []);
+      setAttributes(Array.isArray(attrs) ? attrs : []);
     } catch (err) {
+
       enqueueSnackbar("Error loading labels: " + err.message, {
         variant: "error",
       });
@@ -68,7 +79,9 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
   const onCategoryChange = async (categoryId) => {
     setAttrLoading(true);
     setCategoryAttributes([]);
+    setExtraAttributes([]);
     form.setFieldValue("attributes", {});
+
     try {
       const category = await fetchCategoryById(categoryId);
       setCategoryAttributes(category.attributes || []);
@@ -80,6 +93,20 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
       setAttrLoading(false);
     }
   };
+
+  const handleAddExtraAttribute = (attrId) => {
+    const attr = attributes.find((a) => a.id === attrId);
+    if (!attr) return;
+    
+    // Check if it's already there
+    if (categoryAttributes.some((a) => a.id === attrId) || 
+        extraAttributes.some((a) => a.id === attrId)) {
+      return;
+    }
+
+    setExtraAttributes([...extraAttributes, attr]);
+  };
+
 
   const steps = [
     { title: "Details", description: "Product info" },
@@ -226,13 +253,19 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
             categories={categories}
             brands={brands}
             onCategoryChange={onCategoryChange}
+            categoryAttributes={categoryAttributes}
+            extraAttributes={extraAttributes}
+            allAttributes={attributes}
+            onAddExtraAttribute={handleAddExtraAttribute}
+            attrLoading={attrLoading}
           />
+
+
 
           <AttributeStep
             display={currentStep === 2 ? "block" : "none"}
-            categoryAttributes={categoryAttributes}
-            attrLoading={attrLoading}
           />
+
 
           <PublicStep display={currentStep === 3 ? "block" : "none"} />
         </Form>
