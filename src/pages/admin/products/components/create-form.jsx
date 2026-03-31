@@ -1,20 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Modal,
-  Form,
-  Input,
-  InputNumber,
-  Select,
-  Switch,
-  Button,
-  Steps,
-  Typography,
-  Space,
-  Row,
-  Col,
-  Divider,
-} from "antd";
-import { CloudUploadOutlined, CheckCircleFilled } from "@ant-design/icons";
+import { Modal, Form, Input, Button, Steps, Typography, Space } from "antd";
 import {
   fetchCategories,
   fetchCategoryById,
@@ -46,7 +31,6 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
   const [submitting, setSubmitting] = useState(false);
   const [attrLoading, setAttrLoading] = useState(false);
 
-
   useEffect(() => {
     if (visible) {
       loadInitialData();
@@ -67,7 +51,6 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
       setBrands(Array.isArray(brs) ? brs : []);
       setAttributes(Array.isArray(attrs) ? attrs : []);
     } catch (err) {
-
       enqueueSnackbar("Error loading labels: " + err.message, {
         variant: "error",
       });
@@ -97,16 +80,16 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
   const handleAddExtraAttribute = (attrId) => {
     const attr = attributes.find((a) => a.id === attrId);
     if (!attr) return;
-    
-    // Check if it's already there
-    if (categoryAttributes.some((a) => a.id === attrId) || 
-        extraAttributes.some((a) => a.id === attrId)) {
+
+    if (
+      categoryAttributes.some((a) => a.id === attrId) ||
+      extraAttributes.some((a) => a.id === attrId)
+    ) {
       return;
     }
 
     setExtraAttributes([...extraAttributes, attr]);
   };
-
 
   const steps = [
     { title: "Details", description: "Product info" },
@@ -129,9 +112,7 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
         await form.validateFields(["category_id", "brand_id"]);
       }
       setCurrentStep(currentStep + 1);
-    } catch (error) {
-      console.log("Validation Failed:", error);
-    }
+    } catch (error) {}
   };
 
   const handleBack = () => {
@@ -160,6 +141,7 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
           .replace(/[^\w-]+/g, ""),
       };
 
+      console.log(data);
       await createProduct(data);
       enqueueSnackbar("Sản phẩm đã được tạo!", { variant: "success" });
       onSuccess();
@@ -260,12 +242,7 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
             attrLoading={attrLoading}
           />
 
-
-
-          <AttributeStep
-            display={currentStep === 2 ? "block" : "none"}
-          />
-
+          <AttributeStep display={currentStep === 2 ? "block" : "none"} />
 
           <PublicStep display={currentStep === 3 ? "block" : "none"} />
         </Form>
