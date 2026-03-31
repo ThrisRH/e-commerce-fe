@@ -83,7 +83,7 @@ const Home = () => {
         {latestProductsByCategory.map((item, index) => {
           return (
             <LatestProInCateSection
-              cateName={item.name}
+              cateName={item.cate_name}
               latestProducts={item.products}
             />
           );
