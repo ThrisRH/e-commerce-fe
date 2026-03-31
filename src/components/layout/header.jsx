@@ -20,9 +20,8 @@ const Header = ({ onMenuClick }) => {
       style={{
         display: "flex",
         alignItems: "center",
-        padding: "0 50px",
         backgroundColor: "#e53935",
-        height: 64,
+        height: 58,
         position: "sticky",
         top: 0,
         zIndex: 1000,
@@ -58,26 +57,26 @@ const Header = ({ onMenuClick }) => {
           }}
           onClick={() => navigate("/")}
         >
-          GALAXY STORE
+          GALAXY STORE PHP
         </Title>
 
         <div style={{ flex: 1, margin: "0 40px", maxWidth: 600 }}>
           <Input
-            prefix={<SearchOutlined />}
-            placeholder="Search products, brands and more..."
+            prefix={<SearchOutlined style={{ color: "#e53935" }} />}
+            placeholder="Tìm kiến sản phẩm của bạn..."
             className="search-input"
             variant="filled"
-            style={{ borderRadius: 8, height: 40, backgroundColor: "white" }}
+            style={{ borderRadius: 24, backgroundColor: "white" }}
           />
         </div>
 
         <Space size="large" style={{ color: "white" }}>
-          <Badge count={10} size="small" offset={[5, 5]}>
+          <Badge count={0} size="small" offset={[5, 5]}>
             <Button
               type="text"
               icon={
                 <ShoppingCartOutlined
-                  style={{ color: "white", fontSize: 24 }}
+                  style={{ color: "white", fontSize: 18 }}
                 />
               }
               onClick={() => {}}
@@ -86,17 +85,15 @@ const Header = ({ onMenuClick }) => {
 
           <Button
             type="text"
-            icon={<UserOutlined style={{ color: "white", fontSize: 24 }} />}
+            icon={<UserOutlined style={{ color: "white", fontSize: 18 }} />}
             onClick={() => {}}
           />
 
-          <Tooltip title="Build PC">
-            <Button
-              type="text"
-              icon={<BuildOutlined style={{ color: "white", fontSize: 22 }} />}
-              onClick={() => navigate("/build-pc")}
-            />
-          </Tooltip>
+          <Button
+            type="text"
+            icon={<BuildOutlined style={{ color: "white", fontSize: 18 }} />}
+            onClick={() => navigate("/build-pc")}
+          />
         </Space>
       </div>
 

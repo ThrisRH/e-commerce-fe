@@ -10,7 +10,7 @@ const categories = [
   { label: "Máy tính bảng", key: "may-tinh-bang" },
   { label: "Thiết bị âm thanh", key: "thiet-bi-am-thanh" },
   { label: "Phụ kiện", key: "phu-kien" },
-  { label: "🔧 Build PC", key: "/build-pc" },
+  { label: "Dựng cấu hình PC", key: "/build-pc" },
 ];
 
 const Navbar = () => {

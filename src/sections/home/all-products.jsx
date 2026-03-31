@@ -4,7 +4,7 @@ import ProductCard from "../../components/ui/products/product-card";
 
 const { Title } = Typography;
 
-const AllProductsSection = ({ products, sortOrder, onSortChange }) => {
+const AllProductsSection = ({ products = [], sortOrder, onSortChange }) => {
   return (
     <div id="all-products">
       <AntdCard
@@ -37,7 +37,7 @@ const AllProductsSection = ({ products, sortOrder, onSortChange }) => {
             <Select
               value={sortOrder}
               onChange={onSortChange}
-              style={{ minWidth: 150 }}
+              style={{ minWidth: 150, color: "#fff" }}
               variant="filled"
               options={[
                 { value: "latest", label: "Mới nhất" },
@@ -49,11 +49,11 @@ const AllProductsSection = ({ products, sortOrder, onSortChange }) => {
 
         <div style={{ padding: "32px 16px", backgroundColor: "#fff" }}>
           <Row gutter={[16, 16]}>
-            {/* {products.map((product) => (
-              <Col key={product.id} xs={12} sm={8} md={6} lg={4}>
+            {products.map((product) => (
+              <Col key={product.id} xs={12} sm={8} md={6} lg={6} xxl={4}>
                 <ProductCard product={product} />
               </Col>
-            ))} */}
+            ))}
           </Row>
         </div>
       </AntdCard>

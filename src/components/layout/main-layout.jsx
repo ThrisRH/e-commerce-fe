@@ -24,14 +24,22 @@ const MainLayout = () => {
         },
       }}
     >
-      <Layout style={{ minHeight: "100vh" }}>
+      <Layout
+        style={{
+          minHeight: "100vh",
+        }}
+      >
         <Header onMenuClick={handleDrawerToggle} />
         <Navbar />
         <Sidebar mobileOpen={mobileOpen} onClose={handleDrawerToggle} />
 
-        <Content style={{ backgroundColor: "#f5f5f5" }}>
-          <Outlet />
-        </Content>
+        <div
+          style={{ display: "flex", width: "100%", justifyContent: "center" }}
+        >
+          <Content style={{ backgroundColor: "#f5f5f5", maxWidth: 1800 }}>
+            <Outlet />
+          </Content>
+        </div>
 
         <Footer />
       </Layout>

@@ -11,7 +11,8 @@ import "./App.css";
 import { SnackbarProvider } from "notistack";
 import ProductDetail from "./pages/admin/products/product-detail";
 import CategoryDetail from "./pages/admin/categories/category-detail";
-
+import UserLogin from "./pages/user/login";
+import AdminLogin from "./pages/admin/login";
 
 // Lazy load admin pages for better initial bundle size
 const AdminDashboard = lazy(() => import("./pages/admin/dashboard"));
@@ -43,13 +44,17 @@ function App() {
             {/* Main Store Layout */}
             <Route path="/" element={<MainLayout />}>
               <Route index element={<Home />} />
+              <Route path="login" element={<UserLogin />} />
               <Route path="build-pc" element={<BuildPC />} />
               <Route path="*" element={<div>Page Not Found</div>} />
             </Route>
 
             {/* Admin Layout */}
             <Route path="/admin" element={<AdminLayout />}>
+              <Route path="login" element={<AdminLogin />} />
+
               <Route index element={<AdminDashboard />} />
+
               <Route path="products" element={<ProductsManagement />} />
               <Route path="products/:id" element={<ProductDetail />} />
               <Route path="categories" element={<CategoriesManagement />} />

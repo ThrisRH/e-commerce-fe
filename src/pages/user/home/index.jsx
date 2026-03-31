@@ -1,24 +1,34 @@
+// @ts-ignore
 import React, { useState, useEffect } from "react";
+// @ts-ignore
 import { Breadcrumb, Typography, Space, Spin, Image } from "antd";
 import AllProductsSection from "../../../sections/home/all-products";
 import { fetchProducts } from "../../../api/products/product-lapi";
 import { enqueueSnackbar } from "notistack";
 import { Product } from "@/models/product";
 import banner1 from "@/assets/images/banner1.png"; // Assuming it exists or I can just use placeholder if it's broken
+// @ts-ignore
+import LatestProInCateSection from "@/sections/home/latest-in-cart";
+import { fetchCateSection } from "@/api/home/cate-section-lapi";
 
+// @ts-ignore
 const { Title } = Typography;
 
 const Home = () => {
   const [sortOrder, setSortOrder] = useState("latest");
   /** @type {[Product[], Function]} */
   const [products, setProducts] = useState([]);
+
+  const [latestProductsByCategory, setLatestProductsByCategory] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    fetchProducts()
-      .then((data) => {
-        setProducts(data);
+
+    Promise.all([fetchProducts(), fetchCateSection()])
+      .then(([proRes, cateRes]) => {
+        setProducts(proRes.data);
+        setLatestProductsByCategory(cateRes.data);
       })
       .catch((error) => {
         enqueueSnackbar(error.message, { variant: "error" });
@@ -27,6 +37,8 @@ const Home = () => {
         setLoading(false);
       });
   }, []);
+
+  console.log(products);
 
   if (loading) {
     return (
@@ -67,6 +79,15 @@ const Home = () => {
           sortOrder={sortOrder}
           onSortChange={setSortOrder}
         />
+
+        {latestProductsByCategory.map((item, index) => {
+          return (
+            <LatestProInCateSection
+              cateName={item.name}
+              latestProducts={item.products}
+            />
+          );
+        })}
       </Space>
     </div>
   );

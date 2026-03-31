@@ -1,10 +1,10 @@
 import axios from "axios";
 import { Product, ProductResponse } from "../../models/product";
-import { env } from "@/constants/env";
+import { API_VER, env } from "@/constants/env";
 
 export const fetchProducts = async (page = 1) => {
   const response = await axios.get(
-    `${import.meta.env.VITE_API_URL}/api/products?page=${page}`,
+    `${env.VITE_API_URL}/api/${API_VER}/products?page=${page}`,
   );
 
   if (!response.data || !response.data.data) {
@@ -16,7 +16,7 @@ export const fetchProducts = async (page = 1) => {
 
 export const fetchProductById = async (id) => {
   const response = await axios.get(
-    `${import.meta.env.VITE_API_URL}/api/products/${id}`,
+    `${env.VITE_API_URL}/api/${API_VER}/products/${id}`,
   );
 
   if (!response.data || !response.data.data) {
@@ -29,7 +29,7 @@ export const fetchProductById = async (id) => {
 export const updateProduct = async (id, data) => {
   console.log("data: ", data);
   const response = await axios.patch(
-    `${import.meta.env.VITE_API_URL}/api/products/${id}`,
+    `${env.VITE_API_URL}/api/${API_VER}/products/${id}`,
     data,
   );
 
@@ -41,7 +41,7 @@ export const updateProduct = async (id, data) => {
 };
 export const createProduct = async (data) => {
   const response = await axios.post(
-    `${import.meta.env.VITE_API_URL}/api/products`,
+    `${env.VITE_API_URL}/api/${API_VER}/products`,
     data,
   );
 
@@ -53,7 +53,7 @@ export const createProduct = async (data) => {
 };
 export const deleteProduct = async (id) => {
   const response = await axios.delete(
-    `${import.meta.env.VITE_API_URL}/api/products/${id}`,
+    `${env.VITE_API_URL}/api/${API_VER}/products/${id}`,
   );
 
   if (response.status !== 200 && response.status !== 204) {
