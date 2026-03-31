@@ -11,7 +11,9 @@ import {
   fetchCategories,
   createCategory,
 } from "@/api/categories/category-lapi";
+import { fetchAttributes } from "@/api/attributes/attribute-lapi";
 import { enqueueSnackbar } from "notistack";
+
 import InfoStep from "./steps/info-step";
 import ClassificationStep from "./steps/classification-step";
 import PublicStep from "./steps/public-step";
@@ -23,7 +25,9 @@ const CreateCategoryModal = ({ visible, onClose, onSuccess }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [attributes, setAttributes] = useState([]);
   const [submitting, setSubmitting] = useState(false);
+
 
   useEffect(() => {
     if (visible) {
@@ -40,9 +44,14 @@ const CreateCategoryModal = ({ visible, onClose, onSuccess }) => {
   const loadInitialData = async () => {
     setLoading(true);
     try {
-      const cats = await fetchCategories();
+      const [cats, attrs] = await Promise.all([
+        fetchCategories(),
+        fetchAttributes(),
+      ]);
       setCategories(Array.isArray(cats) ? cats : []);
+      setAttributes(Array.isArray(attrs) ? attrs : []);
     } catch (err) {
+
       enqueueSnackbar("Error loading categories: " + err.message, {
         variant: "error",
       });
@@ -178,7 +187,9 @@ const CreateCategoryModal = ({ visible, onClose, onSuccess }) => {
             display={currentStep === 1 ? "block" : "none"}
             loading={loading}
             categories={categories}
+            attributes={attributes}
           />
+
 
           <PublicStep display={currentStep === 2 ? "block" : "none"} />
         </Form>
