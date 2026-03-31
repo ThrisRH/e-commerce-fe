@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./styles/global.css";
 import App from "./app.jsx";
 import { ConfigProvider } from "antd";
+import { AuthProvider } from "./context/AuthContext";
 
 const theme = {
   token: {
@@ -21,7 +22,9 @@ const theme = {
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ConfigProvider theme={theme}>
-      <App />
+      <AuthProvider>
+        <App />
+      </AuthProvider>
     </ConfigProvider>
   </StrictMode>,
 );
