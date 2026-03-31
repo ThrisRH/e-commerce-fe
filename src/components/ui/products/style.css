@@ -11,6 +11,7 @@
     flex-direction: column;
 
     height: 100%;
+    min-height: 450px;
 
     border-radius: 8px;
     border: 1px solid #efeded;
@@ -66,7 +67,7 @@
 }
 
 .product-name {
-    font-size: 13px;
+    font-size: 16px;
     font-weight: 600;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -75,8 +76,9 @@
 }
 
 .price {
-    color: #1677ff;
-    font-weight: 700;
-    margin-top: 8px;
-    display: block;
+    color: var(--primary-main) !important;
+}
+
+.card-footer {
+    flex-direction: column;
 }

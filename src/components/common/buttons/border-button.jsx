@@ -1,18 +1,17 @@
 import { Button } from "antd/es/radio";
 
-const AppButton = ({ label, onClick, disabled = false }) => {
+const BorderButton = ({ label, onClick }) => {
   return (
     <Button
       onClick={onClick}
-      disabled={disabled}
       style={{
         width: "100%",
         height: "48px",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        background: disabled ? "var(--neutral-200)" : "var(--primary-main)",
-        color: "white",
+        border: "1px solid var(--primary-main)",
+        color: "var(--primary-main)",
         padding: "8px",
       }}
     >
@@ -21,4 +20,4 @@ const AppButton = ({ label, onClick, disabled = false }) => {
   );
 };
 
-export default AppButton;
+export default BorderButton;

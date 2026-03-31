@@ -1,6 +1,9 @@
-import { Card, Tag, Typography, Button, Tooltip } from "antd";
+import { Card, Tag, Typography, Button, Tooltip, Space, Flex } from "antd";
 import "./style.css";
 import { formatCurrency } from "../../utils/format-currency";
+import AppButton from "@/components/common/button";
+import { IconButton } from "@mui/material";
+import BorderButton from "@/components/common/buttons/border-button";
 
 const { Meta } = Card;
 
@@ -34,13 +37,14 @@ const ProductCard = ({ product }) => {
         </div>
 
         <div className="card-footer">
-          <Typography.Text className="price">
+          <Typography.Title level={4} className="price">
             {formatCurrency(product.price)}
-          </Typography.Text>
+          </Typography.Title>
 
-          <Button type="primary" block>
-            Thêm vào giỏ hàng
-          </Button>
+          <Flex gap={"small"}>
+            <AppButton label={"Mua ngay"} onClick={undefined} />
+            <BorderButton label={"Thêm giỏ hàng"} onClick={undefined} />
+          </Flex>
         </div>
       </div>
     </Card>
