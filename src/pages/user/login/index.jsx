@@ -1,14 +1,12 @@
 import React, { useState } from "react";
-import { Form, Typography, Divider, Checkbox, Card } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { Form, Card, Button, Checkbox, Divider } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "@/api/auth/auth-lapi";
 import { enqueueSnackbar } from "notistack";
-import AppInput from "@/components/common/input";
-
-const { Text } = Typography;
-
-const formLabelStyle = { fontWeight: 500, color: "var(--neutral-700)" };
+import {
+  TextField,
+  PasswordField,
+} from "@/components/common/input/ant-custom-input";
 
 const UserLogin = () => {
   const [loading, setLoading] = useState(false);
@@ -17,10 +15,9 @@ const UserLogin = () => {
   const onFinish = async (values) => {
     setLoading(true);
     try {
-      const response = await login(values.email, values.password, "user");
+      const response = await login(values.email, values.password);
       if (response?.access_token) {
         localStorage.setItem("access_token", response.access_token);
-        localStorage.setItem("user_role", "user");
       }
       enqueueSnackbar("Đăng nhập thành công!", { variant: "success" });
       navigate("/");
@@ -43,28 +40,79 @@ const UserLogin = () => {
         margin: "0 auto",
       }}
     >
-      <Card title="Login" style={{ width: 650 }}>
+      <Card title="Đăng nhập" style={{ width: 500 }}>
         <Form
           name="login_form"
           initialValues={{ remember: true }}
           onFinish={onFinish}
           layout="vertical"
         >
-          <Form.Item
+          <TextField
             label="Email"
             name="email"
             rules={[
-              { required: true, message: "Please input your email!" },
-              { type: "email", message: "Invalid email format!" },
+              { required: true, message: "Không được để trống!" },
+              { type: "email", message: "Email không hợp lệ!" },
             ]}
+            placeholder="VD: nguyenvan@gmail.com"
+          />
+
+          <PasswordField
+            label="Mật khẩu"
+            name="password"
+            rules={[{ required: true, message: "Không được để trống!" }]}
+            placeholder="Nhập mật khẩu"
+          />
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 16,
+            }}
           >
-            <AppInput
-              label={"Email"}
-              name={"email"}
-              value={undefined}
-              onChange={undefined}
-            />
+            <Form.Item name="remember" valuePropName="checked" noStyle>
+              <Checkbox>Ghi nhớ đăng nhập</Checkbox>
+            </Form.Item>
+            <Link
+              to="/forgot-password"
+              style={{ fontSize: 13, color: "var(--primary-main)" }}
+            >
+              Quên mật khẩu?
+            </Link>
+          </div>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={loading}
+              block
+              style={{
+                height: 44,
+                background: "var(--primary-main)",
+                borderColor: "var(--primary-main)",
+                fontWeight: 600,
+              }}
+            >
+              Đăng nhập
+            </Button>
           </Form.Item>
+
+          <Divider style={{ borderColor: "var(--neutral-300)", margin: "12px 0" }}>
+            <span style={{ color: "var(--neutral-500)", fontSize: 13 }}>hoặc</span>
+          </Divider>
+
+          <div style={{ textAlign: "center", fontSize: 14, color: "var(--neutral-600)" }}>
+            Chưa có tài khoản?{" "}
+            <Link
+              to="/register"
+              style={{ color: "var(--primary-main)", fontWeight: 600 }}
+            >
+              Đăng ký ngay
+            </Link>
+          </div>
         </Form>
       </Card>
     </div>

@@ -14,7 +14,7 @@ import CategoryDetail from "./pages/admin/categories/category-detail";
 import UserLogin from "./pages/user/login";
 import AdminLogin from "./pages/admin/login";
 import UserProductDetail from "./pages/user/product-detail";
-
+import UserRegister from "./pages/user/register";
 
 // Lazy load admin pages for better initial bundle size
 const AdminDashboard = lazy(() => import("./pages/admin/dashboard"));
@@ -47,7 +47,9 @@ function App() {
             <Route path="/" element={<MainLayout />}>
               <Route index element={<Home />} />
               <Route path="login" element={<UserLogin />} />
+              <Route path="register" element={<UserRegister />} />
               <Route path="products/:id" element={<UserProductDetail />} />
+
               <Route path="build-pc" element={<BuildPC />} />
 
               <Route path="*" element={<div>Page Not Found</div>} />
