@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Modal,
-  Form,
-  Button,
-  Steps,
-  Typography,
-  Space,
-} from "antd";
+import { Modal, Form, Button, Steps, Typography, Space } from "antd";
 import {
   fetchCategories,
   createCategory,
@@ -28,15 +21,14 @@ const CreateCategoryModal = ({ visible, onClose, onSuccess }) => {
   const [attributes, setAttributes] = useState([]);
   const [submitting, setSubmitting] = useState(false);
 
-
   useEffect(() => {
     if (visible) {
       loadInitialData();
       form.resetFields();
       form.setFieldsValue({
-          is_active: true,
-          sort_order: 0
-      })
+        is_active: true,
+        sort_order: 0,
+      });
       setCurrentStep(0);
     }
   }, [visible]);
@@ -51,7 +43,6 @@ const CreateCategoryModal = ({ visible, onClose, onSuccess }) => {
       setCategories(Array.isArray(cats) ? cats : []);
       setAttributes(Array.isArray(attrs) ? attrs : []);
     } catch (err) {
-
       enqueueSnackbar("Error loading categories: " + err.message, {
         variant: "error",
       });
@@ -69,9 +60,13 @@ const CreateCategoryModal = ({ visible, onClose, onSuccess }) => {
   const handleNext = async () => {
     try {
       if (currentStep === 0) {
-        await form.validateFields(["name", "description", "image_url", "sort_order"]);
+        await form.validateFields([
+          "name",
+          "description",
+          "image_url",
+          "sort_order",
+        ]);
       } else if (currentStep === 1) {
-        // Parent is optional but we validate the step
         await form.validateFields(["parent_id"]);
       }
       setCurrentStep(currentStep + 1);
@@ -95,6 +90,8 @@ const CreateCategoryModal = ({ visible, onClose, onSuccess }) => {
           .replace(/ /g, "-")
           .replace(/[^\w-]+/g, ""),
       };
+
+      console.log(data);
 
       await createCategory(data);
       enqueueSnackbar("Danh mục đã được tạo!", { variant: "success" });
@@ -189,7 +186,6 @@ const CreateCategoryModal = ({ visible, onClose, onSuccess }) => {
             categories={categories}
             attributes={attributes}
           />
-
 
           <PublicStep display={currentStep === 2 ? "block" : "none"} />
         </Form>
