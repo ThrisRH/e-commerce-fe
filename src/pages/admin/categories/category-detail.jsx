@@ -3,6 +3,8 @@ import {
   Box,
   Card,
   CardContent,
+  Checkbox,
+  Chip,
   Container,
   FormControl,
   FormControlLabel,
@@ -10,14 +12,14 @@ import {
   IconButton,
   InputLabel,
   MenuItem,
+  OutlinedInput,
   Select,
   Switch,
   TextField,
   Typography,
 } from "@mui/material";
-import {
-  ArrowBack as ArrowLeftIcon,
-} from "@mui/icons-material";
+
+import { ArrowBack as ArrowLeftIcon } from "@mui/icons-material";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -25,6 +27,14 @@ import AppButton from "@/components/common/button";
 import AppInput from "@/components/common/input";
 import useCategoryDetail from "@/hooks/categories/category-detail";
 import Loading from "@/components/ui/state/loading";
+
+import {
+  Breadcrumb,
+  Typography as AntdTypography,
+  Space as AntdSpace,
+} from "antd";
+
+const { Title: AntdTitle } = AntdTypography;
 
 export default function CategoryDetail() {
   const { id } = useParams();
@@ -37,6 +47,7 @@ export default function CategoryDetail() {
     setFormData,
     originData,
     parentCategories,
+    allAttributes,
     loadData,
   } = useCategoryDetail(id);
 
@@ -74,8 +85,12 @@ export default function CategoryDetail() {
         description: formData.description,
         is_active: formData.is_active,
         image_url: formData.image_url,
-        parent_id: formData.parent_category ? formData.parent_category?.id : null,
-        sort_order: formData.sort_order || 0
+        parent_id: formData.parent_category
+          ? formData.parent_category?.id
+          : null,
+        sort_order: formData.sort_order || 0,
+        attribute_ids: formData.attribute_ids || [],
+        is_required: formData.is_required || false,
       };
 
       // We need to compare with origin data's payload-like representation
@@ -85,15 +100,19 @@ export default function CategoryDetail() {
         description: originData.description,
         is_active: originData.is_active,
         image_url: originData.image_url,
-        parent_id: originData.parent_category ? originData.parent_category?.id : null,
-        sort_order: originData.sort_order || 0
+        parent_id: originData.parent_category
+          ? originData.parent_category?.id
+          : null,
+        sort_order: originData.sort_order || 0,
+        attribute_ids: originData.attribute_ids || [],
+        is_required: originData.is_required || false,
       };
 
       const changedPayload = getChangedField(originPayload, payload);
 
       if (Object.keys(changedPayload).length === 0) {
-          enqueueSnackbar("Không có gì thay đổi", { variant: "info" });
-          return;
+        enqueueSnackbar("Không có gì thay đổi", { variant: "info" });
+        return;
       }
 
       await updateCategory(id, changedPayload);
@@ -124,20 +143,23 @@ export default function CategoryDetail() {
           justifyContent: "space-between",
         }}
       >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <IconButton
-            onClick={() => navigate(-1)}
-            sx={{ bgcolor: "background.paper", boxShadow: 1 }}
-          >
-            <ArrowLeftIcon />
-          </IconButton>
-          <Typography variant="h4" sx={{ fontWeight: 700 }}>
-            Chi Tiết Danh Mục
-          </Typography>
+        <Box>
+          <Breadcrumb
+            items={[
+              { title: "Admin", href: "#" },
+              { title: "Quản Lý Danh Mục", href: "/admin/categories" },
+              { title: "Chi Tiết" },
+            ]}
+          />
+          <AntdTitle level={2} style={{ margin: "8px 0 0" }}>
+            Chi Tiết Danh Mục: {formData.name}
+          </AntdTitle>
         </Box>
-        <Box sx={{ width: 200 }}>
+        <Box sx={{ width: 220 }}>
           <AppButton
-            disabled={saving || JSON.stringify(originData) === JSON.stringify(formData)}
+            disabled={
+              saving || JSON.stringify(originData) === JSON.stringify(formData)
+            }
             onClick={handleSubmit}
             label={saving ? "Đang lưu..." : "Lưu Thay Đổi"}
           />
@@ -146,7 +168,9 @@ export default function CategoryDetail() {
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 8 }}>
-          <Card sx={{ borderRadius: 3, boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}>
+          <Card
+            sx={{ borderRadius: 3, boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}
+          >
             <CardContent sx={{ p: 4 }}>
               <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
                 Thông Tin Cơ Bản
@@ -207,10 +231,92 @@ export default function CategoryDetail() {
               </Grid>
             </CardContent>
           </Card>
+
+          <Card
+            sx={{
+              mt: 3,
+              borderRadius: 3,
+              boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
+            }}
+          >
+            <CardContent sx={{ p: 4 }}>
+              <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                Thuộc Tính Danh Mục
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                Chọn các thuộc tính mà sản phẩm thuộc danh mục này sẽ có.
+              </Typography>
+
+              <Grid container spacing={3} alignItems="center">
+                <Grid size={{ xs: 12, sm: 9 }}>
+                  <FormControl fullWidth>
+                    <InputLabel>Chọn thuộc tính</InputLabel>
+                    <Select
+                      multiple
+                      value={formData.attribute_ids || []}
+                      onChange={(e) => {
+                        setFormData((p) => ({
+                          ...p,
+                          attribute_ids: e.target.value,
+                        }));
+                      }}
+                      input={<OutlinedInput label="Chọn thuộc tính" />}
+                      renderValue={(selected) => (
+                        <Box
+                          sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}
+                        >
+                          {selected.map((value) => (
+                            <Chip
+                              key={value}
+                              label={
+                                allAttributes.find((a) => a.id === value)
+                                  ?.name || value
+                              }
+                              size="small"
+                            />
+                          ))}
+                        </Box>
+                      )}
+                    >
+                      {allAttributes.map((attr) => (
+                        <MenuItem key={attr.id} value={attr.id}>
+                          <Checkbox
+                            checked={
+                              (formData.attribute_ids || []).indexOf(attr.id) >
+                              -1
+                            }
+                          />
+                          {attr.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid size={{ xs: 12, sm: 3 }}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={formData.is_required || false}
+                        onChange={(e) =>
+                          setFormData((p) => ({
+                            ...p,
+                            is_required: e.target.checked,
+                          }))
+                        }
+                      />
+                    }
+                    label="Bắt buộc?"
+                  />
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
         </Grid>
 
         <Grid size={{ xs: 12, md: 4 }}>
-          <Card sx={{ borderRadius: 3, boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}>
+          <Card
+            sx={{ borderRadius: 3, boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}
+          >
             <CardContent sx={{ p: 4 }}>
               <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
                 Phân Loại
@@ -225,7 +331,8 @@ export default function CategoryDetail() {
                     setFormData((p) => ({
                       ...p,
                       parent_category:
-                        parentCategories.find((c) => c.id === e.target.value) || null,
+                        parentCategories.find((c) => c.id === e.target.value) ||
+                        null,
                     }))
                   }
                 >
@@ -240,7 +347,10 @@ export default function CategoryDetail() {
                 </Select>
               </FormControl>
 
-              <Typography variant="subtitle2" sx={{ mb: 1, color: "text.secondary" }}>
+              <Typography
+                variant="subtitle2"
+                sx={{ mb: 1, color: "text.secondary" }}
+              >
                 Hình ảnh đại diện
               </Typography>
               <Box
@@ -255,14 +365,18 @@ export default function CategoryDetail() {
                   overflow: "hidden",
                   border: "1px dashed",
                   borderColor: "grey.400",
-                  mb: 2
+                  mb: 2,
                 }}
               >
                 {formData.image_url ? (
                   <img
                     src={formData.image_url}
                     alt={formData.name}
-                    style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                    }}
                   />
                 ) : (
                   <Typography variant="body2" color="text.secondary">

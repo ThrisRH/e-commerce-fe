@@ -14,7 +14,11 @@ export default class Category {
     this.updated_at = data.updated_at ?? "";
     this.attributes = Attribute.fromJson(data?.attributes) ?? [];
     this.products = data.products ?? [];
+    this.is_required = data.is_required ?? false;
+    this.attribute_ids = data.attribute_ids ?? [];
   }
+
+
 
   static fromJson(json) {
     if (!json) return null;

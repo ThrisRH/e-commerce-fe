@@ -38,7 +38,7 @@ const PartSelectionModal = ({
     setLoading(true);
     try {
       const category = await fetchCategoryById(categoryId);
-      const items = (category.products.data || []).map((p) => new Product(p));
+      const items = (category.products || []).map((p) => new Product(p));
       setProducts(items);
     } catch (err) {
       console.error("Error loading products for build pc:", err);
