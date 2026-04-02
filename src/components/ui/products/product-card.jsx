@@ -4,6 +4,7 @@ import "./style.css";
 import { formatCurrency } from "../../utils/format-currency";
 import AppButton from "@/components/common/button";
 import BorderButton from "@/components/common/buttons/border-button";
+import { handleAddToCart } from "@/utils/add-to-cart";
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
@@ -15,7 +16,11 @@ const ProductCard = ({ product }) => {
       hoverable
       className="product-card"
       cover={
-        <div className="image-wrapper" onClick={goToDetail} style={{ cursor: "pointer" }}>
+        <div
+          className="image-wrapper"
+          onClick={goToDetail}
+          style={{ cursor: "pointer" }}
+        >
           <img
             alt={product.name}
             src={product.image_url}
@@ -49,7 +54,10 @@ const ProductCard = ({ product }) => {
 
           <Flex gap="small">
             <AppButton label="Mua ngay" onClick={goToDetail} />
-            <BorderButton label="Thêm giỏ hàng" onClick={undefined} />
+            <BorderButton
+              label="Thêm giỏ hàng"
+              onClick={(e) => handleAddToCart(e, product, 1)}
+            />
           </Flex>
         </div>
       </div>

@@ -17,11 +17,8 @@ import {
   Card,
 } from "antd";
 import {
-  ShoppingCartOutlined,
   ThunderboltOutlined,
   HeartOutlined,
-  ShareAltOutlined,
-  CheckCircleOutlined,
   TruckOutlined,
   SafetyCertificateOutlined,
   ReloadOutlined,
@@ -37,6 +34,8 @@ import {
 import { fetchProductById } from "@/api/products/product-lapi";
 import { enqueueSnackbar } from "notistack";
 import { formatCurrency } from "@/components/utils/format-currency";
+import BorderButton from "@/components/common/buttons/border-button";
+import { handleAddToCart } from "@/utils/add-to-cart";
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -89,10 +88,14 @@ const PolicyBadge = ({ icon, title, subtitle }) => (
   >
     <span style={{ fontSize: 22, color: "var(--primary-main)" }}>{icon}</span>
     <div>
-      <div style={{ fontWeight: 600, fontSize: 12, color: "var(--neutral-800)" }}>
+      <div
+        style={{ fontWeight: 600, fontSize: 12, color: "var(--neutral-800)" }}
+      >
         {title}
       </div>
-      <div style={{ fontSize: 11, color: "var(--neutral-500)" }}>{subtitle}</div>
+      <div style={{ fontSize: 11, color: "var(--neutral-500)" }}>
+        {subtitle}
+      </div>
     </div>
   </div>
 );
@@ -143,18 +146,40 @@ const UserProductDetail = () => {
       label: "Mô tả chi tiết",
       children: (
         <div style={{ padding: "24px 0" }}>
-          <Paragraph style={{ color: "var(--neutral-700)", lineHeight: 1.8, marginBottom: 20 }}>
+          <Paragraph
+            style={{
+              color: "var(--neutral-700)",
+              lineHeight: 1.8,
+              marginBottom: 20,
+            }}
+          >
             {product.description || LOREM}
           </Paragraph>
-          <Paragraph style={{ color: "var(--neutral-700)", lineHeight: 1.8, marginBottom: 24 }}>
+          <Paragraph
+            style={{
+              color: "var(--neutral-700)",
+              lineHeight: 1.8,
+              marginBottom: 24,
+            }}
+          >
             {LOREM}
           </Paragraph>
           <Title level={5} style={{ marginBottom: 12 }}>
             Tính năng nổi bật
           </Title>
-          <ul style={{ paddingLeft: 20, display: "flex", flexDirection: "column", gap: 8 }}>
+          <ul
+            style={{
+              paddingLeft: 20,
+              display: "flex",
+              flexDirection: "column",
+              gap: 8,
+            }}
+          >
             {LOREM_FEATURES.map((f) => (
-              <li key={f} style={{ color: "var(--neutral-700)", lineHeight: 1.7 }}>
+              <li
+                key={f}
+                style={{ color: "var(--neutral-700)", lineHeight: 1.7 }}
+              >
                 {f}
               </li>
             ))}
@@ -179,7 +204,8 @@ const UserProductDetail = () => {
                     <TableRow
                       key={attr.id || idx}
                       sx={{
-                        background: idx % 2 === 0 ? "var(--neutral-50)" : "#fff",
+                        background:
+                          idx % 2 === 0 ? "var(--neutral-50)" : "#fff",
                         "&:last-child td": { border: 0 },
                       }}
                     >
@@ -195,7 +221,13 @@ const UserProductDetail = () => {
                       >
                         {attr.name}
                       </TableCell>
-                      <TableCell sx={{ color: "var(--neutral-900)", fontSize: 13, py: 1.5 }}>
+                      <TableCell
+                        sx={{
+                          color: "var(--neutral-900)",
+                          fontSize: 13,
+                          py: 1.5,
+                        }}
+                      >
                         {attr.value}
                         {attr.unit ? ` ${attr.unit}` : ""}
                       </TableCell>
@@ -214,7 +246,14 @@ const UserProductDetail = () => {
       key: "reviews",
       label: `Đánh giá (${MOCK_REVIEWS.length})`,
       children: (
-        <div style={{ padding: "24px 0", display: "flex", flexDirection: "column", gap: 16 }}>
+        <div
+          style={{
+            padding: "24px 0",
+            display: "flex",
+            flexDirection: "column",
+            gap: 16,
+          }}
+        >
           <div
             style={{
               display: "flex",
@@ -227,11 +266,29 @@ const UserProductDetail = () => {
             }}
           >
             <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: 48, fontWeight: 700, color: "var(--primary-main)", lineHeight: 1 }}>
+              <div
+                style={{
+                  fontSize: 48,
+                  fontWeight: 700,
+                  color: "var(--primary-main)",
+                  lineHeight: 1,
+                }}
+              >
                 {avgRating}
               </div>
-              <Rate value={avgRating} allowHalf disabled style={{ fontSize: 16 }} />
-              <div style={{ fontSize: 12, color: "var(--neutral-500)", marginTop: 4 }}>
+              <Rate
+                value={avgRating}
+                allowHalf
+                disabled
+                style={{ fontSize: 16 }}
+              />
+              <div
+                style={{
+                  fontSize: 12,
+                  color: "var(--neutral-500)",
+                  marginTop: 4,
+                }}
+              >
                 {MOCK_REVIEWS.length} đánh giá
               </div>
             </div>
@@ -241,13 +298,26 @@ const UserProductDetail = () => {
             <Card
               key={i}
               size="small"
-              style={{ borderRadius: 10, border: "1px solid var(--neutral-200)" }}
+              style={{
+                borderRadius: 10,
+                border: "1px solid var(--neutral-200)",
+              }}
               bodyStyle={{ padding: "16px" }}
             >
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: 8,
+                }}
+              >
                 <div>
                   <Text strong>{r.name}</Text>
-                  <Rate value={r.rating} disabled style={{ fontSize: 12, marginLeft: 10 }} />
+                  <Rate
+                    value={r.rating}
+                    disabled
+                    style={{ fontSize: 12, marginLeft: 10 }}
+                  />
                 </div>
                 <Text type="secondary" style={{ fontSize: 12 }}>
                   {r.date}
@@ -287,7 +357,10 @@ const UserProductDetail = () => {
             }}
           >
             <Image
-              src={product.image_url || "https://via.placeholder.com/400x400?text=No+Image"}
+              src={
+                product.image_url ||
+                "https://via.placeholder.com/400x400?text=No+Image"
+              }
               alt={product.name}
               style={{
                 width: "100%",
@@ -324,7 +397,12 @@ const UserProductDetail = () => {
             </Title>
 
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <Rate value={avgRating} allowHalf disabled style={{ fontSize: 14 }} />
+              <Rate
+                value={avgRating}
+                allowHalf
+                disabled
+                style={{ fontSize: 14 }}
+              />
               <Text type="secondary" style={{ fontSize: 13 }}>
                 {avgRating}/5 · {MOCK_REVIEWS.length} đánh giá
               </Text>
@@ -338,7 +416,10 @@ const UserProductDetail = () => {
                 borderLeft: "4px solid var(--primary-main)",
               }}
             >
-              <Title level={2} style={{ color: "var(--primary-main)", margin: 0 }}>
+              <Title
+                level={2}
+                style={{ color: "var(--primary-main)", margin: 0 }}
+              >
                 {formatCurrency(product.price)}
               </Title>
               <Text style={{ fontSize: 12, color: "var(--neutral-600)" }}>
@@ -347,8 +428,7 @@ const UserProductDetail = () => {
             </div>
 
             <Text style={{ color: "var(--neutral-600)", lineHeight: 1.8 }}>
-              {product.description?.slice(0, 200) ||
-                LOREM.slice(0, 200)}
+              {product.description?.slice(0, 200) || LOREM.slice(0, 200)}
               ...
             </Text>
 
@@ -385,24 +465,9 @@ const UserProductDetail = () => {
               >
                 Mua ngay
               </Button>
-              <Button
-                size="large"
-                icon={<ShoppingCartOutlined />}
-                style={{
-                  flex: 1,
-                  minWidth: 140,
-                  height: 48,
-                  borderColor: "var(--primary-main)",
-                  color: "var(--primary-main)",
-                  fontWeight: 600,
-                }}
-              >
-                Thêm vào giỏ
-              </Button>
-              <Button
-                size="large"
-                icon={<HeartOutlined />}
-                style={{ height: 48, width: 48 }}
+              <BorderButton
+                label={"Thêm vào giỏ hàng"}
+                onClick={(e) => handleAddToCart(e, product, quantity)}
               />
             </div>
 

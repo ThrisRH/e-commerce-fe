@@ -9,7 +9,6 @@ import {
   FormControl,
   FormControlLabel,
   Grid,
-  IconButton,
   InputLabel,
   MenuItem,
   OutlinedInput,
@@ -19,7 +18,6 @@ import {
   Typography,
 } from "@mui/material";
 
-import { ArrowBack as ArrowLeftIcon } from "@mui/icons-material";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
