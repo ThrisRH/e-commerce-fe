@@ -13,6 +13,7 @@ export default class Category {
     this.created_at = data.created_at ?? "";
     this.updated_at = data.updated_at ?? "";
     this.attributes = Attribute.fromJson(data?.attributes) ?? [];
+    this.products = data.products ?? [];
   }
 
   static fromJson(json) {

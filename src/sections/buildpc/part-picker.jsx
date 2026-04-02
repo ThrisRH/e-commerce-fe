@@ -1,209 +1,143 @@
 import React from "react";
+import { Typography, Button, Avatar } from "antd";
 import {
-  Row,
-  Col,
-  Typography,
-  Tag,
-  Button,
-  Space,
-  Card as AntdCard,
-} from "antd";
-import {
-  Card,
-  CardMedia,
-  CardContent,
-  CardActions,
-  Button as MuiButton,
-  Chip as MuiChip,
-  Tooltip as MuiTooltip,
-  Typography as MuiTypography,
-  Box as MuiBox,
-} from "@mui/material";
-import { AddCircleOutline, CheckCircle } from "@mui/icons-material";
+  PlusCircleOutlined,
+  DeleteOutlined,
+  SwapOutlined,
+} from "@ant-design/icons";
 import { formatCurrency } from "../../components/utils/format-currency";
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
-const PartPicker = ({
-  category,
-  title,
-  parts,
-  selected,
-  onSelect,
-  onRemove,
-}) => {
-  const filtered = parts.filter((p) => p.category === category);
-
+const PartPicker = ({ category, title, selected, onPick, onRemove }) => {
   return (
-    <div id={`part-picker-${category}`} style={{ marginBottom: 48 }}>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        backgroundColor: "#fff",
+        padding: "16px 24px",
+        borderRadius: 12,
+        marginBottom: 16,
+        border: "1px solid var(--neutral-200)",
+        transition: "all 0.3s",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.02)",
+      }}
+    >
+      {/* Category Icon/Title Area */}
+      <div style={{ width: 180, flexShrink: 0 }}>
+        <div
+          style={{ fontSize: 15, fontWeight: 700, color: "var(--neutral-900)" }}
+        >
+          {title}
+        </div>
+      </div>
+
+      {/* Main Content Area */}
       <div
         style={{
+          flexGrow: 1,
+          padding: "0 24px",
           display: "flex",
-          justifyContent: "space-between",
           alignItems: "center",
-          backgroundColor: "#fafafa",
-          padding: "12px 24px",
-          borderRadius: 8,
-          marginBottom: 24,
-          border: "1px solid #f0f0f0",
         }}
       >
-        <Title level={4} style={{ margin: 0, fontWeight: 700 }}>
-          {title}
-        </Title>
-        {selected && (
-          <Tag
-            color="red"
-            closable
-            onClose={(e) => {
-              e.preventDefault();
-              onRemove();
-            }}
+        {selected ? (
+          <div
             style={{
-              height: 32,
               display: "flex",
               alignItems: "center",
-              borderRadius: 16,
-              padding: "0 12px",
-              fontWeight: 600,
-              fontSize: 13,
+              gap: 16,
+              width: "100%",
             }}
           >
-            Đã chọn: {selected.name}
-          </Tag>
+            <Avatar
+              src={selected.image_url}
+              shape="square"
+              size={56}
+              style={{
+                background: "#fff",
+                border: "1px solid var(--neutral-100)",
+              }}
+            />
+            <div style={{ flexGrow: 1 }}>
+              <div
+                style={{
+                  fontWeight: 600,
+                  fontSize: 15,
+                  color: "var(--neutral-900)",
+                }}
+              >
+                {selected.name}
+              </div>
+              <div style={{ fontSize: 13, color: "var(--neutral-500)" }}>
+                {selected.specs || selected.brandName || selected.brand?.name}
+              </div>
+            </div>
+            <div style={{ textAlign: "right", marginRight: 16 }}>
+              <div
+                style={{
+                  fontWeight: 700,
+                  color: "var(--primary-main)",
+                  fontSize: 16,
+                }}
+              >
+                {formatCurrency(selected.price)}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <Text type="secondary" italic style={{ fontSize: 14 }}>
+            Chưa có linh kiện nào được chọn cho mục này.
+          </Text>
         )}
       </div>
 
-      <Row gutter={[16, 16]}>
-        {filtered.map((part) => {
-          const isSelected = selected?.id === part.id;
-          return (
-            <Col key={part.id} xs={24} sm={12} md={8} lg={6}>
-              <Card
-                elevation={0}
-                sx={{
-                  border: isSelected
-                    ? "2px solid #e53935"
-                    : "1px solid #f0f0f0",
-                  borderRadius: 2,
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  transition: "all 0.3s",
-                  "&:hover": {
-                    transform: "translateY(-4px)",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                    borderColor: isSelected ? "#e53935" : "#e5393580",
-                  },
-                  position: "relative",
-                  overflow: "visible",
-                  bgcolor: isSelected ? "#fff8f7" : "#fff",
-                }}
-              >
-                {isSelected && (
-                  <CheckCircle
-                    sx={{
-                      position: "absolute",
-                      top: -12,
-                      right: -12,
-                      color: "#e53935",
-                      fontSize: 28,
-                      bgcolor: "white",
-                      borderRadius: "50%",
-                      zIndex: 1,
-                    }}
-                  />
-                )}
-                <CardMedia
-                  component="img"
-                  image={part.image_url}
-                  alt={part.name}
-                  sx={{
-                    height: 160,
-                    objectFit: "contain",
-                    p: 2,
-                    bgcolor: "#f9f9f9",
-                  }}
-                />
-                <CardContent sx={{ flexGrow: 1, px: 2, py: 1.5 }}>
-                  <MuiChip
-                    label={part.brand}
-                    size="small"
-                    sx={{
-                      mb: 0.5,
-                      fontSize: 10,
-                      height: 20,
-                      bgcolor: "#e53935",
-                      color: "white",
-                      fontWeight: 700,
-                    }}
-                  />
-                  <MuiTooltip title={part.name} placement="top">
-                    <MuiTypography
-                      variant="caption"
-                      sx={{
-                        fontWeight: 600,
-                        display: "-webkit-box",
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
-                        lineHeight: 1.4,
-                        mb: 0.5,
-                        fontSize: 13,
-                        color: "#262626",
-                      }}
-                    >
-                      {part.name}
-                    </MuiTypography>
-                  </MuiTooltip>
-                  <MuiTypography
-                    variant="caption"
-                    sx={{
-                      color: "#8c8c8c",
-                      display: "-webkit-box",
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: "vertical",
-                      overflow: "hidden",
-                      lineHeight: 1.3,
-                    }}
-                  >
-                    {part.specs}
-                  </MuiTypography>
-                  <MuiTypography
-                    variant="body1"
-                    sx={{ color: "#e53935", fontWeight: 700, mt: 1 }}
-                  >
-                    {formatCurrency(part.price)}
-                  </MuiTypography>
-                </CardContent>
-                <CardActions sx={{ px: 2, pb: 2 }}>
-                  <MuiButton
-                    fullWidth
-                    variant={isSelected ? "contained" : "outlined"}
-                    sx={{
-                      fontWeight: 600,
-                      textTransform: "none",
-                      bgcolor: isSelected ? "#e53935" : "transparent",
-                      borderColor: "#e53935",
-                      color: isSelected ? "white" : "#e53935",
-                      "&:hover": {
-                        bgcolor: isSelected ? "#d32f2f" : "#e5393510",
-                        borderColor: "#d32f2f",
-                      },
-                    }}
-                    startIcon={
-                      isSelected ? <CheckCircle /> : <AddCircleOutline />
-                    }
-                    onClick={() => (isSelected ? onRemove() : onSelect(part))}
-                  >
-                    {isSelected ? "Đã chọn" : "Chọn linh kiện"}
-                  </MuiButton>
-                </CardActions>
-              </Card>
-            </Col>
-          );
-        })}
-      </Row>
+      {/* Action Area */}
+      <div
+        style={{
+          width: 150,
+          textAlign: "right",
+          display: "flex",
+          gap: 8,
+          justifyContent: "flex-end",
+        }}
+      >
+        {selected ? (
+          <>
+            <Button
+              icon={<SwapOutlined />}
+              onClick={onPick}
+              type="text"
+              style={{ color: "var(--primary-main)", fontWeight: 600 }}
+            >
+              Thay đổi
+            </Button>
+            <Button
+              icon={<DeleteOutlined />}
+              onClick={onRemove}
+              danger
+              type="text"
+            />
+          </>
+        ) : (
+          <Button
+            type="primary"
+            ghost
+            icon={<PlusCircleOutlined />}
+            onClick={onPick}
+            style={{
+              borderRadius: 8,
+              height: 40,
+              borderColor: "var(--primary-main)",
+              color: "var(--primary-main)",
+              padding: "0 20px",
+            }}
+          >
+            Chọn linh kiện
+          </Button>
+        )}
+      </div>
     </div>
   );
 };

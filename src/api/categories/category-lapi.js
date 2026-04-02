@@ -12,9 +12,9 @@ export const fetchCategories = async () => {
   return Category.fromJson(response.data.data.data || response.data.data);
 };
 
-export const fetchCategoryById = async (id) => {
+export const fetchCategoryById = async (id, page = 1) => {
   const response = await axios.get(
-    `${import.meta.env.VITE_API_URL}/api/categories/${id}`,
+    `${import.meta.env.VITE_API_URL}/api/categories/${id}?page=${page}`,
   );
   if (!response.data || !response.data.data) {
     throw new Error("Failed to fetch category");

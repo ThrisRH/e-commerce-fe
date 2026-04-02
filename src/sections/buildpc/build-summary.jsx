@@ -26,11 +26,17 @@ const CATEGORY_LABELS = {
   cpu: "CPU",
   mainboard: "Mainboard",
   ram: "RAM",
-  storage: "Ổ cứng",
-  gpu: "Card đồ họa",
+  hdd: "Ổ HDD",
+  ssd: "Ổ SSD",
+  gpu: "Card màn hình",
   psu: "Nguồn",
   case: "Thùng máy",
   cooler: "Tản nhiệt",
+  monitor: "Màn hình",
+  headphone: "Tai nghe",
+  keyboard: "Bàn phím",
+  mouse: "Chuột",
+  speaker: "Loa",
 };
 
 const BuildSummary = ({ selected, onRemove, onReset, onAddToCart }) => {
