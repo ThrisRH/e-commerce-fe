@@ -35,10 +35,7 @@ import { TextField } from "@/components/common/input/ant-custom-input";
 
 const { Title, Text } = Typography;
 
-// TODO: tính phí vận chuyển từ API hoặc logic giỏ hàng (miễn phí nếu >= 500k)
 let SHIPPING_FEE = 30000;
-
-const DISCOUNT_AMOUNT = 0; // TODO: áp dụng coupon logic ở đây
 
 const PAYMENT_METHODS = [
   {
@@ -208,7 +205,7 @@ const CheckoutPage = () => {
     (sum, { product, quantity }) => sum + product.price * quantity,
     0,
   );
-  const total = subtotal + SHIPPING_FEE - DISCOUNT_AMOUNT;
+  const total = subtotal + SHIPPING_FEE;
 
   const handleSubmit = async () => {
     try {
@@ -530,21 +527,6 @@ const CheckoutPage = () => {
                     )}
                   </Text>
                 </div>
-
-                {DISCOUNT_AMOUNT > 0 && (
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text type="secondary">Giảm giá</Text>
-                    <Text style={{ color: "#52c41a" }}>
-                      -{formatCurrency(DISCOUNT_AMOUNT)}
-                    </Text>
-                  </div>
-                )}
               </div>
 
               <Divider style={{ margin: "16px 0" }} />
