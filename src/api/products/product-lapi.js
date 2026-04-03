@@ -62,3 +62,15 @@ export const deleteProduct = async (id) => {
 
   return response.data;
 };
+
+export const fetchProductsByCategory = async (cate_id) => {
+  const response = await axios.get(
+    `${env.VITE_API_URL}/api/v1/categories/${cate_id}/products`,
+  );
+
+  if (!response.data || !response.data.data) {
+    throw new Error("Failed to fetch products");
+  }
+
+  return new ProductResponse(response.data);
+};
