@@ -48,7 +48,7 @@ const AllProductsSection = ({ products = [], sortOrder, onSortChange }) => {
         </div>
 
         <div style={{ padding: "32px 16px", backgroundColor: "#fff" }}>
-          <Row gutter={[16, 16]}>
+          <Row gutter={[12, 12]}>
             {products.map((product) => (
               <Col key={product.id} xs={12} sm={8} md={6} lg={6} xxl={4}>
                 <ProductCard product={product} />

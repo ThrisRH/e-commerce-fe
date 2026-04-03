@@ -1,4 +1,5 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Row, Col } from "antd";
+import { Box, Typography } from "@mui/material";
 import ProductCard from "../../components/ui/products/product-card";
 
 const LatestProInCateSection = ({ latestProducts = [], cateName }) => {
@@ -23,21 +24,16 @@ const LatestProInCateSection = ({ latestProducts = [], cateName }) => {
           {cateName}
         </Typography>
       </Box>
-      <Grid
-        container
-        spacing={2}
-        sx={{
-          background: "white",
-          px: 2,
-          py: 4,
-        }}
-      >
-        {latestProducts.map((product) => (
-          <Grid key={product.id} size={{ xs: 6, sm: 4, md: 3, lg: 2.4 }}>
-            <ProductCard key={product.id} product={product} />
-          </Grid>
-        ))}
-      </Grid>
+
+      <div style={{ background: "white", padding: "24px 16px" }}>
+        <Row gutter={[12, 12]}>
+          {latestProducts.map((product) => (
+            <Col key={product.id} xs={12} sm={8} md={6} lg={6} xxl={4}>
+              <ProductCard product={product} />
+            </Col>
+          ))}
+        </Row>
+      </div>
     </Box>
   );
 };

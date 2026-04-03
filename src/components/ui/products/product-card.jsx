@@ -38,7 +38,7 @@ const ProductCard = ({ product }) => {
 
           <Tooltip title={product.name}>
             <Typography.Text
-              className="product-name"
+              className="product-name text-sm"
               onClick={goToDetail}
               style={{ cursor: "pointer" }}
             >
@@ -48,9 +48,9 @@ const ProductCard = ({ product }) => {
         </div>
 
         <div className="card-footer">
-          <Typography.Title level={4} className="price">
+          <Typography.Text className="text-lg price">
             {formatCurrency(product.price)}
-          </Typography.Title>
+          </Typography.Text>
 
           <Flex gap="small">
             <AppButton label="Mua ngay" onClick={goToDetail} />
