@@ -4,12 +4,12 @@ import "./style.css";
 export const TextField = ({ label, name, rules, ...inputProps }) => {
   return (
     <Form.Item
-      style={{ width: "100%" }}
+      style={{ width: "100%", padding: "12px" }}
       name={name}
       label={label}
       rules={rules}
     >
-      <Input style={{ fontSize: "12px", padding: "8px" }} {...inputProps} />
+      <Input style={{ fontSize: "12px", padding: "12px " }} {...inputProps} />
     </Form.Item>
   );
 };

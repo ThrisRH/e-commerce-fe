@@ -30,6 +30,8 @@ import { enqueueSnackbar } from "notistack";
 import AddressPickerModal from "./address-picker-modal";
 import { getCartFromSession } from "@/components/ui/cart/cart-drawer";
 import { fetchProductById } from "@/api/products/product-lapi";
+import { createOrder } from "@/api/orders/order-api";
+import { TextField } from "@/components/common/input/ant-custom-input";
 
 const { Title, Text } = Typography;
 
@@ -50,12 +52,6 @@ const PAYMENT_METHODS = [
     label: "Chuyển khoản ngân hàng",
     icon: <BankOutlined />,
     desc: "VCB · TPBank · MB Bank · Techcombank",
-  },
-  {
-    value: "momo",
-    label: "Ví MoMo",
-    icon: <CreditCardOutlined />,
-    desc: "Thanh toán qua ví điện tử MoMo",
   },
 ];
 
@@ -220,19 +216,21 @@ const CheckoutPage = () => {
       const values = form.getFieldsValue();
       setSubmitting(true);
 
-      // TODO: gọi API tạo đơn hàng
-      // const payload = {
-      //   customer_name: values.name,
-      //   customer_phone: values.phone,
-      //   shipping_address: `${values.address}, ${values.district}, ${values.city}`,
-      //   note: values.note,
-      //   payment_method: paymentMethod,
-      //   items: MOCK_CART_ITEMS.map(i => ({ product_id: i.id, quantity: i.quantity })),
-      // };
-      // await createOrder(payload);
+      const payload = {
+        shipping_name: values.name,
+        shipping_phone: values.phone,
+        shipping_address: `${values.address}, ${values.district}, ${values.city}`,
+        note: values.note,
+        payment_method: paymentMethod,
+        items: items.map((i) => ({
+          product_id: i.product.id,
+          quantity: i.quantity,
+        })),
+      };
+      await createOrder(payload);
 
       enqueueSnackbar("Đặt hàng thành công!", { variant: "success" });
-      navigate("/"); // TODO: chuyển sang trang xác nhận đơn hàng
+      navigate("/");
     } catch (err) {
       if (err?.errorFields) return;
       enqueueSnackbar(err?.message || "Có lỗi xảy ra", { variant: "error" });
@@ -268,56 +266,24 @@ const CheckoutPage = () => {
           <Form form={form} layout="vertical" requiredMark={false}>
             <SectionCard title="Thông tin người nhận" icon={<UserOutlined />}>
               <div style={{ display: "flex", gap: 16 }}>
-                <Form.Item
-                  name="name"
+                <TextField
                   label="Họ và tên"
-                  style={{ flex: 1 }}
+                  placeholder="Nguyễn Văn A"
+                  style={{ borderRadius: 8 }}
+                  name="name"
                   rules={[{ required: true, message: "Vui lòng nhập họ tên" }]}
-                >
-                  <Input
-                    prefix={
-                      <UserOutlined style={{ color: "var(--neutral-400)" }} />
-                    }
-                    placeholder="Nguyễn Văn A"
-                    size="large"
-                    style={{ borderRadius: 8 }}
-                  />
-                </Form.Item>
+                />
 
-                <Form.Item
-                  name="phone"
+                <TextField
                   label="Số điện thoại"
-                  style={{ flex: 1 }}
+                  placeholder="0912 345 678"
+                  style={{ borderRadius: 8 }}
+                  name="phone"
                   rules={[
                     { required: true, message: "Vui lòng nhập số điện thoại" },
-                    {
-                      pattern: /^[0-9]{9,11}$/,
-                      message: "Số điện thoại không hợp lệ",
-                    },
                   ]}
-                >
-                  <Input
-                    prefix={
-                      <PhoneOutlined style={{ color: "var(--neutral-400)" }} />
-                    }
-                    placeholder="0912 345 678"
-                    size="large"
-                    style={{ borderRadius: 8 }}
-                  />
-                </Form.Item>
-              </div>
-
-              <Form.Item
-                name="email"
-                label="Email"
-                rules={[{ type: "email", message: "Email không hợp lệ" }]}
-              >
-                <Input
-                  placeholder="email@example.com"
-                  size="large"
-                  style={{ borderRadius: 8 }}
                 />
-              </Form.Item>
+              </div>
             </SectionCard>
 
             <SectionCard
@@ -395,30 +361,21 @@ const CheckoutPage = () => {
                 />
               </div>
 
-              <Form.Item
-                name="address"
+              <TextField
                 label="Địa chỉ cụ thể"
+                placeholder="Số nhà, tên đường, phường..."
+                style={{ borderRadius: 8 }}
+                name="address"
                 rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
-              >
-                <Input
-                  prefix={
-                    <EnvironmentOutlined
-                      style={{ color: "var(--neutral-400)" }}
-                    />
-                  }
-                  placeholder="Số nhà, tên đường, phường..."
-                  size="large"
-                  style={{ borderRadius: 8 }}
-                />
-              </Form.Item>
+              />
 
-              <Form.Item name="note" label="Ghi chú (tuỳ chọn)">
-                <Input.TextArea
-                  placeholder="Giao giờ hành chính, gọi trước khi giao..."
-                  rows={3}
-                  style={{ borderRadius: 8 }}
-                />
-              </Form.Item>
+              <TextField
+                label="Ghi chú (tuỳ chọn)"
+                placeholder="Giao giờ hành chính, gọi trước khi giao..."
+                style={{ borderRadius: 8 }}
+                name="note"
+                rules={[{ required: true, message: "Vui lòng nhập ghi chú" }]}
+              />
             </SectionCard>
 
             <AddressPickerModal

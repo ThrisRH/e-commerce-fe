@@ -1,5 +1,5 @@
 export const fetchProvinces = async () => {
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/provinces`);
+  const res = await fetch(`${import.meta.env.VITE_PROVINCE_API}/`);
   if (!res.ok) {
     throw new Error("Failed to fetch provinces");
   }
@@ -8,7 +8,7 @@ export const fetchProvinces = async () => {
 
 export const fetchDistricts = async (provinceCode) => {
   const res = await fetch(
-    `${import.meta.env.VITE_API_URL}/api/provinces/${provinceCode}?depth=2`,
+    `${import.meta.env.VITE_PROVINCE_API}/p/${provinceCode}?depth=2`,
   );
   if (!res.ok) {
     throw new Error("Failed to fetch districts");
