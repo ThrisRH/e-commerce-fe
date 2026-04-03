@@ -1,9 +1,10 @@
 import axios from "axios";
 import Category from "../../models/category";
+import { API_VER } from "@/constants/env";
 
 export const fetchCategories = async () => {
   const response = await axios.get(
-    `${import.meta.env.VITE_API_URL}/api/categories`,
+    `${import.meta.env.VITE_API_URL}/api/${API_VER}/categories`,
   );
   if (!response.data || !response.data.data) {
     throw new Error("Failed to fetch categories");
@@ -14,7 +15,7 @@ export const fetchCategories = async () => {
 
 export const fetchCategoryById = async (id, page = 1) => {
   const response = await axios.get(
-    `${import.meta.env.VITE_API_URL}/api/categories/${id}?page=${page}`,
+    `${import.meta.env.VITE_API_URL}/api/${API_VER}/categories/${id}?page=${page}`,
   );
   if (!response.data || !response.data.data) {
     throw new Error("Failed to fetch category");
@@ -24,7 +25,7 @@ export const fetchCategoryById = async (id, page = 1) => {
 };
 export const createCategory = async (data) => {
   const response = await axios.post(
-    `${import.meta.env.VITE_API_URL}/api/categories`,
+    `${import.meta.env.VITE_API_URL}/api/${API_VER}/categories`,
     data,
   );
 
@@ -37,7 +38,7 @@ export const createCategory = async (data) => {
 
 export const updateCategory = async (id, data) => {
   const response = await axios.patch(
-    `${import.meta.env.VITE_API_URL}/api/categories/${id}`,
+    `${import.meta.env.VITE_API_URL}/api/${API_VER}/categories/${id}`,
     data,
   );
 
@@ -50,7 +51,7 @@ export const updateCategory = async (id, data) => {
 
 export const deleteCategory = async (id) => {
   const response = await axios.delete(
-    `${import.meta.env.VITE_API_URL}/api/categories/${id}`,
+    `${import.meta.env.VITE_API_URL}/api/${API_VER}/categories/${id}`,
   );
 
   if (response.status !== 200 && response.status !== 204) {
