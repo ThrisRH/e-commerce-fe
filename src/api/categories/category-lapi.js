@@ -1,16 +1,20 @@
 import axios from "axios";
 import Category from "../../models/category";
 import { API_VER } from "@/constants/env";
+import { Meta } from "@/models/MetaData/meta";
 
-export const fetchCategories = async () => {
+export const fetchCategories = async (page = 1, limit = 10) => {
   const response = await axios.get(
-    `${import.meta.env.VITE_API_URL}/api/${API_VER}/categories`,
+    `${import.meta.env.VITE_API_URL}/api/${API_VER}/categories?page=${page}&limit=${limit}`,
   );
   if (!response.data || !response.data.data) {
     throw new Error("Failed to fetch categories");
   }
 
-  return Category.fromJson(response.data.data.data || response.data.data);
+  return {
+    data: Category.fromJson(response.data.data),
+    meta: new Meta(response.data.meta),
+  };
 };
 
 export const fetchCategoryById = async (id, page = 1) => {

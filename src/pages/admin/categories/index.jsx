@@ -9,10 +9,9 @@ import {
 } from "@/api/categories/category-lapi";
 import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
-import { DeleteOutlined } from "@ant-design/icons";
-import { Popconfirm } from "antd";
 import CreateCategoryModal from "./components/create-form";
 import { getCategoryColumns } from "./components/grid-columns/setup";
+import { Meta } from "@/models/MetaData/meta";
 
 const { Title } = Typography;
 
@@ -20,13 +19,19 @@ const CategoriesManagement = () => {
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [meta, setMeta] = useState(new Meta());
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 10,
+  });
   const navigate = useNavigate();
 
   const loadCategories = () => {
     setIsLoading(true);
-    fetchCategories()
+    fetchCategories(paginationModel.page + 1, paginationModel.pageSize)
       .then((data) => {
-        setCategories(data);
+        setCategories(data.data);
+        setMeta(data.meta);
       })
       .catch((error) => {
         enqueueSnackbar("Error fetching categories: " + error.message, {
@@ -53,7 +58,7 @@ const CategoriesManagement = () => {
 
   useEffect(() => {
     loadCategories();
-  }, []);
+  }, [paginationModel]);
 
   return (
     <Space direction="vertical" style={{ width: "100%" }} size="large">
@@ -100,13 +105,12 @@ const CategoriesManagement = () => {
           <DataGrid
             rows={categories}
             columns={getCategoryColumns(handleDelete)}
+            rowCount={meta.total}
             loading={isLoading}
             pageSizeOptions={[10, 25, 50]}
-            initialState={{
-              pagination: {
-                paginationModel: { pageSize: 10 },
-              },
-            }}
+            paginationModel={paginationModel}
+            paginationMode="server"
+            onPaginationModelChange={setPaginationModel}
             onRowClick={(params) =>
               navigate(`/admin/categories/${params.row.id}`)
             }
