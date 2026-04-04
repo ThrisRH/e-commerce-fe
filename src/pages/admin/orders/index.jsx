@@ -1,6 +1,5 @@
 import React from "react";
 import { Breadcrumb, Typography, Space, Card, Empty } from "antd";
-import { ShoppingCartOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
 
@@ -18,23 +17,13 @@ const OrdersManagement = () => {
 
       <Card
         style={{
-          borderRadius: 12,
-          padding: 64,
-          textAlign: "center",
-          border: "2px dashed #f0f0f0",
-          backgroundColor: "#fafafa",
+          borderRadius: 8,
+          boxShadow:
+            "0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02)",
         }}
+        bodyStyle={{ padding: 0 }}
       >
-        <Empty
-          image={
-            <ShoppingCartOutlined style={{ fontSize: 64, color: "#bfbfbf" }} />
-          }
-          description={
-            <Typography.Text type="secondary" style={{ fontSize: 18 }}>
-              Chức năng quản lý đơn hàng sẽ sớm ra mắt.
-            </Typography.Text>
-          }
-        />
+        {/* <DataGrid */}
       </Card>
     </Space>
   );
