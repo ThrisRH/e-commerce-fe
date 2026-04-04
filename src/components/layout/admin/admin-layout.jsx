@@ -27,7 +27,7 @@ const AdminLayout = () => {
         <Sidebar collapsed={collapsed} />
         <Layout
           style={{
-            marginLeft: collapsed ? 80 : 280,
+            marginLeft: collapsed ? 80 : 220,
             transition: "all 0.2s",
             minHeight: "100vh",
             display: "flex",

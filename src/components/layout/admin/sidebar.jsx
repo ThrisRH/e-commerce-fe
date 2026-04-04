@@ -1,14 +1,8 @@
 import React from "react";
-import { Layout, Menu } from "antd";
+import { Layout, Tooltip } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
-import {
-  DashboardOutlined,
-  ShoppingOutlined,
-  AppstoreOutlined,
-  UserOutlined,
-  OrderedListOutlined,
-  LogoutOutlined,
-} from "@ant-design/icons";
+import { menuItems } from "@/constants/menu-items";
+import "./style.css";
 
 const { Sider } = Layout;
 
@@ -16,47 +10,12 @@ const Sidebar = ({ collapsed }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const menuItems = [
-    {
-      key: "/admin",
-      icon: <DashboardOutlined />,
-      label: "Dashboard",
-    },
-    {
-      key: "/admin/products",
-      icon: <ShoppingOutlined />,
-      label: "Sản phẩm",
-    },
-    {
-      key: "/admin/categories",
-      icon: <AppstoreOutlined />,
-      label: "Danh mục",
-    },
-    {
-      key: "/admin/users",
-      icon: <UserOutlined />,
-      label: "Người dùng",
-    },
-    {
-      key: "/admin/orders",
-      icon: <OrderedListOutlined />,
-      label: "Đơn hàng",
-    },
-    {
-      key: "/",
-      icon: <LogoutOutlined />,
-      label: "Quay lại Store",
-      danger: true,
-      style: { marginTop: "auto" },
-    },
-  ];
-
   return (
     <Sider
       trigger={null}
       collapsible
       collapsed={collapsed}
-      width={280}
+      width={220}
       theme="light"
       style={{
         overflow: "auto",
@@ -66,40 +25,87 @@ const Sidebar = ({ collapsed }) => {
         top: 0,
         bottom: 0,
         borderRight: "1px solid #f0f0f0",
+        background: "#fff",
+        zIndex: 100,
       }}
     >
       <div
         style={{
           height: 64,
-          margin: 16,
+          margin: "8px 16px",
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: collapsed ? "center" : "flex-start",
+          borderBottom: "1px solid #f0f0f0",
+          marginBottom: 16,
         }}
       >
-        <h2
+        <div
           style={{
-            color: "#1890ff",
-            margin: 0,
-            fontSize: collapsed ? 16 : 24,
-            transition: "all 0.3s",
+            width: 32,
+            height: 32,
+            background: "linear-gradient(135deg, #1890ff 0%, #001529 100%)",
+            borderRadius: "8px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#fff",
+            fontWeight: "bold",
+            fontSize: 18,
+            marginRight: collapsed ? 0 : 12,
           }}
         >
-          {collapsed ? "A" : "Admin Panel"}
-        </h2>
+          A
+        </div>
+        {!collapsed && (
+          <h2
+            style={{
+              color: "#001529",
+              margin: 0,
+              fontSize: 18,
+              fontWeight: 700,
+              transition: "all 0.3s",
+              whiteSpace: "nowrap",
+            }}
+          >
+            Admin Panel
+          </h2>
+        )}
       </div>
-      <Menu
-        mode="inline"
-        selectedKeys={[location.pathname]}
+
+      <nav
         style={{
-          borderRight: 0,
-          height: "calc(100% - 96px)",
+          padding: "0 12px",
           display: "flex",
           flexDirection: "column",
+          gap: `12px`,
+          height: "calc(100vh - 100px)",
         }}
-        items={menuItems}
-        onClick={({ key }) => navigate(key)}
-      />
+      >
+        {menuItems.map((item) => {
+          const isActive = location.pathname === item.key;
+          const isLogout = item.danger;
+
+          return (
+            <Tooltip
+              key={item.key}
+              title={collapsed ? item.label : ""}
+              placement="right"
+            >
+              <div
+                className={`sidebar-item ${isActive ? "active" : ""} ${isLogout ? "logout" : ""} ${collapsed ? "collapsed" : ""}`}
+                onClick={() => navigate(item.key)}
+              >
+                {item.icon}
+
+                {!collapsed && (
+                  <p className="sidebar-label text-sm">{item.label}</p>
+                )}
+              </div>
+            </Tooltip>
+          );
+        })}
+      </nav>
     </Sider>
   );
 };

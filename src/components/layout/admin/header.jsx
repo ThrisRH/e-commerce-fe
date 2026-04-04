@@ -1,6 +1,10 @@
 import React from "react";
-import { Layout, Avatar, Dropdown, Space, Typography } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { Layout, Avatar, Dropdown, Space, Typography, Button } from "antd";
+import {
+  UserOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+} from "@ant-design/icons";
 
 const { Header: AntHeader } = Layout;
 const { Text } = Typography;
@@ -26,7 +30,7 @@ const Header = ({ collapsed, toggleCollapsed }) => {
         background: "#fff",
         display: "flex",
         alignItems: "center",
-        justifyContent: "flex-end",
+        justifyContent: "space-between",
         position: "sticky",
         top: 0,
         zIndex: 1,
@@ -34,6 +38,16 @@ const Header = ({ collapsed, toggleCollapsed }) => {
         boxShadow: "0 1px 4px rgba(0,21,41,.08)",
       }}
     >
+      <Button
+        type="text"
+        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+        onClick={toggleCollapsed}
+        style={{
+          fontSize: "16px",
+          width: 64,
+          height: 64,
+        }}
+      />
       <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
         <div
           style={{
