@@ -1,10 +1,14 @@
 import React from "react";
 import { Row, Col, Typography, Select, Space, Card as AntdCard } from "antd";
 import ProductCard from "../../components/ui/products/product-card";
+import AppButton from "@/components/common/button";
+import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
 
 const AllProductsSection = ({ products = [], sortOrder, onSortChange }) => {
+  const navigate = useNavigate();
+
   return (
     <div id="all-products">
       <AntdCard
@@ -29,27 +33,21 @@ const AllProductsSection = ({ products = [], sortOrder, onSortChange }) => {
             level={3}
             style={{ fontWeight: 700, color: "white", margin: 0 }}
           >
-            Tất Cả Sản Phẩm
+            Sản phẩm mới nhất
           </Title>
 
-          <Space>
-            <span style={{ color: "white", fontSize: 13 }}>Sắp xếp theo:</span>
-            <Select
-              value={sortOrder}
-              onChange={onSortChange}
-              style={{ minWidth: 150, color: "#fff" }}
-              variant="filled"
-              options={[
-                { value: "latest", label: "Mới nhất" },
-                { value: "oldest", label: "Cũ nhất" },
-              ]}
-            />
-          </Space>
+          <AppButton
+            label={"Xem tất cả"}
+            onClick={() => {
+              navigate("/category");
+            }}
+            width="150px"
+          />
         </div>
 
         <div style={{ padding: "32px 16px", backgroundColor: "#fff" }}>
           <Row gutter={[12, 12]}>
-            {products.map((product) => (
+            {products.slice(0, 10).map((product) => (
               <Col key={product.id} xs={12} sm={8} md={6} lg={6} xxl={4}>
                 <ProductCard product={product} />
               </Col>

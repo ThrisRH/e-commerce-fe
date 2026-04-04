@@ -14,7 +14,10 @@ import {
   Space,
 } from "antd";
 import { SearchOutlined, AppstoreOutlined } from "@ant-design/icons";
-import { fetchProductsByCategory } from "@/api/products/product-lapi";
+import {
+  fetchProducts,
+  fetchProductsByCategory,
+} from "@/api/products/product-lapi";
 import {
   fetchCategoryById,
   fetchCategories,
@@ -63,7 +66,9 @@ const CategoryPage = () => {
   const loadProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetchProductsByCategory(categoryId);
+      const res = categoryId
+        ? await fetchProductsByCategory(categoryId)
+        : await fetchProducts();
       const rawData = Array.isArray(res.data) ? res.data : [];
       setProducts(rawData);
       setMeta(res.meta);
@@ -90,7 +95,9 @@ const CategoryPage = () => {
 
   useEffect(() => {
     fetchCategories()
-      .then(setCategories)
+      .then((data) => {
+        setCategories(data.data);
+      })
       .catch(() => {});
   }, []);
 

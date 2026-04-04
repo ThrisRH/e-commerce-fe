@@ -1,12 +1,12 @@
 import { Button } from "antd/es/radio";
 
-const AppButton = ({ label, onClick, disabled = false }) => {
+const AppButton = ({ label, onClick, disabled = false, width = "100%" }) => {
   return (
     <Button
       onClick={onClick}
       disabled={disabled}
       style={{
-        width: "100%",
+        width: width,
         height: "48px",
         display: "flex",
         justifyContent: "center",

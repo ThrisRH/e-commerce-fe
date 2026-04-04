@@ -72,5 +72,8 @@ export const fetchProductsByCategory = async (cate_id) => {
     throw new Error("Failed to fetch products");
   }
 
-  return new ProductResponse(response.data);
+  return {
+    data: response.data.data,
+    meta: response.data.meta,
+  };
 };
