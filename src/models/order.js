@@ -4,6 +4,7 @@ class Order {
     this.shipping_name = data.shipping_name;
     this.shipping_phone = data.shipping_phone;
     this.shipping_address = data.shipping_address;
+    this.tracking_code = data.tracking_code;
 
     this.total_amount = data.total_amount;
     this.shipping_fee = data.shipping_fee;
@@ -18,6 +19,12 @@ class Order {
   }
 
   static fromJson(data) {
+    if (!data) return null;
+
+    if (Array.isArray(data)) {
+      return data.map((item) => new Order(item));
+    }
+
     return new Order(data);
   }
 }

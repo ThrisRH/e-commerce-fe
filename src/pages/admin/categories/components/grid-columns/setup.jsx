@@ -2,7 +2,6 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Space } from "antd";
 
 export const getCategoryColumns = (handleDelete) => [
-  { field: "id", headerName: "ID", width: 70 },
   { field: "name", headerName: "Name", width: 250 },
   { field: "slug", headerName: "Slug", width: 250 },
   { field: "description", headerName: "Description", width: 300 },

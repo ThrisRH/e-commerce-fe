@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import CreateProductModal from "./components/create-form";
 import { deleteProduct } from "@/api/products/product-lapi";
 import { getProductColumns } from "./components/grid-columns/setup";
+import { Meta } from "@/models/MetaData/meta";
 
 const { Title } = Typography;
 
@@ -19,6 +20,7 @@ const ProductsManagement = () => {
   /** @type {[ProductResponse, Function]} */
   const [products, setProducts] = useState(new ProductResponse());
   const [isLoading, setIsLoading] = useState(true);
+  const [meta, setMeta] = useState(new Meta());
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
     pageSize: 10,
@@ -40,7 +42,7 @@ const ProductsManagement = () => {
 
   const loadProducts = () => {
     setIsLoading(true);
-    fetchProducts(paginationModel.page + 1)
+    fetchProducts(paginationModel.page + 1, paginationModel.pageSize)
       .then((data) => {
         setProducts(data);
       })
