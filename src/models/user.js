@@ -3,7 +3,7 @@ export class User {
     this.id = data?.id || 0;
     this.name = data?.name || "";
     this.email = data?.email || "";
-    this.phone = data?.phone || "";
+    this.phone = data?.phone_number || "";
     this.roles = data?.roles || [];
   }
 

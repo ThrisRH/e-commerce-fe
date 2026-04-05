@@ -22,7 +22,9 @@ import CategoryPage from "./pages/user/category";
 const AdminDashboard = lazy(() => import("./pages/admin/dashboard"));
 const ProductsManagement = lazy(() => import("./pages/admin/products"));
 const CategoriesManagement = lazy(() => import("./pages/admin/categories"));
-const UsersManagement = lazy(() => import("./pages/admin/users"));
+const UsersManagement = lazy(() => import("./pages/admin/users/index"));
+import UserDetail from "./pages/admin/users/user-detail";
+
 const OrdersManagement = lazy(() => import("./pages/admin/orders"));
 
 const LoadingFallback = () => (
@@ -40,6 +42,7 @@ const LoadingFallback = () => (
 
 import SearchPage from "./pages/user/search";
 import NotFound from "./components/common/not-found";
+import Middleware from "./middleware/middleware";
 
 function App() {
   return (
@@ -60,11 +63,26 @@ function App() {
               <Route path="checkout" element={<CheckoutPage />} />
               <Route path="category" element={<CategoryPage />} />
 
-              <Route path="*" element={<NotFound title="Trang không tồn tại" description="Trang bạn đang tìm kiếm không tồn tại hoặc đã bị di dời." />} />
+              <Route
+                path="*"
+                element={
+                  <NotFound
+                    title="Trang không tồn tại"
+                    description="Trang bạn đang tìm kiếm không tồn tại hoặc đã bị di dời."
+                  />
+                }
+              />
             </Route>
 
             {/* Admin Layout */}
-            <Route path="/admin" element={<AdminLayout />}>
+            <Route
+              path="/admin"
+              element={
+                <Middleware roles={["super-admin", "staff"]}>
+                  <AdminLayout />
+                </Middleware>
+              }
+            >
               <Route path="login" element={<AdminLogin />} />
 
               <Route index element={<AdminDashboard />} />
@@ -75,6 +93,7 @@ function App() {
               <Route path="categories/:id" element={<CategoryDetail />} />
 
               <Route path="users" element={<UsersManagement />} />
+              <Route path="users/:id" element={<UserDetail />} />
               <Route path="orders" element={<OrdersManagement />} />
             </Route>
           </Routes>
