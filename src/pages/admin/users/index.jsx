@@ -31,7 +31,9 @@ const UsersManagement = () => {
         setMeta(data.meta);
       })
       .catch((error) => {
-        enqueueSnackbar("Lỗi tải danh sách: " + error.message, { variant: "error" });
+        enqueueSnackbar("Lỗi tải danh sách: " + error.message, {
+          variant: "error",
+        });
       })
       .finally(() => {
         setIsLoading(false);
@@ -45,7 +47,9 @@ const UsersManagement = () => {
         loadUsers();
       })
       .catch((error) => {
-        enqueueSnackbar("Xóa tài khoản thất bại: " + error.message, { variant: "error" });
+        enqueueSnackbar("Xóa tài khoản thất bại: " + error.message, {
+          variant: "error",
+        });
       });
   };
 
@@ -76,9 +80,7 @@ const UsersManagement = () => {
             },
           },
         }}
-        onRowClick={(params) =>
-          navigate(`/admin/users/${params.row.id}`)
-        }
+        onRowClick={(params) => navigate(`/admin/users/${params.row.id}`)}
         sx={{
           border: "none",
           "& .MuiDataGrid-cell:focus": {
