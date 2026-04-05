@@ -60,7 +60,15 @@ function App() {
               <Route path="checkout" element={<CheckoutPage />} />
               <Route path="category" element={<CategoryPage />} />
 
-              <Route path="*" element={<NotFound title="Trang không tồn tại" description="Trang bạn đang tìm kiếm không tồn tại hoặc đã bị di dời." />} />
+              <Route
+                path="*"
+                element={
+                  <NotFound
+                    title="Trang không tồn tại"
+                    description="Trang bạn đang tìm kiếm không tồn tại hoặc đã bị di dời."
+                  />
+                }
+              />
             </Route>
 
             {/* Admin Layout */}

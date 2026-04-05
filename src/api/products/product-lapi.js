@@ -4,7 +4,7 @@ import { API_VER, env } from "@/constants/env";
 
 export const fetchProducts = async ({ page = 1, limit = 10 } = {}) => {
   const response = await axios.get(
-    `${env.VITE_API_URL}/api/${API_VER}/products?page=${page}&limit=${limit}`,
+    `/api/${API_VER}/products?page=${page}&limit=${limit}`,
   );
 
   if (!response.data || !response.data.data) {
@@ -15,9 +15,7 @@ export const fetchProducts = async ({ page = 1, limit = 10 } = {}) => {
 };
 
 export const fetchProductById = async (id) => {
-  const response = await axios.get(
-    `${env.VITE_API_URL}/api/${API_VER}/products/${id}`,
-  );
+  const response = await axios.get(`/api/${API_VER}/products/${id}`);
 
   if (!response.data || !response.data.data) {
     throw new Error("Failed to fetch product");
@@ -28,10 +26,7 @@ export const fetchProductById = async (id) => {
 
 export const updateProduct = async (id, data) => {
   console.log("data: ", data);
-  const response = await axios.patch(
-    `${env.VITE_API_URL}/api/${API_VER}/products/${id}`,
-    data,
-  );
+  const response = await axios.patch(`/api/${API_VER}/products/${id}`, data);
 
   if (!response.data || !response.data.data) {
     throw new Error("Failed to update product");
@@ -40,10 +35,7 @@ export const updateProduct = async (id, data) => {
   return new Product(response.data.data);
 };
 export const createProduct = async (data) => {
-  const response = await axios.post(
-    `${env.VITE_API_URL}/api/${API_VER}/products`,
-    data,
-  );
+  const response = await axios.post(`/api/${API_VER}/products`, data);
 
   if (!response.data || !response.data.data) {
     throw new Error("Failed to create product");
@@ -52,9 +44,7 @@ export const createProduct = async (data) => {
   return new Product(response.data.data);
 };
 export const deleteProduct = async (id) => {
-  const response = await axios.delete(
-    `${env.VITE_API_URL}/api/${API_VER}/products/${id}`,
-  );
+  const response = await axios.delete(`/api/${API_VER}/products/${id}`);
 
   if (response.status !== 200 && response.status !== 204) {
     throw new Error("Failed to delete product");
@@ -64,9 +54,7 @@ export const deleteProduct = async (id) => {
 };
 
 export const fetchProductsByCategory = async (cate_id) => {
-  const response = await axios.get(
-    `${env.VITE_API_URL}/api/v1/categories/${cate_id}/products`,
-  );
+  const response = await axios.get(`/api/v1/categories/${cate_id}/products`);
 
   if (!response.data || !response.data.data) {
     throw new Error("Failed to fetch products");
@@ -79,7 +67,7 @@ export const fetchProductsByCategory = async (cate_id) => {
 };
 export const searchProducts = async (keyword, page = 1, limit = 10) => {
   const response = await axios.get(
-    `${env.VITE_API_URL}/api/${API_VER}/products/search?keyword=${keyword}&page=${page}&limit=${limit}`,
+    `/api/${API_VER}/products/search?keyword=${keyword}&page=${page}&limit=${limit}`,
   );
 
   if (!response.data || !response.data.data) {

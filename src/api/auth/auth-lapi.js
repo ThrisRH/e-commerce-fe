@@ -3,13 +3,10 @@ import { User } from "@/models/user";
 import axios from "axios";
 
 export const login = async (email, password) => {
-  const response = await axios.post(
-    `${env.VITE_API_URL}/api/${API_VER}/auth/login`,
-    {
-      email,
-      password,
-    },
-  );
+  const response = await axios.post(`/api/${API_VER}/auth/login`, {
+    email,
+    password,
+  });
 
   if (!response.data || !response.data.data) {
     throw new Error("Login failed");
@@ -19,15 +16,12 @@ export const login = async (email, password) => {
 };
 
 export const register = async (payload) => {
-  const response = await axios.post(
-    `${env.VITE_API_URL}/api/${API_VER}/auth/register`,
-    {
-      name: `${payload.fname} ${payload.lname}`,
-      email: payload.email,
-      phone_number: payload.phone,
-      password: payload.password,
-    },
-  );
+  const response = await axios.post(`/api/${API_VER}/auth/register`, {
+    name: `${payload.fname} ${payload.lname}`,
+    email: payload.email,
+    phone_number: payload.phone,
+    password: payload.password,
+  });
 
   if (!response.data || !response.data.data) {
     throw new Error("Register failed");
@@ -37,14 +31,11 @@ export const register = async (payload) => {
 };
 
 export const fetchMe = async (token) => {
-  const response = await axios.get(
-    `${env.VITE_API_URL}/api/${API_VER}/auth/me`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+  const response = await axios.get(`/api/${API_VER}/auth/me`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
     },
-  );
+  });
 
   if (!response.data || !response.data.data) {
     throw new Error("Fetch me failed");
@@ -55,7 +46,7 @@ export const fetchMe = async (token) => {
 
 export const logout = async (token) => {
   const response = await axios.post(
-    `${env.VITE_API_URL}/api/${API_VER}/auth/logout`,
+    `/api/${API_VER}/auth/logout`,
     {},
     {
       headers: {
