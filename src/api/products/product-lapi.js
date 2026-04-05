@@ -77,3 +77,14 @@ export const fetchProductsByCategory = async (cate_id) => {
     meta: response.data.meta,
   };
 };
+export const searchProducts = async (keyword, page = 1, limit = 10) => {
+  const response = await axios.get(
+    `${env.VITE_API_URL}/api/${API_VER}/products/search?keyword=${keyword}&page=${page}&limit=${limit}`,
+  );
+
+  if (!response.data || !response.data.data) {
+    throw new Error("Failed to search products");
+  }
+
+  return new ProductResponse(response.data);
+};

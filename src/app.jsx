@@ -38,6 +38,9 @@ const LoadingFallback = () => (
   </Box>
 );
 
+import SearchPage from "./pages/user/search";
+import NotFound from "./components/common/not-found";
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -51,12 +54,13 @@ function App() {
               <Route path="login" element={<UserLogin />} />
               <Route path="register" element={<UserRegister />} />
               <Route path="products/:id" element={<UserProductDetail />} />
+              <Route path="search" element={<SearchPage />} />
 
               <Route path="build-pc" element={<BuildPC />} />
               <Route path="checkout" element={<CheckoutPage />} />
               <Route path="category" element={<CategoryPage />} />
 
-              <Route path="*" element={<div>Page Not Found</div>} />
+              <Route path="*" element={<NotFound title="Trang không tồn tại" description="Trang bạn đang tìm kiếm không tồn tại hoặc đã bị di dời." />} />
             </Route>
 
             {/* Admin Layout */}

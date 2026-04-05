@@ -161,6 +161,12 @@ const Header = ({ onMenuClick }) => {
     setCartOpen(true);
   };
 
+  const handleSearch = (value) => {
+    if (value.trim()) {
+      navigate(`/search?keyword=${encodeURIComponent(value.trim())}`);
+    }
+  };
+
   return (
     <>
       <AntHeader
@@ -209,9 +215,10 @@ const Header = ({ onMenuClick }) => {
           <div style={{ flex: 1, margin: "0 40px", maxWidth: 600 }}>
             <Input
               prefix={<SearchOutlined style={{ color: "#e53935" }} />}
-              placeholder="Tìm kiến sản phẩm của bạn..."
+              placeholder="Tìm kiếm sản phẩm của bạn..."
               className="search-input"
               variant="filled"
+              onPressEnter={(e) => handleSearch(e.currentTarget.value)}
               style={{ borderRadius: 24, backgroundColor: "white" }}
             />
           </div>
