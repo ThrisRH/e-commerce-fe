@@ -50,7 +50,6 @@ export const fetchMe = async (token) => {
     throw new Error("Fetch me failed");
   }
 
-  console.log("response.data: ", response.data);
   return new User(response.data.data);
 };
 

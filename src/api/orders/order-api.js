@@ -26,8 +26,6 @@ export const fetchOrders = async (page = 1, limit = 10) => {
     throw new Error("Failed to fetch orders");
   }
 
-  console.log(result.data.data);
-
   return {
     data: Order.fromJson(result.data.data),
     meta: new Meta(result.data.meta),

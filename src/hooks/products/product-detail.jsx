@@ -36,7 +36,7 @@ export default function useProductDetail(id) {
         return;
       }
       const [categoriesList, brandData, categoryData] = await Promise.all([
-        fetchCategories(),
+        fetchCategories({ page: 1, limit: 100 }),
         fetchBrands(),
         fetchCategoryById(productData.category.id),
       ]);
@@ -50,8 +50,6 @@ export default function useProductDetail(id) {
       );
       setBrands(Array.isArray(brandData) ? brandData : [brandData]);
       setAttributes(categoryData.attributes);
-
-      console.log("categoryData: ", categoryData);
     } catch (err) {
       enqueueSnackbar(err.message, { variant: "error" });
     } finally {

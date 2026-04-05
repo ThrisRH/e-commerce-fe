@@ -62,8 +62,6 @@ export default function ProductDetail() {
     loadData,
   } = useProductDetail(id);
 
-  console.log("attributes: ", attributes);
-
   useEffect(() => {
     if (id) loadData();
   }, [id]);
@@ -156,8 +154,6 @@ export default function ProductDetail() {
       setSaving(false);
     }
   };
-
-  console.log("formData: ", formData);
 
   if (loading) {
     return <Loading />;

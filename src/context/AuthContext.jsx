@@ -29,8 +29,6 @@ export const AuthProvider = ({ children }) => {
         const token = localStorage.getItem("access_token");
         const response = await fetchMe(token);
 
-        console.log("user: ", response);
-
         setUser(response);
       } catch (e) {
         enqueueSnackbar("Xác thực người dùng thất bại", { variant: "error" });

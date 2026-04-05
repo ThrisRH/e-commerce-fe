@@ -14,8 +14,6 @@ const SearchPage = () => {
   const query = searchParams.get("keyword") || "";
   const pageParam = parseInt(searchParams.get("page") || "1", 10);
 
-  console.log("query: ", query);
-
   const [products, setProducts] = useState([]);
   const [meta, setMeta] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -30,7 +28,6 @@ const SearchPage = () => {
     setLoading(true);
     try {
       const res = await searchProducts(query, pageParam, 12);
-      console.log("res: ", res);
       setProducts(res.data || []);
       setMeta(res.meta);
     } catch (err) {

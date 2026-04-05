@@ -28,7 +28,10 @@ const CategoriesManagement = () => {
 
   const loadCategories = () => {
     setIsLoading(true);
-    fetchCategories(paginationModel.page + 1, paginationModel.pageSize)
+    fetchCategories({
+      page: paginationModel.page + 1,
+      limit: paginationModel.pageSize,
+    })
       .then((data) => {
         setCategories(data.data);
         setMeta(data.meta);

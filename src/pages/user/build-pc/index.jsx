@@ -47,8 +47,8 @@ const BuildPC = () => {
 
   const loadCategories = async () => {
     try {
-      const cats = await fetchCategories();
-      setCategories(cats);
+      const cats = await fetchCategories({ page: 1, limit: 100 });
+      setCategories(cats.data);
     } catch (err) {
       console.error("Failed to load categories for Build PC", err);
     }

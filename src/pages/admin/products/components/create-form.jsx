@@ -43,7 +43,7 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
     setLoading(true);
     try {
       const [cats, brs, attrs] = await Promise.all([
-        fetchCategories(),
+        fetchCategories({ page: 1, limit: 100 }),
         fetchBrands(),
         fetchAttributes(),
       ]);
@@ -141,7 +141,6 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
           .replace(/[^\w-]+/g, ""),
       };
 
-      console.log(data);
       await createProduct(data);
       enqueueSnackbar("Sản phẩm đã được tạo!", { variant: "success" });
       onSuccess();

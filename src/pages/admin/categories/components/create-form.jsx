@@ -37,7 +37,7 @@ const CreateCategoryModal = ({ visible, onClose, onSuccess }) => {
     setLoading(true);
     try {
       const [cats, attrs] = await Promise.all([
-        fetchCategories(),
+        fetchCategories({ page: 1, limit: 100 }),
         fetchAttributes(),
       ]);
       setCategories(Array.isArray(cats) ? cats : []);
@@ -70,9 +70,7 @@ const CreateCategoryModal = ({ visible, onClose, onSuccess }) => {
         await form.validateFields(["parent_id"]);
       }
       setCurrentStep(currentStep + 1);
-    } catch (error) {
-      console.log("Validation Failed:", error);
-    }
+    } catch (error) {}
   };
 
   const handleBack = () => {
@@ -90,8 +88,6 @@ const CreateCategoryModal = ({ visible, onClose, onSuccess }) => {
           .replace(/ /g, "-")
           .replace(/[^\w-]+/g, ""),
       };
-
-      console.log(data);
 
       await createCategory(data);
       enqueueSnackbar("Danh mục đã được tạo!", { variant: "success" });

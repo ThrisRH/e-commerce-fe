@@ -2,7 +2,7 @@ import axios from "axios";
 import { Product, ProductResponse } from "../../models/product";
 import { API_VER, env } from "@/constants/env";
 
-export const fetchProducts = async (page = 1, limit = 10) => {
+export const fetchProducts = async ({ page = 1, limit = 10 } = {}) => {
   const response = await axios.get(
     `${env.VITE_API_URL}/api/${API_VER}/products?page=${page}&limit=${limit}`,
   );

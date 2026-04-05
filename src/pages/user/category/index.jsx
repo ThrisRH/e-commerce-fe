@@ -68,7 +68,7 @@ const CategoryPage = () => {
     try {
       const res = categoryId
         ? await fetchProductsByCategory(categoryId)
-        : await fetchProducts();
+        : await fetchProducts({ page: pageParam, limit: 20 });
       const rawData = Array.isArray(res.data) ? res.data : [];
       setProducts(rawData);
       setMeta(res.meta);
@@ -94,7 +94,7 @@ const CategoryPage = () => {
   }, [categoryId]);
 
   useEffect(() => {
-    fetchCategories()
+    fetchCategories({ page: 1, limit: 100 })
       .then((data) => {
         setCategories(data.data);
       })
@@ -216,9 +216,7 @@ const CategoryPage = () => {
           </div>
         </div>
 
-        {/* ── Main content ─────────────────────────────────── */}
         <div style={{ flex: 1, minWidth: 0 }}>
-          {/* Header bar */}
           <div
             style={{
               display: "flex",
