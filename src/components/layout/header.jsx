@@ -67,7 +67,10 @@ const Header = ({ onMenuClick }) => {
   };
 
   const handleLogout = async () => {
-    await logout();
+    const response = await logout(token);
+    if (response?.data) {
+      localStorage.removeItem("access_token");
+    }
     setUser(null);
     navigate("/");
   };
@@ -79,11 +82,27 @@ const Header = ({ onMenuClick }) => {
           <Skeleton avatar active paragraph={{ rows: 1 }} />
         ) : (
           <>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "0 8px" }}>
-              <Avatar size={48} icon={<UserOutlined />} style={{ backgroundColor: "#e53935" }} />
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                padding: "0 8px",
+              }}
+            >
+              <Avatar
+                size={48}
+                icon={<UserOutlined />}
+                style={{ backgroundColor: "#e53935" }}
+              />
               <div style={{ display: "flex", flexDirection: "column" }}>
-                <Text strong style={{ fontSize: 16 }}>{user?.name || "User"}</Text>
-                <Text type="secondary" style={{ fontSize: 12, textTransform: "uppercase" }}>
+                <Text strong style={{ fontSize: 16 }}>
+                  {user?.name || "User"}
+                </Text>
+                <Text
+                  type="secondary"
+                  style={{ fontSize: 12, textTransform: "uppercase" }}
+                >
                   {user?.roles?.[0] || "Khách hàng"}
                 </Text>
               </div>
@@ -94,7 +113,12 @@ const Header = ({ onMenuClick }) => {
               danger
               icon={<LogoutOutlined />}
               onClick={handleLogout}
-              style={{ width: "100%", textAlign: "left", height: 40, borderRadius: 8 }}
+              style={{
+                width: "100%",
+                textAlign: "left",
+                height: 40,
+                borderRadius: 8,
+              }}
             >
               Đăng xuất
             </Button>
@@ -102,9 +126,16 @@ const Header = ({ onMenuClick }) => {
         )
       ) : (
         <div style={{ textAlign: "center", padding: "8px" }}>
-          <Skeleton.Avatar active size={64} shape="circle" style={{ marginBottom: 16 }} />
+          <Skeleton.Avatar
+            active
+            size={64}
+            shape="circle"
+            style={{ marginBottom: 16 }}
+          />
           <div style={{ marginBottom: 16 }}>
-            <Text type="secondary" style={{ display: "block" }}>Bạn chưa đăng nhập</Text>
+            <Text type="secondary" style={{ display: "block" }}>
+              Bạn chưa đăng nhập
+            </Text>
             <Text strong>Hãy tham gia vào GALAXY STORE</Text>
           </div>
           <Button

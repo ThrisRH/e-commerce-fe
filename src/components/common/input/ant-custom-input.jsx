@@ -4,7 +4,7 @@ import "./style.css";
 export const TextField = ({ label, name, rules, ...inputProps }) => {
   return (
     <Form.Item
-      style={{ width: "100%", padding: "12px" }}
+      style={{ width: "100%" }}
       name={name}
       label={label}
       rules={rules}
@@ -23,7 +23,7 @@ export const PasswordField = ({ label, name, rules, ...inputProps }) => {
       rules={rules}
     >
       <Input.Password
-        style={{ fontSize: "12px", padding: "8px" }}
+        style={{ fontSize: "12px", padding: "12px" }}
         {...inputProps}
       />
     </Form.Item>

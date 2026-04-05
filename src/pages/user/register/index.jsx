@@ -25,6 +25,10 @@ const UserRegister = () => {
 
     try {
       const response = await register(values);
+      if (response?.data) {
+        enqueueSnackbar("Đăng ký thành công!", { variant: "success" });
+        navigate("/login");
+      }
     } catch (error) {
       enqueueSnackbar(error.message || "Đăng ký thất bại", {
         variant: "error",

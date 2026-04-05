@@ -54,7 +54,20 @@ export const fetchMe = async (token) => {
   return new User(response.data.data);
 };
 
-export const logout = async () => {
-  localStorage.removeItem("access_token");
-  localStorage.removeItem("user_id");
+export const logout = async (token) => {
+  const response = await axios.post(
+    `${env.VITE_API_URL}/api/${API_VER}/auth/logout`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  if (!response.data || !response.data.data) {
+    throw new Error("Logout failed");
+  }
+
+  return response.data;
 };
