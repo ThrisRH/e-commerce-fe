@@ -62,6 +62,8 @@ export default function ProductDetail() {
     loadData,
   } = useProductDetail(id);
 
+  console.log("attributes: ", attributes);
+
   useEffect(() => {
     if (id) loadData();
   }, [id]);
@@ -309,7 +311,7 @@ export default function ProductDetail() {
                     key={index}
                     sx={{ mb: 2, alignItems: "center" }}
                   >
-                    <Grid size={{ xs: 3 }}>
+                    <Grid sx={{ flex: 1 }}>
                       <FormControl fullWidth size="small">
                         <InputLabel>Loại</InputLabel>
                         <Select
@@ -319,15 +321,23 @@ export default function ProductDetail() {
                             handleAttributeChange(index, "id", e.target.value)
                           }
                         >
-                          {attributes.map((attribute) => (
-                            <MenuItem key={attribute.id} value={attribute.id}>
-                              {attribute.name}
-                            </MenuItem>
-                          ))}
+                          {attributes
+                            .filter(
+                              (attribute) =>
+                                !formData.attributes.some(
+                                  (a, i) =>
+                                    i !== index && a.id === attribute.id,
+                                ),
+                            )
+                            .map((attribute) => (
+                              <MenuItem key={attribute.id} value={attribute.id}>
+                                {attribute.name}
+                              </MenuItem>
+                            ))}
                         </Select>
                       </FormControl>
                     </Grid>
-                    <Grid size={{ xs: 4 }}>
+                    <Grid size={{ xs: 7 }}>
                       <TextField
                         fullWidth
                         label="Giá trị (VD: 16, Red)"
@@ -338,25 +348,8 @@ export default function ProductDetail() {
                         }
                       />
                     </Grid>
-                    <Grid size={{ xs: 3 }}>
-                      <FormControl fullWidth size="small">
-                        <InputLabel>Đơn vị / Loại</InputLabel>
-                        <Select
-                          label="Đơn vị / Loại"
-                          value={attr.unit || ""}
-                          onChange={(e) =>
-                            handleAttributeChange(index, "unit", e.target.value)
-                          }
-                        >
-                          {PREDEFINED_ATTRIBUTE_UNITS.map((unit) => (
-                            <MenuItem key={unit} value={unit}>
-                              {unit}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid size={{ xs: 2 }}>
+
+                    <Grid>
                       <IconButton
                         color="error"
                         onClick={() => removeAttribute(index)}

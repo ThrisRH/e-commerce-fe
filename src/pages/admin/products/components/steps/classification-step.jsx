@@ -72,7 +72,9 @@ export default function ClassificationStep({
             <Select
               showSearch
               placeholder="Search and add an attribute"
-              options={allAttributes.map(attr => ({ label: attr.name, value: attr.id }))}
+              options={allAttributes
+                .filter((attr) => !mergedAttributes.some((ma) => ma.id === attr.id))
+                .map((attr) => ({ label: attr.name, value: attr.id }))}
               filterOption={(input, option) =>
                 (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
               }

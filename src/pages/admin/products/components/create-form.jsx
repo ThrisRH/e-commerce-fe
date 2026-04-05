@@ -47,7 +47,7 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
         fetchBrands(),
         fetchAttributes(),
       ]);
-      setCategories(Array.isArray(cats) ? cats : []);
+      setCategories(Array.isArray(cats.data) ? cats.data : []);
       setBrands(Array.isArray(brs) ? brs : []);
       setAttributes(Array.isArray(attrs) ? attrs : []);
     } catch (err) {
