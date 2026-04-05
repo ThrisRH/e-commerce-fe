@@ -31,3 +31,29 @@ export const fetchOrders = async (page = 1, limit = 10) => {
     meta: new Meta(result.data.meta),
   };
 };
+
+export const fetchOrderById = async (id) => {
+  const result = await axios.get(
+    `${env.VITE_API_URL}/api/${API_VER}/orders/${id}`,
+  );
+
+  if (!result.data) {
+    throw new Error("Failed to fetch order");
+  }
+
+  return Order.fromJson(result.data.data);
+};
+
+export const updateOrder = async (id, data) => {
+  const result = await axios.patch(
+    `${env.VITE_API_URL}/api/${API_VER}/orders/${id}`,
+    data,
+  );
+
+  if (!result.data) {
+    throw new Error("Failed to update order");
+  }
+
+  return result.data;
+};
+

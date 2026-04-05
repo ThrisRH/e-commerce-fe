@@ -1,45 +1,78 @@
 import { formatCurrency } from "@/components/utils/format-currency";
 import { formatStatus } from "@/components/utils/format-status";
 import { formatPaymentMethod } from "@/components/utils/payment-method";
+import { MenuItem, Select } from "@mui/material";
 
-export const getOrderColumns = () => {
+export const getOrderColumns = (onUpdateStatus) => {
   return [
+    {
+      field: "id",
+      headerName: "ID",
+      width: 70,
+    },
     { field: "tracking_code", headerName: "Mã vận đơn", width: 150 },
-    { field: "shipping_name", headerName: "Khách hàng", width: 200 },
+    { field: "shipping_name", headerName: "Khách hàng", width: 150 },
     {
       field: "total_amount",
       headerName: "Tổng tiền",
-      width: 150,
+      width: 130,
       valueFormatter: (value, row) => formatCurrency(row.total_amount),
     },
     {
-      field: "shipping_fee",
-      headerName: "Phí ship",
-      width: 150,
-      valueFormatter: (value, row) => formatCurrency(row.shipping_fee),
-    },
-    {
       field: "status",
-      headerName: "Trạng thái",
-      width: 150,
-      valueFormatter: (value, row) => formatStatus(row.status),
-    },
-    {
-      field: "payment_method",
-      headerName: "Phương thức thanh toán",
-      width: 200,
-      valueFormatter: (value, row) => formatPaymentMethod(row.payment_method),
+      headerName: "Trạng thái đơn",
+      width: 160,
+      renderCell: (params) => (
+        <Select
+          value={params.row.status}
+          size="small"
+          fullWidth
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) =>
+            onUpdateStatus(params.row.id, { status: e.target.value })
+          }
+          sx={{ fontSize: "0.875rem" }}
+        >
+          <MenuItem value="pending">Chờ xử lý</MenuItem>
+          <MenuItem value="confirmed">Đã xác nhận</MenuItem>
+          <MenuItem value="shipping">Đang giao</MenuItem>
+          <MenuItem value="delivered">Đã giao</MenuItem>
+          <MenuItem value="cancelled">Đã hủy</MenuItem>
+        </Select>
+      ),
     },
     {
       field: "payment_status",
-      headerName: "Trạng thái thanh toán",
+      headerName: "Thanh toán",
+      width: 160,
+      renderCell: (params) => (
+        <Select
+          value={params.row.payment_status}
+          size="small"
+          fullWidth
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) =>
+            onUpdateStatus(params.row.id, { payment_status: e.target.value })
+          }
+          sx={{ fontSize: "0.875rem" }}
+        >
+          <MenuItem value="pending">Chờ thanh toán</MenuItem>
+          <MenuItem value="paid">Đã thanh toán</MenuItem>
+          <MenuItem value="failed">Thất bại</MenuItem>
+          <MenuItem value="refund">Đã hoàn tiền</MenuItem>
+        </Select>
+      ),
+    },
+    {
+      field: "payment_method",
+      headerName: "Phương thức",
       width: 150,
-      valueFormatter: (value, row) => formatStatus(row.payment_status),
+      valueFormatter: (value, row) => formatPaymentMethod(row.payment_method),
     },
     {
       field: "created_at",
       headerName: "Ngày tạo",
-      width: 250,
+      width: 180,
       valueFormatter: (value, row) =>
         new Date(row.created_at).toLocaleString("vi-VN"),
     },

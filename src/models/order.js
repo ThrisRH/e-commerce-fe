@@ -33,7 +33,12 @@ class OrderItem {
   constructor(data) {
     this.id = data.id;
     this.order_id = data.order_id;
+
     this.product_id = data.product_id;
+    this.product_name = data.product_name;
+    this.product_image = data.product_image;
+    this.price = data.price;
+    this.total = data.total;
     this.quantity = data.quantity;
   }
 

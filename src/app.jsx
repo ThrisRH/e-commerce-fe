@@ -17,6 +17,8 @@ import UserProductDetail from "./pages/user/product-detail";
 import UserRegister from "./pages/user/register";
 import CheckoutPage from "./pages/user/checkout";
 import CategoryPage from "./pages/user/category";
+import OrderDetail from "./pages/admin/orders/order-details";
+
 
 // Lazy load admin pages for better initial bundle size
 const AdminDashboard = lazy(() => import("./pages/admin/dashboard"));
@@ -76,6 +78,7 @@ function App() {
 
               <Route path="users" element={<UsersManagement />} />
               <Route path="orders" element={<OrdersManagement />} />
+              <Route path="orders/:id" element={<OrderDetail />} />
             </Route>
           </Routes>
         </Suspense>

@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Breadcrumb, Typography, Space, Card, Empty } from "antd";
 import { DataGrid } from "@mui/x-data-grid";
 import { getOrderColumns } from "./components/grid-columns/setup";
 import Order from "@/models/order";
-import { fetchOrders } from "@/api/orders/order-api";
+import { fetchOrders, updateOrder } from "@/api/orders/order-api";
 import { enqueueSnackbar } from "notistack";
 import { Meta } from "@/models/MetaData/meta";
 
 const { Title } = Typography;
 
 const OrdersManagement = () => {
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   /** @type {[Order[] | [], function]} */
   const [orders, setOrders] = useState([]);
@@ -32,6 +34,18 @@ const OrdersManagement = () => {
       .finally(() => {
         setIsLoading(false);
       });
+  };
+
+  const handleUpdateStatus = async (id, data) => {
+    try {
+      await updateOrder(id, data);
+      enqueueSnackbar("Cập nhật trạng thái thành công!", {
+        variant: "success",
+      });
+      loadOrders();
+    } catch (error) {
+      enqueueSnackbar(error.message, { variant: "error" });
+    }
   };
 
   useEffect(() => {
@@ -59,8 +73,14 @@ const OrdersManagement = () => {
       >
         <DataGrid
           rows={orders}
-          columns={getOrderColumns()}
+          columns={getOrderColumns(handleUpdateStatus)}
           loading={isLoading}
+          onRowClick={(params) => navigate(`/admin/orders/${params.row.id}`)}
+          sx={{
+            "& .MuiDataGrid-row": {
+              cursor: "pointer",
+            },
+          }}
           rowCount={meta.total}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}

@@ -8,6 +8,7 @@ const AppInput = ({
   onChange,
   maxLength = 250,
   type = "text",
+  readOnly = false,
 }) => {
   return (
     <TextField
@@ -15,6 +16,7 @@ const AppInput = ({
       slotProps={{
         htmlInput: {
           maxLength: maxLength,
+          readOnly: readOnly,
         },
       }}
       type={type}
@@ -25,5 +27,6 @@ const AppInput = ({
     />
   );
 };
+
 
 export default AppInput;
