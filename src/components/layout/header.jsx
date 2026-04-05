@@ -1,22 +1,39 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Layout, Input, Badge, Button, Space, Typography } from "antd";
+import {
+  Layout,
+  Input,
+  Badge,
+  Button,
+  Space,
+  Typography,
+  Popover,
+  Avatar,
+  Divider,
+  Skeleton,
+} from "antd";
 import {
   ShoppingCartOutlined,
   UserOutlined,
   MenuOutlined,
   BuildOutlined,
   SearchOutlined,
+  LogoutOutlined,
+  LoginOutlined,
 } from "@ant-design/icons";
 import CartDrawer, { getCartCount } from "@/components/ui/cart/cart-drawer";
+import { fetchMe, logout } from "@/api/auth/auth-lapi";
 
 const { Header: AntHeader } = Layout;
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const Header = ({ onMenuClick }) => {
   const navigate = useNavigate();
   const [cartOpen, setCartOpen] = useState(false);
   const [cartCount, setCartCount] = useState(getCartCount());
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const token = localStorage.getItem("access_token");
 
   useEffect(() => {
     const syncCount = () => setCartCount(getCartCount());
@@ -24,11 +41,89 @@ const Header = ({ onMenuClick }) => {
     window.addEventListener("cart-updated", syncCount);
     window.addEventListener("storage", syncCount);
 
+    if (token) {
+      handleFetchMe();
+    }
+
     return () => {
       window.removeEventListener("cart-updated", syncCount);
       window.removeEventListener("storage", syncCount);
     };
-  }, []);
+  }, [token]);
+
+  const handleFetchMe = async () => {
+    setLoading(true);
+    try {
+      const userData = await fetchMe(token);
+      setUser(userData);
+    } catch (error) {
+      console.error("Failed to fetch user:", error);
+      if (error.response?.status === 401) {
+        logout();
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    setUser(null);
+    navigate("/");
+  };
+
+  const profileContent = (
+    <div style={{ width: 240, padding: "8px 0" }}>
+      {token ? (
+        loading ? (
+          <Skeleton avatar active paragraph={{ rows: 1 }} />
+        ) : (
+          <>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "0 8px" }}>
+              <Avatar size={48} icon={<UserOutlined />} style={{ backgroundColor: "#e53935" }} />
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <Text strong style={{ fontSize: 16 }}>{user?.name || "User"}</Text>
+                <Text type="secondary" style={{ fontSize: 12, textTransform: "uppercase" }}>
+                  {user?.roles?.[0] || "Khách hàng"}
+                </Text>
+              </div>
+            </div>
+            <Divider style={{ margin: "12px 0" }} />
+            <Button
+              type="text"
+              danger
+              icon={<LogoutOutlined />}
+              onClick={handleLogout}
+              style={{ width: "100%", textAlign: "left", height: 40, borderRadius: 8 }}
+            >
+              Đăng xuất
+            </Button>
+          </>
+        )
+      ) : (
+        <div style={{ textAlign: "center", padding: "8px" }}>
+          <Skeleton.Avatar active size={64} shape="circle" style={{ marginBottom: 16 }} />
+          <div style={{ marginBottom: 16 }}>
+            <Text type="secondary" style={{ display: "block" }}>Bạn chưa đăng nhập</Text>
+            <Text strong>Hãy tham gia vào GALAXY STORE</Text>
+          </div>
+          <Button
+            type="primary"
+            icon={<LoginOutlined />}
+            onClick={() => navigate("/login")}
+            style={{
+              width: "100%",
+              backgroundColor: "#e53935",
+              borderRadius: 20,
+              height: 40,
+            }}
+          >
+            Đăng nhập / Đăng ký
+          </Button>
+        </div>
+      )}
+    </div>
+  );
 
   const handleCartOpen = () => {
     setCartCount(getCartCount());
@@ -42,7 +137,6 @@ const Header = ({ onMenuClick }) => {
           display: "flex",
           alignItems: "center",
           backgroundColor: "#e53935",
-          height: 58,
           position: "sticky",
           top: 0,
           zIndex: 1000,
@@ -55,7 +149,7 @@ const Header = ({ onMenuClick }) => {
             alignItems: "center",
             justifyContent: "space-between",
             width: "100%",
-            maxWidth: 1440,
+            maxWidth: 1280,
             margin: "0 auto",
           }}
         >
@@ -96,20 +190,37 @@ const Header = ({ onMenuClick }) => {
               count={cartCount}
               size="small"
               offset={[5, 5]}
-              styles={{ indicator: { background: "#fff", color: "#e53935", fontWeight: 700, boxShadow: "none" } }}
+              styles={{
+                indicator: {
+                  background: "#fff",
+                  color: "#e53935",
+                  fontWeight: 700,
+                  boxShadow: "none",
+                },
+              }}
             >
               <Button
                 type="text"
-                icon={<ShoppingCartOutlined style={{ color: "white", fontSize: 20 }} />}
+                icon={
+                  <ShoppingCartOutlined
+                    style={{ color: "white", fontSize: 20 }}
+                  />
+                }
                 onClick={handleCartOpen}
               />
             </Badge>
 
-            <Button
-              type="text"
-              icon={<UserOutlined style={{ color: "white", fontSize: 18 }} />}
-              onClick={() => {}}
-            />
+            <Popover
+              content={profileContent}
+              trigger="click"
+              placement="bottomRight"
+              overlayStyle={{ paddingTop: 12 }}
+            >
+              <Button
+                type="text"
+                icon={<UserOutlined style={{ color: "white", fontSize: 18 }} />}
+              />
+            </Popover>
 
             <Button
               type="text"

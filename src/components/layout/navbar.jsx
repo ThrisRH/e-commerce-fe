@@ -27,7 +27,7 @@ const Navbar = () => {
         padding: "0 50px",
       }}
     >
-      <div style={{ width: "100%", maxWidth: 1440, margin: "0 auto" }}>
+      <div style={{ width: "100%", maxWidth: 1280, margin: "0 auto" }}>
         <Menu
           mode="horizontal"
           style={{

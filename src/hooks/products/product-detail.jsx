@@ -44,12 +44,14 @@ export default function useProductDetail(id) {
       setFormData(new Product(productData));
       setOriginData(new Product(productData));
       setCategories(
-        Array.isArray(categoriesList) ? categoriesList : [categoriesList],
+        Array.isArray(categoriesList.data)
+          ? categoriesList.data
+          : [categoriesList],
       );
       setBrands(Array.isArray(brandData) ? brandData : [brandData]);
       setAttributes(categoryData.attributes);
 
-      console.log(productData);
+      console.log("categoryData: ", categoryData);
     } catch (err) {
       enqueueSnackbar(err.message, { variant: "error" });
     } finally {

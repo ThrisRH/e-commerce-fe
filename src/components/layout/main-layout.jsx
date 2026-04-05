@@ -33,13 +33,11 @@ const MainLayout = () => {
         <Navbar />
         <Sidebar mobileOpen={mobileOpen} onClose={handleDrawerToggle} />
 
-        <div
-          style={{ display: "flex", width: "100%", justifyContent: "center" }}
-        >
-          <Content style={{ backgroundColor: "#f5f5f5", maxWidth: 1800 }}>
+        <Content style={{ padding: "0 24px", background: "#f5f5f5" }}>
+          <div style={{ maxWidth: 1280, margin: "0 auto" }}>
             <Outlet />
-          </Content>
-        </div>
+          </div>
+        </Content>
 
         <Footer />
       </Layout>

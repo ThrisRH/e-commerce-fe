@@ -54,7 +54,7 @@ const Home = () => {
   }
 
   return (
-    <div style={{ padding: "32px 50px", margin: "0 auto" }}>
+    <div style={{ padding: "32px 0px", margin: "0 auto" }}>
       <BannerSection />
 
       <Space direction="vertical" size={48} style={{ width: "100%" }}>

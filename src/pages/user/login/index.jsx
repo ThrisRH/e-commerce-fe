@@ -16,8 +16,8 @@ const UserLogin = () => {
     setLoading(true);
     try {
       const response = await login(values.email, values.password);
-      if (response?.access_token) {
-        localStorage.setItem("access_token", response.access_token);
+      if (response?.data?.access_token) {
+        localStorage.setItem("access_token", response.data.access_token);
       }
       enqueueSnackbar("Đăng nhập thành công!", { variant: "success" });
       navigate("/");
@@ -100,11 +100,21 @@ const UserLogin = () => {
             </Button>
           </Form.Item>
 
-          <Divider style={{ borderColor: "var(--neutral-300)", margin: "12px 0" }}>
-            <span style={{ color: "var(--neutral-500)", fontSize: 13 }}>hoặc</span>
+          <Divider
+            style={{ borderColor: "var(--neutral-300)", margin: "12px 0" }}
+          >
+            <span style={{ color: "var(--neutral-500)", fontSize: 13 }}>
+              hoặc
+            </span>
           </Divider>
 
-          <div style={{ textAlign: "center", fontSize: 14, color: "var(--neutral-600)" }}>
+          <div
+            style={{
+              textAlign: "center",
+              fontSize: 14,
+              color: "var(--neutral-600)",
+            }}
+          >
             Chưa có tài khoản?{" "}
             <Link
               to="/register"

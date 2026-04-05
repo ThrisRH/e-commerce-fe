@@ -262,7 +262,6 @@ const CategoryPage = () => {
             </Space>
           </div>
 
-          {/* Active filters */}
           {(categoryId || searchParam) && (
             <div
               style={{
@@ -298,7 +297,6 @@ const CategoryPage = () => {
             </div>
           )}
 
-          {/* Product grid */}
           {loading ? (
             <div
               style={{
@@ -320,7 +318,7 @@ const CategoryPage = () => {
             <>
               <Row gutter={[16, 16]}>
                 {products.map((product) => (
-                  <Col key={product.id} xs={12} sm={8} md={8} lg={6} xxl={4}>
+                  <Col key={product.id} xs={12} sm={8} md={8} lg={6}>
                     <ProductCard product={product} />
                   </Col>
                 ))}

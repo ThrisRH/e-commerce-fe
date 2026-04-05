@@ -25,7 +25,7 @@ import {
 } from "@mui/icons-material";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-import { useNavigate, useNavigation, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import AppButton from "@/components/common/button";
 import AppInput from "@/components/common/input";
 import useProductDetail from "@/hooks/products/product-detail";
@@ -154,6 +154,8 @@ export default function ProductDetail() {
       setSaving(false);
     }
   };
+
+  console.log("formData: ", formData);
 
   if (loading) {
     return <Loading />;
@@ -378,7 +380,6 @@ export default function ProductDetail() {
           </Card>
         </Grid>
 
-        {/* Categories & Brands */}
         <Grid size={{ xs: 12, md: 4 }}>
           <Card
             sx={{ borderRadius: 3, boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}

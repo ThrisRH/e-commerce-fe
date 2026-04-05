@@ -91,7 +91,6 @@ export default function CategoryDetail() {
         is_required: formData.is_required || false,
       };
 
-      // We need to compare with origin data's payload-like representation
       const originPayload = {
         name: originData.name,
         slug: originData.slug,

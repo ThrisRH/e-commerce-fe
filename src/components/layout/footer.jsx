@@ -29,7 +29,7 @@ const Footer = () => {
         padding: "64px 50px 32px",
       }}
     >
-      <div style={{ maxWidth: 1440, margin: "0 auto", width: "100%" }}>
+      <div style={{ maxWidth: 1280, margin: "0 auto", width: "100%" }}>
         <Row gutter={[32, 32]}>
           <Col xs={24} sm={8}>
             <Title level={4} style={{ color: "#262626", fontWeight: 700 }}>
