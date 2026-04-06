@@ -31,7 +31,6 @@ export const AuthProvider = ({ children }) => {
 
         setUser(response);
       } catch (e) {
-        enqueueSnackbar("Xác thực người dùng thất bại", { variant: "error" });
         setUser(null);
       } finally {
         setLoading(false);

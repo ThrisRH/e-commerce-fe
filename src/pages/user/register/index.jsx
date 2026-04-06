@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Card, Button, Divider, Flex } from "antd";
+import { Form, Card, Button, Divider, Flex, Alert } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { register } from "@/api/auth/auth-api";
 import { enqueueSnackbar } from "notistack";
@@ -10,15 +10,15 @@ import {
 
 const UserRegister = () => {
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const onFinish = async (values) => {
     setLoading(true);
+    setErrorMessage("");
 
     if (values.password !== values.password_confirmation) {
-      enqueueSnackbar("Mật khẩu không khớp!", {
-        variant: "error",
-      });
+      setErrorMessage("Mật khẩu xác nhận không khớp!");
       setLoading(false);
       return;
     }
@@ -30,9 +30,7 @@ const UserRegister = () => {
         navigate("/login");
       }
     } catch (error) {
-      enqueueSnackbar(error.message || "Đăng ký thất bại", {
-        variant: "error",
-      });
+      setErrorMessage(error.message || "Đăng ký thất bại. Vui lòng thử lại!");
     } finally {
       setLoading(false);
     }
@@ -50,96 +48,108 @@ const UserRegister = () => {
     >
       <Card title="Tạo tài khoản" style={{ width: 500 }}>
         <Form name="register_form" onFinish={onFinish} layout="vertical">
-          <Flex gap={16}>
+          <Flex gap={16} vertical>
+            {errorMessage && (
+              <Alert
+                message={errorMessage}
+                type="error"
+                showIcon
+                closable
+                onClose={() => setErrorMessage("")}
+                style={{ borderRadius: 8 }}
+              />
+            )}
+            <Flex gap={16}>
+              <TextField
+                label="Họ"
+                name="lname"
+                rules={[
+                  { required: true, message: "Không được để trống!" },
+                  { min: 2, message: "Họ chưa hợp lệ!" },
+                ]}
+                placeholder="VD: Nguyễn"
+              />
+              <TextField
+                label="Tên"
+                name="fname"
+                rules={[
+                  { required: true, message: "Không được để trống!" },
+                  { min: 2, message: "Tên chưa hợp lệ!" },
+                ]}
+                placeholder="VD: Văn A"
+              />
+            </Flex>
+
             <TextField
-              label="Họ"
-              name="lname"
+              label="Email"
+              name="email"
               rules={[
                 { required: true, message: "Không được để trống!" },
-                { min: 2, message: "Họ chưa hợp lệ!" },
+                { type: "email", message: "Email không hợp lệ!" },
               ]}
-              placeholder="VD: Nguyễn"
+              placeholder="VD: nguyenvan@gmail.com"
             />
+
             <TextField
-              label="Tên"
-              name="fname"
+              label="Số điện thoại"
+              name="phone"
               rules={[
                 { required: true, message: "Không được để trống!" },
-                { min: 2, message: "Tên chưa hợp lệ!" },
+                {
+                  pattern:
+                    /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[1-5]|9[0-9])[0-9]{7}$/,
+                  message: "Số điện thoại không hợp lệ!",
+                },
               ]}
-              placeholder="VD: Văn A"
+              placeholder="VD: 0987654321"
             />
+
+            <Flex gap={16}>
+              <PasswordField
+                label="Mật khẩu"
+                name="password"
+                rules={[
+                  { required: true, message: "Không được để trống!" },
+                  { min: 8, message: "Mật khẩu phải có ít nhất 8 ký tự!" },
+                ]}
+                placeholder="Tối thiểu 8 ký tự"
+              />
+              <PasswordField
+                label="Xác nhận mật khẩu"
+                name="password_confirmation"
+                dependencies={["password"]}
+                rules={[
+                  { required: true, message: "Không được để trống!" },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue("password") === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Mật khẩu không khớp!"));
+                    },
+                  }),
+                ]}
+                placeholder="Nhập lại mật khẩu"
+              />
+            </Flex>
+
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={loading}
+                block
+                style={{
+                  height: 44,
+                  background: "var(--primary-main)",
+                  borderColor: "var(--primary-main)",
+                  fontWeight: 600,
+                }}
+              >
+                Đăng ký
+              </Button>
+            </Form.Item>
           </Flex>
-
-          <TextField
-            label="Email"
-            name="email"
-            rules={[
-              { required: true, message: "Không được để trống!" },
-              { type: "email", message: "Email không hợp lệ!" },
-            ]}
-            placeholder="VD: nguyenvan@gmail.com"
-          />
-
-          <TextField
-            label="Số điện thoại"
-            name="phone"
-            rules={[
-              { required: true, message: "Không được để trống!" },
-              {
-                pattern:
-                  /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[1-5]|9[0-9])[0-9]{7}$/,
-                message: "Số điện thoại không hợp lệ!",
-              },
-            ]}
-            placeholder="VD: 0987654321"
-          />
-
-          <Flex gap={16}>
-            <PasswordField
-              label="Mật khẩu"
-              name="password"
-              rules={[
-                { required: true, message: "Không được để trống!" },
-                { min: 8, message: "Mật khẩu phải có ít nhất 8 ký tự!" },
-              ]}
-              placeholder="Tối thiểu 8 ký tự"
-            />
-            <PasswordField
-              label="Xác nhận mật khẩu"
-              name="password_confirmation"
-              dependencies={["password"]}
-              rules={[
-                { required: true, message: "Không được để trống!" },
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
-                    if (!value || getFieldValue("password") === value) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(new Error("Mật khẩu không khớp!"));
-                  },
-                }),
-              ]}
-              placeholder="Nhập lại mật khẩu"
-            />
-          </Flex>
-
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={loading}
-              block
-              style={{
-                height: 44,
-                background: "var(--primary-main)",
-                borderColor: "var(--primary-main)",
-                fontWeight: 600,
-              }}
-            >
-              Đăng ký
-            </Button>
-          </Form.Item>
 
           <Divider
             style={{ borderColor: "var(--neutral-300)", margin: "12px 0" }}

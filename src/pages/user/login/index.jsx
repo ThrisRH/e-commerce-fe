@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Card, Button, Checkbox, Divider } from "antd";
+import { Form, Card, Button, Checkbox, Divider, Alert } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "@/api/auth/auth-api";
 import { enqueueSnackbar } from "notistack";
@@ -7,13 +7,16 @@ import {
   TextField,
   PasswordField,
 } from "@/components/common/input/ant-custom-input";
+import Text from "antd/es/typography/Text";
 
 const UserLogin = () => {
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const onFinish = async (values) => {
     setLoading(true);
+    setErrorMessage("");
     try {
       const response = await login(values.email, values.password);
       if (response?.data?.access_token) {
@@ -22,9 +25,7 @@ const UserLogin = () => {
       enqueueSnackbar("Đăng nhập thành công!", { variant: "success" });
       navigate("/");
     } catch (error) {
-      enqueueSnackbar(error.message || "Email hoặc mật khẩu không đúng", {
-        variant: "error",
-      });
+      setErrorMessage("Email hoặc mật khẩu không chính xác!");
     } finally {
       setLoading(false);
     }
@@ -46,6 +47,7 @@ const UserLogin = () => {
           initialValues={{ remember: true }}
           onFinish={onFinish}
           layout="vertical"
+          style={{ display: "flex", flexDirection: "column", gap: "16px" }}
         >
           <TextField
             label="Email"
@@ -64,24 +66,7 @@ const UserLogin = () => {
             placeholder="Nhập mật khẩu"
           />
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: 16,
-            }}
-          >
-            <Form.Item name="remember" valuePropName="checked" noStyle>
-              <Checkbox>Ghi nhớ đăng nhập</Checkbox>
-            </Form.Item>
-            <Link
-              to="/forgot-password"
-              style={{ fontSize: 13, color: "var(--primary-main)" }}
-            >
-              Quên mật khẩu?
-            </Link>
-          </div>
+          {errorMessage && <Text type="danger">{errorMessage}</Text>}
 
           <Form.Item>
             <Button
