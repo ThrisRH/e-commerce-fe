@@ -171,14 +171,16 @@ const UsersManagement = () => {
             Quản Lý Người Dùng
           </Title>
         </div>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          size="large"
-          onClick={handleCreateButtonClick}
-        >
-          {activeTab === "role" ? "Thêm Vai Trò" : "Thêm Tài Khoản"}
-        </Button>
+        {activeTab !== "customer" && (
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            size="large"
+            onClick={handleCreateButtonClick}
+          >
+            {activeTab === "role" ? "Thêm Vai Trò" : "Thêm Tài Khoản"}
+          </Button>
+        )}
       </div>
 
       <CreateUserModal

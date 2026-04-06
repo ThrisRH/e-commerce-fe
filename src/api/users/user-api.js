@@ -68,6 +68,16 @@ export const createUser = async (data) => {
   return new User(response.data.data);
 };
 
+export const createStaff = async (data) => {
+  const response = await axiosClient.post(`/${API_VER}/users/staffs`, data);
+
+  if (response.status !== 201) {
+    throw new Error("Tạo tài khoản nhân viên thất bại");
+  }
+
+  return { data: "Success" };
+};
+
 export const createRole = async (data) => {
   const response = await axiosClient.post(`/${API_VER}/roles`, data);
 
