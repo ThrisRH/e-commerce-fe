@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Breadcrumb, Typography, Row, Col, Spin, Pagination, Tag } from "antd";
-import { searchProducts } from "@/api/products/product-lapi";
+import { searchProducts } from "@/api/products/product-api";
 import ProductCard from "@/components/ui/products/product-card";
 import NotFound from "@/components/common/not-found";
 import { enqueueSnackbar } from "notistack";

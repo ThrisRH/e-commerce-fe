@@ -1,8 +1,8 @@
 import {
   fetchCategories,
   fetchCategoryById,
-} from "@/api/categories/category-lapi";
-import { fetchAttributes } from "@/api/attributes/attribute-lapi";
+} from "@/api/categories/category-api";
+import { fetchAttributes } from "@/api/attributes/attribute-api";
 import Category from "@/models/category";
 
 import { enqueueSnackbar } from "notistack";
@@ -42,7 +42,6 @@ export default function useCategoryDetail(id) {
 
       setFormData(category);
       setOriginData(category);
-
 
       setParentCategories(
         (Array.isArray(allCats) ? allCats : [allCats]).filter(

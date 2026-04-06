@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Form, Button, Steps, Typography, Space } from "antd";
-import {
-  fetchCategories,
-  createCategory,
-} from "@/api/categories/category-lapi";
-import { fetchAttributes } from "@/api/attributes/attribute-lapi";
+import { fetchCategories, createCategory } from "@/api/categories/category-api";
+import { fetchAttributes } from "@/api/attributes/attribute-api";
 import { enqueueSnackbar } from "notistack";
 
 import InfoStep from "./steps/info-step";
@@ -43,7 +40,7 @@ const CreateCategoryModal = ({ visible, onClose, onSuccess }) => {
       setCategories(Array.isArray(cats) ? cats : []);
       setAttributes(Array.isArray(attrs) ? attrs : []);
     } catch (err) {
-      enqueueSnackbar("Error loading categories: " + err.message, {
+      enqueueSnackbar("Lỗi tải danh mục: " + err.message, {
         variant: "error",
       });
     } finally {
@@ -52,9 +49,9 @@ const CreateCategoryModal = ({ visible, onClose, onSuccess }) => {
   };
 
   const steps = [
-    { title: "Details", description: "Category info" },
-    { title: "Classification", description: "Hierarchy" },
-    { title: "Visibility", description: "Finalize" },
+    { title: "Chi tiết", description: "Thông tin danh mục" },
+    { title: "Phân loại", description: "Cấp bậc" },
+    { title: "Hiển thị", description: "Hoàn tất" },
   ];
 
   const handleNext = async () => {
@@ -110,17 +107,17 @@ const CreateCategoryModal = ({ visible, onClose, onSuccess }) => {
       }}
     >
       <Text type="secondary" style={{ fontSize: "12px" }}>
-        Step {currentStep + 1} of {steps.length}
+        Bước {currentStep + 1} / {steps.length}
       </Text>
       <div style={{ display: "flex", gap: "8px" }}>
         {currentStep > 0 && (
           <Button onClick={handleBack} disabled={submitting}>
-            Back
+            Quay lại
           </Button>
         )}
         {currentStep < steps.length - 1 ? (
           <Button type="primary" onClick={handleNext}>
-            Next
+            Tiếp theo
           </Button>
         ) : (
           <Button
@@ -128,7 +125,7 @@ const CreateCategoryModal = ({ visible, onClose, onSuccess }) => {
             onClick={() => form.submit()}
             loading={submitting}
           >
-            Create Category
+            Tạo Danh Mục
           </Button>
         )}
       </div>
@@ -144,7 +141,7 @@ const CreateCategoryModal = ({ visible, onClose, onSuccess }) => {
           style={{ width: "100%", justifyContent: "space-between" }}
         >
           <Text strong style={{ fontSize: "18px" }}>
-            Create New Category
+            Tạo Danh Mục Mới
           </Text>
         </Space>
       }

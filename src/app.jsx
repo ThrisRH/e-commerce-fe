@@ -19,7 +19,6 @@ import CheckoutPage from "./pages/user/checkout";
 import CategoryPage from "./pages/user/category";
 import OrderDetail from "./pages/admin/orders/order-details";
 
-
 // Lazy load admin pages for better initial bundle size
 const AdminDashboard = lazy(() => import("./pages/admin/dashboard"));
 const ProductsManagement = lazy(() => import("./pages/admin/products"));

@@ -1,9 +1,9 @@
-import { fetchBrands } from "@/api/brands/brand-lapi";
+import { fetchBrands } from "@/api/brands/brand-api";
 import {
   fetchCategories,
   fetchCategoryById,
-} from "@/api/categories/category-lapi";
-import { fetchProductById } from "@/api/products/product-lapi";
+} from "@/api/categories/category-api";
+import { fetchProductById } from "@/api/products/product-api";
 import Brand from "@/models/brand";
 import Category from "@/models/category";
 import { Product } from "@/models/product";

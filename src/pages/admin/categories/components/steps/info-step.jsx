@@ -9,34 +9,34 @@ export default function CategoryInfoStep({ display }) {
         <Col span={16}>
           <Form.Item
             name="name"
-            label="Category Name"
-            rules={[{ required: true, message: "Please enter category name" }]}
+            label="Tên Danh Mục"
+            rules={[{ required: true, message: "Vui lòng nhập tên danh mục" }]}
           >
-            <Input placeholder='Enter category title (e.g., "Laptops")' />
+            <Input placeholder='Nhập tên danh mục (VD: "Máy tính xách tay")' />
           </Form.Item>
           <Form.Item
             name="description"
-            label="Description"
-            rules={[{ required: true, message: "Please enter description" }]}
+            label="Mô tả"
+            rules={[{ required: true, message: "Vui lòng nhập mô tả" }]}
           >
             <TextArea
               rows={5}
-              placeholder="Tell shoppers about this category..."
+              placeholder="Mô tả về danh mục này cho khách hàng..."
             />
           </Form.Item>
         </Col>
         <Col span={8}>
           <Form.Item
             name="image_url"
-            label="Image URL"
-            rules={[{ required: true, message: "Please provide image URL" }]}
+            label="Đường dẫn ảnh (URL)"
+            rules={[{ required: true, message: "Vui lòng nhập đường dẫn ảnh" }]}
           >
             <Input prefix={<CloudUploadOutlined />} placeholder="https://..." />
           </Form.Item>
           <Form.Item
             name="sort_order"
-            label="Sort Order"
-            rules={[{ required: true }]}
+            label="Thứ tự sắp xếp"
+            rules={[{ required: true, message: "Vui lòng nhập thứ tự" }]}
           >
             <InputNumber style={{ width: "100%" }} min={0} />
           </Form.Item>

@@ -14,7 +14,7 @@ import {
   DeleteOutlined,
   ThunderboltOutlined,
 } from "@ant-design/icons";
-import { fetchProductById } from "@/api/products/product-lapi";
+import { fetchProductById } from "@/api/products/product-api";
 import { formatCurrency } from "@/components/utils/format-currency";
 import { useNavigate } from "react-router-dom";
 
@@ -65,13 +65,23 @@ const CartItem = ({ item, onQuantityChange, onRemove }) => {
         }}
       >
         <img
-          src={product.image_url || "https://via.placeholder.com/76x76?text=IMG"}
+          src={
+            product.image_url || "https://via.placeholder.com/76x76?text=IMG"
+          }
           alt={product.name}
           style={{ width: "100%", height: "100%", objectFit: "contain" }}
         />
       </div>
 
-      <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 4 }}>
+      <div
+        style={{
+          flex: 1,
+          minWidth: 0,
+          display: "flex",
+          flexDirection: "column",
+          gap: 4,
+        }}
+      >
         <Text
           strong
           style={{
@@ -89,13 +99,26 @@ const CartItem = ({ item, onQuantityChange, onRemove }) => {
         </Text>
 
         {product.brand?.name && (
-          <Tag color="blue" style={{ fontSize: 11, borderRadius: 4, width: "fit-content" }}>
+          <Tag
+            color="blue"
+            style={{ fontSize: 11, borderRadius: 4, width: "fit-content" }}
+          >
             {product.brand.name}
           </Tag>
         )}
 
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "auto" }}>
-          <Text strong style={{ color: "var(--primary-main, #e53935)", fontSize: 14 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginTop: "auto",
+          }}
+        >
+          <Text
+            strong
+            style={{ color: "var(--primary-main, #e53935)", fontSize: 14 }}
+          >
             {formatCurrency(product.price * quantity)}
           </Text>
 
@@ -138,7 +161,7 @@ const CartDrawer = ({ open, onClose }) => {
     setLoading(true);
     try {
       const results = await Promise.allSettled(
-        stored.map((entry) => fetchProductById(entry.id))
+        stored.map((entry) => fetchProductById(entry.id)),
       );
 
       const merged = stored.reduce((acc, entry, idx) => {
@@ -163,20 +186,22 @@ const CartDrawer = ({ open, onClose }) => {
     if (!newQty || newQty < 1) return;
     const stored = getCartFromSession();
     const updated = stored.map((item) =>
-      item.id === productId ? { ...item, quantity: newQty } : item
+      item.id === productId ? { ...item, quantity: newQty } : item,
     );
     saveCartToSession(updated);
     setCartItems((prev) =>
       prev.map((item) =>
-        item.product.id === productId ? { ...item, quantity: newQty } : item
-      )
+        item.product.id === productId ? { ...item, quantity: newQty } : item,
+      ),
     );
   };
 
   const handleRemove = (productId) => {
     const stored = getCartFromSession().filter((item) => item.id !== productId);
     saveCartToSession(stored);
-    setCartItems((prev) => prev.filter((item) => item.product.id !== productId));
+    setCartItems((prev) =>
+      prev.filter((item) => item.product.id !== productId),
+    );
     window.dispatchEvent(new Event("cart-updated"));
   };
 
@@ -193,7 +218,7 @@ const CartDrawer = ({ open, onClose }) => {
 
   const subtotal = cartItems.reduce(
     (sum, { product, quantity }) => sum + product.price * quantity,
-    0
+    0,
   );
   const totalItems = cartItems.reduce((sum, { quantity }) => sum + quantity, 0);
 
@@ -201,7 +226,9 @@ const CartDrawer = ({ open, onClose }) => {
     <Drawer
       title={
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <ShoppingCartOutlined style={{ color: "var(--primary-main, #e53935)", fontSize: 18 }} />
+          <ShoppingCartOutlined
+            style={{ color: "var(--primary-main, #e53935)", fontSize: 18 }}
+          />
           <span style={{ fontSize: 16, fontWeight: 700 }}>
             Giỏ hàng
             {totalItems > 0 && (
@@ -229,9 +256,17 @@ const CartDrawer = ({ open, onClose }) => {
       footer={
         cartItems.length > 0 ? (
           <div>
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: 8,
+              }}
+            >
               <Text type="secondary">Tạm tính ({totalItems} sản phẩm)</Text>
-              <Text strong style={{ fontSize: 15 }}>{formatCurrency(subtotal)}</Text>
+              <Text strong style={{ fontSize: 15 }}>
+                {formatCurrency(subtotal)}
+              </Text>
             </div>
             <Divider style={{ margin: "10px 0" }} />
             <Button
@@ -257,17 +292,40 @@ const CartDrawer = ({ open, onClose }) => {
       }
       styles={{
         body: { padding: "0 20px", overflowY: "auto" },
-        footer: { padding: "16px 20px", borderTop: "1px solid var(--neutral-200, #e0e0e0)" },
+        footer: {
+          padding: "16px 20px",
+          borderTop: "1px solid var(--neutral-200, #e0e0e0)",
+        },
       }}
     >
       {loading ? (
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: 300 }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: 300,
+          }}
+        >
           <Spin tip="Đang tải giỏ hàng..." />
         </div>
       ) : cartItems.length === 0 ? (
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: 300, gap: 12 }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            height: 300,
+            gap: 12,
+          }}
+        >
           <Empty
-            image={<ShoppingCartOutlined style={{ fontSize: 64, color: "var(--neutral-300, #bdbdbd)" }} />}
+            image={
+              <ShoppingCartOutlined
+                style={{ fontSize: 64, color: "var(--neutral-300, #bdbdbd)" }}
+              />
+            }
             imageStyle={{ height: 72 }}
             description={
               <Text type="secondary" style={{ fontSize: 14 }}>
@@ -281,8 +339,20 @@ const CartDrawer = ({ open, onClose }) => {
         </div>
       ) : (
         <>
-          <div style={{ display: "flex", justifyContent: "flex-end", padding: "10px 0 0" }}>
-            <Button type="link" danger size="small" onClick={handleClearAll} style={{ padding: 0, fontSize: 12 }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              padding: "10px 0 0",
+            }}
+          >
+            <Button
+              type="link"
+              danger
+              size="small"
+              onClick={handleClearAll}
+              style={{ padding: 0, fontSize: 12 }}
+            >
               Xóa tất cả
             </Button>
           </div>

@@ -1,4 +1,4 @@
-import { updateCategory } from "@/api/categories/category-lapi";
+import { updateCategory } from "@/api/categories/category-api";
 import {
   Box,
   Card,
@@ -108,7 +108,9 @@ export default function CategoryDetail() {
       const changedPayload = getChangedField(originPayload, payload);
 
       if (Object.keys(changedPayload).length === 0) {
-        enqueueSnackbar("Không có gì thay đổi", { variant: "info" });
+        enqueueSnackbar("Không có thay đổi nào được thực hiện", {
+          variant: "info",
+        });
         return;
       }
 
@@ -143,7 +145,7 @@ export default function CategoryDetail() {
         <Box>
           <Breadcrumb
             items={[
-              { title: "Admin", href: "#" },
+              { title: "Admin", href: "/admin" },
               { title: "Quản Lý Danh Mục", href: "/admin/categories" },
               { title: "Chi Tiết" },
             ]}
@@ -383,7 +385,7 @@ export default function CategoryDetail() {
               </Box>
               <TextField
                 fullWidth
-                label="Image URL"
+                label="Đường dẫn hình ảnh (URL)"
                 name="image_url"
                 value={formData.image_url || ""}
                 onChange={handleChange}

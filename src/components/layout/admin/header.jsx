@@ -58,7 +58,7 @@ const Header = ({ collapsed, toggleCollapsed }) => {
           }}
         >
           <Text strong style={{ fontSize: 14 }}>
-            Administrator
+            Quản trị viên
           </Text>
           <Text type="secondary" style={{ fontSize: 12 }}>
             admin@galaxy.store

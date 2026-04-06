@@ -4,41 +4,44 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { formatCurrency } from "@/components/utils/format-currency";
 
 export const getProductColumns = (handleDelete) => [
-  { field: "name", headerName: "Name", width: 300 },
-  { field: "description", headerName: "Description", width: 200 },
+  { field: "name", headerName: "Tên sản phẩm", width: 300 },
+  { field: "description", headerName: "Mô tả", width: 200 },
   {
     field: "price",
-    headerName: "Price",
+    headerName: "Giá",
     width: 150,
     valueGetter: (value, row) => formatCurrency(row?.price),
   },
   {
     field: "stock",
-    headerName: "Stock",
+    headerName: "Tồn kho",
     width: 100,
   },
   {
     field: "category",
-    headerName: "Category",
+    headerName: "Danh mục",
     width: 120,
     valueGetter: (value, row) => row?.category?.name || "",
   },
   {
     field: "brand",
-    headerName: "Brand",
+    headerName: "Thương hiệu",
     width: 120,
     valueGetter: (value, row) => row?.brand?.name || "",
   },
   {
     field: "is_active",
-    headerName: "Active",
+    headerName: "Trạng thái",
     width: 100,
     valueGetter: (value, row) =>
-      row?.is_active == 1 ? "Selling" : "Stop Selling",
+      row?.is_active == 1 ? "Đang bán" : "Ngừng bán",
   },
+
+  { field: "created_at", headerName: "Ngày tạo", width: 150 },
+  { field: "updated_at", headerName: "Ngày cập nhật", width: 150 },
   {
     field: "actions",
-    headerName: "Actions",
+    headerName: "Thao tác",
     width: 100,
     sortable: false,
     renderCell: (params) => (
@@ -56,6 +59,4 @@ export const getProductColumns = (handleDelete) => [
       </Space>
     ),
   },
-  { field: "created_at", headerName: "Created At", width: 150 },
-  { field: "updated_at", headerName: "Updated At", width: 150 },
 ];

@@ -22,7 +22,7 @@ import {
   LoginOutlined,
 } from "@ant-design/icons";
 import CartDrawer, { getCartCount } from "@/components/ui/cart/cart-drawer";
-import { fetchMe, logout } from "@/api/auth/auth-lapi";
+import { fetchMe, logout } from "@/api/auth/auth-api";
 
 const { Header: AntHeader } = Layout;
 const { Title, Text } = Typography;

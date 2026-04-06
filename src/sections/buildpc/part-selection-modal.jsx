@@ -11,7 +11,7 @@ import {
   Space,
 } from "antd";
 import { SearchOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { fetchCategoryById } from "@/api/categories/category-lapi";
+import { fetchCategoryById } from "@/api/categories/category-api";
 import { formatCurrency } from "@/components/utils/format-currency";
 import { Product } from "@/models/product";
 

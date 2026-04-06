@@ -3,12 +3,12 @@ import React, { useState, useEffect } from "react";
 // @ts-ignore
 import { Typography, Space, Spin } from "antd";
 import AllProductsSection from "../../../sections/home/all-products";
-import { fetchProducts } from "../../../api/products/product-lapi";
+import { fetchProducts } from "../../../api/products/product-api";
 import { enqueueSnackbar } from "notistack";
 import { Product } from "@/models/product";
 // @ts-ignore
 import LatestProInCateSection from "@/sections/home/latest-in-cart";
-import { fetchCateSection } from "@/api/home/cate-section-lapi";
+import { fetchCateSection } from "@/api/home/cate-section-api";
 import BannerSection from "@/sections/home/banner";
 
 // @ts-ignore
@@ -48,7 +48,7 @@ const Home = () => {
           height: "80vh",
         }}
       >
-        <Spin size="large" tip="Loading products..." />
+        <Spin size="large" tip="Đang tải sản phẩm..." />
       </div>
     );
   }

@@ -26,7 +26,7 @@ const ProductCard = ({ product }) => {
             src={product.image_url}
             className="product-image"
           />
-          <Tag className="tag">NEW</Tag>
+          <Tag className="tag">MỚI</Tag>
         </div>
       }
     >

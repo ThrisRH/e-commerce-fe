@@ -17,11 +17,11 @@ import { SearchOutlined, AppstoreOutlined } from "@ant-design/icons";
 import {
   fetchProducts,
   fetchProductsByCategory,
-} from "@/api/products/product-lapi";
+} from "@/api/products/product-api";
 import {
   fetchCategoryById,
   fetchCategories,
-} from "@/api/categories/category-lapi";
+} from "@/api/categories/category-api";
 import { Product } from "@/models/product";
 import ProductCard from "@/components/ui/products/product-card";
 import { enqueueSnackbar } from "notistack";

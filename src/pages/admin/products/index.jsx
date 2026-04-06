@@ -3,12 +3,12 @@ import { Typography, Breadcrumb, Card, Button, Space } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Box } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { fetchProducts } from "@/api/products/product-lapi";
+import { fetchProducts } from "@/api/products/product-api";
 import { ProductResponse } from "@/models/product";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
 import CreateProductModal from "./components/create-form";
-import { deleteProduct } from "@/api/products/product-lapi";
+import { deleteProduct } from "@/api/products/product-api";
 import { getProductColumns } from "./components/grid-columns/setup";
 import { Meta } from "@/models/MetaData/meta";
 
@@ -42,7 +42,10 @@ const ProductsManagement = () => {
 
   const loadProducts = () => {
     setIsLoading(true);
-    fetchProducts(paginationModel.page + 1, paginationModel.pageSize)
+    fetchProducts({
+      page: paginationModel.page + 1,
+      limit: paginationModel.pageSize,
+    })
       .then((data) => {
         setProducts(data);
       })

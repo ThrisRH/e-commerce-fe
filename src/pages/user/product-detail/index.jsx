@@ -31,7 +31,7 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { fetchProductById } from "@/api/products/product-lapi";
+import { fetchProductById } from "@/api/products/product-api";
 import { enqueueSnackbar } from "notistack";
 import { formatCurrency } from "@/components/utils/format-currency";
 import BorderButton from "@/components/common/buttons/border-button";

@@ -11,7 +11,7 @@ export const menuItems = [
   {
     key: "/admin",
     icon: <DashboardOutlined />,
-    label: "Dashboard",
+    label: "Tổng Quan",
   },
   {
     key: "/admin/products",

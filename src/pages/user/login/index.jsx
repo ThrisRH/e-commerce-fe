@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Form, Card, Button, Checkbox, Divider } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { login } from "@/api/auth/auth-lapi";
+import { login } from "@/api/auth/auth-api";
 import { enqueueSnackbar } from "notistack";
 import {
   TextField,

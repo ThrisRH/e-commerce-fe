@@ -3,10 +3,10 @@ import { Modal, Form, Input, Button, Steps, Typography, Space } from "antd";
 import {
   fetchCategories,
   fetchCategoryById,
-} from "@/api/categories/category-lapi";
-import { fetchBrands } from "@/api/brands/brand-lapi";
-import { fetchAttributes } from "@/api/attributes/attribute-lapi";
-import { createProduct } from "@/api/products/product-lapi";
+} from "@/api/categories/category-api";
+import { fetchBrands } from "@/api/brands/brand-api";
+import { fetchAttributes } from "@/api/attributes/attribute-api";
+import { createProduct } from "@/api/products/product-api";
 import { enqueueSnackbar } from "notistack";
 
 import InfoStep from "./steps/info-step";

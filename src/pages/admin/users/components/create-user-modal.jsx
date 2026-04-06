@@ -17,7 +17,7 @@ const CreateUserModal = ({ visible, onClose, onSuccess }) => {
       onSuccess();
       onClose();
     } catch (error) {
-      if (error.errorFields) return; // Form validation error
+      if (error.errorFields) return;
       enqueueSnackbar(error.message || "Tạo người dùng thất bại", {
         variant: "error",
       });

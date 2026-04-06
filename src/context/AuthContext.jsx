@@ -1,4 +1,4 @@
-import { fetchMe } from "@/api/auth/auth-lapi";
+import { fetchMe } from "@/api/auth/auth-api";
 import { User } from "@/models/user";
 import { enqueueSnackbar } from "notistack";
 import { createContext, useEffect, useMemo, useState } from "react";

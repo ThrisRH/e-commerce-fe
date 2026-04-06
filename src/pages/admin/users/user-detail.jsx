@@ -74,7 +74,9 @@ export default function UserDetail() {
     setIsUpdating(true);
     updateUser(id, formData)
       .then(() => {
-        enqueueSnackbar("Cập nhật thông tin thành công", { variant: "success" });
+        enqueueSnackbar("Cập nhật thông tin thành công", {
+          variant: "success",
+        });
       })
       .catch((error) => {
         enqueueSnackbar("Cập nhật thất bại: " + error.message, {
@@ -179,10 +181,14 @@ export default function UserDetail() {
                 Vai trò: {formData.roles.join(", ") || "Chưa có vai trò"}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                Ngày tạo: {formData.created_at && new Date(formData.created_at).toLocaleString()}
+                Ngày tạo:{" "}
+                {formData.created_at &&
+                  new Date(formData.created_at).toLocaleString()}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                Cập nhật: {formData.updated_at && new Date(formData.updated_at).toLocaleString()}
+                Cập nhật:{" "}
+                {formData.updated_at &&
+                  new Date(formData.updated_at).toLocaleString()}
               </Typography>
             </CardContent>
           </Card>

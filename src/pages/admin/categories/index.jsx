@@ -3,10 +3,7 @@ import { Typography, Breadcrumb, Card, Button, Space } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Box } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import {
-  fetchCategories,
-  deleteCategory,
-} from "@/api/categories/category-lapi";
+import { fetchCategories, deleteCategory } from "@/api/categories/category-api";
 import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import CreateCategoryModal from "./components/create-form";

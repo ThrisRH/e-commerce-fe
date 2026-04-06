@@ -68,7 +68,7 @@ const Sidebar = ({ collapsed }) => {
               whiteSpace: "nowrap",
             }}
           >
-            Admin Panel
+            Trang Quản Trị
           </h2>
         )}
       </div>

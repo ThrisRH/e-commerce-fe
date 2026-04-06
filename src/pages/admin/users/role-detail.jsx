@@ -179,10 +179,14 @@ export default function RoleDetail() {
                 Guard name: {formData.guard_name}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                Ngày tạo: {formData.created_at && new Date(formData.created_at).toLocaleString()}
+                Ngày tạo:{" "}
+                {formData.created_at &&
+                  new Date(formData.created_at).toLocaleString()}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                Cập nhật: {formData.updated_at && new Date(formData.updated_at).toLocaleString()}
+                Cập nhật:{" "}
+                {formData.updated_at &&
+                  new Date(formData.updated_at).toLocaleString()}
               </Typography>
             </CardContent>
           </Card>

@@ -5,7 +5,7 @@ import { SelectedParts } from "../../../models/build-pc";
 import PartPicker from "../../../sections/buildpc/part-picker";
 import BuildSummary from "../../../sections/buildpc/build-summary";
 import PartSelectionModal from "../../../sections/buildpc/part-selection-modal";
-import { fetchCategories } from "@/api/categories/category-lapi";
+import { fetchCategories } from "@/api/categories/category-api";
 
 const { Title, Text } = Typography;
 

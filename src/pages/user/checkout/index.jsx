@@ -29,7 +29,7 @@ import { formatCurrency } from "@/components/utils/format-currency";
 import { enqueueSnackbar } from "notistack";
 import AddressPickerModal from "./address-picker-modal";
 import { getCartFromSession } from "@/components/ui/cart/cart-drawer";
-import { fetchProductById } from "@/api/products/product-lapi";
+import { fetchProductById } from "@/api/products/product-api";
 import { createOrder } from "@/api/orders/order-api";
 import { TextField } from "@/components/common/input/ant-custom-input";
 

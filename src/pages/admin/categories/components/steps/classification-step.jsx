@@ -10,17 +10,17 @@ export default function CategoryClassificationStep({
 }) {
   return (
     <div style={{ display: display }}>
-      <Title level={5}>Classification</Title>
+      <Title level={5}>Phân loại</Title>
       <Paragraph type="secondary">
-        Decide where this category fits in your hierarchy.
+        Xác định vị trí của danh mục này trong cây danh mục của bạn.
       </Paragraph>
       <Divider />
       <Row gutter={24}>
         <Col span={24}>
-          <Form.Item name="parent_id" label="Parent Category (Optional)">
+          <Form.Item name="parent_id" label="Danh mục cha (Tùy chọn)">
             <Select
               showSearch
-              placeholder="Select a parent category"
+              placeholder="Chọn danh mục cha"
               loading={loading}
               options={categories.map((c) => ({
                 label: c.name,
@@ -32,18 +32,18 @@ export default function CategoryClassificationStep({
         </Col>
 
         <Col span={24}>
-          <Divider>Attributes</Divider>
+          <Divider>Thuộc tính</Divider>
           <Paragraph type="secondary" style={{ fontSize: "12px" }}>
-            Select attributes that will be required for products in this category.
+            Chọn các thuộc tính sẽ được yêu cầu cho các sản phẩm trong danh mục
+            này.
           </Paragraph>
         </Col>
 
-
         <Col span={18}>
-          <Form.Item name="attribute_ids" label="Category Attributes">
+          <Form.Item name="attribute_ids" label="Thuộc tính danh mục">
             <Select
               mode="multiple"
-              placeholder="Select attributes"
+              placeholder="Chọn thuộc tính"
               loading={loading}
               options={attributes.map((attr) => ({
                 label: attr.name,
@@ -57,11 +57,11 @@ export default function CategoryClassificationStep({
         <Col span={6}>
           <Form.Item
             name="is_required"
-            label="Required?"
+            label="Bắt buộc?"
             valuePropName="checked"
             initialValue={false}
           >
-            <Checkbox>Is Required</Checkbox>
+            <Checkbox>Yêu cầu</Checkbox>
           </Form.Item>
         </Col>
       </Row>

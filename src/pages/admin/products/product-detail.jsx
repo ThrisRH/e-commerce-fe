@@ -1,4 +1,4 @@
-import { updateProduct } from "@/api/products/product-lapi";
+import { updateProduct } from "@/api/products/product-api";
 import {
   Box,
   Button,
