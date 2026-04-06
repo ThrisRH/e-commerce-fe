@@ -1,20 +1,46 @@
-import React from "react";
-import { Menu, Layout, Row, Col } from "antd";
-import { useNavigate } from "react-router-dom";
-import { BuildOutlined } from "@ant-design/icons";
-
-const categories = [
-  { label: "PC", key: "pc" },
-  { label: "Laptop văn phòng", key: "laptop-van-phong" },
-  { label: "Laptop gaming", key: "laptop-gaming" },
-  { label: "Máy tính bảng", key: "may-tinh-bang" },
-  { label: "Thiết bị âm thanh", key: "thiet-bi-am-thanh" },
-  { label: "Phụ kiện", key: "phu-kien" },
-  { label: "Dựng cấu hình PC", key: "/build-pc" },
-];
+import React, { useEffect, useState } from "react";
+import { Menu, Layout, Spin } from "antd";
+import { useNavigate, useLocation } from "react-router-dom";
+import { fetchCategories } from "@/api/categories/category-api";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchCategories({ page: 1, limit: 10 })
+      .then((res) => {
+        setCategories(res.data || []);
+      })
+      .catch((err) => {
+        console.error("Lỗi tải category:", err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  const handleMenuClick = ({ key }) => {
+    if (key === "/build-pc") {
+      navigate(key);
+    } else {
+      navigate(`/category?category_id=${key}`);
+    }
+  };
+
+  const menuItems = [
+    ...categories.map((cat) => ({
+      key: String(cat.id),
+      label: cat.name,
+    })),
+    {
+      key: "/build-pc",
+      label: "Dựng cấu hình PC",
+      style: { color: "#e53935", fontWeight: 700 },
+    },
+  ];
 
   return (
     <Layout.Header
@@ -28,27 +54,25 @@ const Navbar = () => {
       }}
     >
       <div style={{ width: "100%", maxWidth: 1280, margin: "0 auto" }}>
-        <Menu
-          mode="horizontal"
-          style={{
-            borderBottom: "none",
-            height: 48,
-            lineHeight: "48px",
-            fontSize: 13,
-            fontWeight: 500,
-          }}
-          items={categories.map(({ label, key }) => ({
-            key,
-            label,
-            style:
-              key === "/build-pc" ? { color: "#e53935", fontWeight: 700 } : {},
-          }))}
-          onClick={({ key }) => {
-            if (key.startsWith("/")) {
-              navigate(key);
-            }
-          }}
-        />
+        {loading ? (
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <Spin size="small" />
+          </div>
+        ) : (
+          <Menu
+            mode="horizontal"
+            style={{
+              borderBottom: "none",
+              height: 48,
+              lineHeight: "48px",
+              fontSize: 13,
+              fontWeight: 500,
+            }}
+            items={menuItems}
+            onClick={handleMenuClick}
+            selectedKeys={[]}
+          />
+        )}
       </div>
     </Layout.Header>
   );
