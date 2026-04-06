@@ -56,7 +56,9 @@ const ProductCard = ({ product }) => {
             <AppButton label="Mua ngay" onClick={goToDetail} />
             <BorderButton
               label="Thêm giỏ hàng"
-              onClick={(e) => handleAddToCart(e, product, 1)}
+              onClick={(e) =>
+                handleAddToCart([{ productId: product.id, quantity: 1 }], e)
+              }
             />
           </Flex>
         </div>

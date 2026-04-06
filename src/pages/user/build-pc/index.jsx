@@ -6,6 +6,7 @@ import PartPicker from "../../../sections/buildpc/part-picker";
 import BuildSummary from "../../../sections/buildpc/build-summary";
 import PartSelectionModal from "../../../sections/buildpc/part-selection-modal";
 import { fetchCategories } from "@/api/categories/category-api";
+import { handleAddToCart } from "@/utils/add-to-cart";
 
 const { Title, Text } = Typography;
 
@@ -107,7 +108,7 @@ const BuildPC = () => {
     });
   };
 
-  const handleAddToCart = () => {
+  const handleAdd = () => {
     const selectedCount = Object.values(selected).filter(
       (part) => part && typeof part !== "function",
     ).length;
@@ -119,11 +120,16 @@ const BuildPC = () => {
       });
       return;
     }
-    api.success({
-      message: "Thành công",
-      description: `Đã thêm ${selectedCount} linh kiện vào giỏ hàng!`,
-      placement: "bottomRight",
-    });
+    const selectedItems = Object.values(selected).filter(
+      (part) => part && typeof part !== "function",
+    );
+
+    const cartItems = selectedItems.map((item) => ({
+      productId: item.id,
+      quantity: 1,
+    }));
+
+    handleAddToCart(cartItems);
   };
 
   return (
@@ -170,7 +176,7 @@ const BuildPC = () => {
               selected={selected}
               onRemove={handleRemove}
               onReset={handleReset}
-              onAddToCart={handleAddToCart}
+              onAddToCart={handleAdd}
             />
           </div>
         </Col>
