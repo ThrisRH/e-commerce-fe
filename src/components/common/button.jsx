@@ -1,19 +1,28 @@
-import { Button } from "antd/es/radio";
+import { Button } from "antd";
 
-const AppButton = ({ label, onClick, disabled = false, width = "100%" }) => {
+const AppButton = ({
+  label,
+  onClick,
+  disabled = false,
+  loading = false,
+  width = "100%",
+  type = "primary",
+}) => {
   return (
     <Button
+      // @ts-ignore
+      type={type}
       onClick={onClick}
       disabled={disabled}
+      loading={loading}
       style={{
         width: width,
         height: "48px",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        background: disabled ? "var(--neutral-200)" : "var(--primary-main)",
-        color: "white",
-        padding: "8px",
+        fontWeight: 600,
+        borderRadius: "8px",
       }}
     >
       {label}

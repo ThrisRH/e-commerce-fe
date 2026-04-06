@@ -16,39 +16,39 @@ import AppButton from "@/components/common/button";
 import AppInput from "@/components/common/input";
 import Loading from "@/components/ui/state/loading";
 import { enqueueSnackbar } from "notistack";
-import { fetchUserById, updateUser } from "@/api/users/user-api";
+import { fetchRoleById, updateRole } from "@/api/users/user-api";
 
 const { Title: AntdTitle } = AntdTypography;
 
-export default function UserDetail() {
+export default function RoleDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
-    phone: "",
-    roles: [],
+    display_name: "",
+    description: "",
+    guard_name: "api",
     created_at: null,
     updated_at: null,
   });
 
   const loadData = useCallback(() => {
     setIsLoading(true);
-    fetchUserById(id)
+    fetchRoleById(id)
       .then((data) => {
         setFormData({
           name: data.name || "",
-          email: data.email || "",
-          phone: data.phone || "",
-          roles: data.roles || [],
-          created_at: data.created_at || null,
-          updated_at: data.updated_at || null,
+          display_name: data.display_name || "",
+          description: data.description || "",
+          guard_name: data.guard_name || "api",
+          created_at: data.created_at,
+          updated_at: data.updated_at,
         });
       })
       .catch((error) => {
-        enqueueSnackbar("Lỗi tải thông tin người dùng: " + error.message, {
+        enqueueSnackbar("Lỗi tải thông tin vai trò: " + error.message, {
           variant: "error",
         });
       })
@@ -72,9 +72,9 @@ export default function UserDetail() {
 
   const handleUpdate = () => {
     setIsUpdating(true);
-    updateUser(id, formData)
+    updateRole(id, formData)
       .then(() => {
-        enqueueSnackbar("Cập nhật thông tin thành công", { variant: "success" });
+        enqueueSnackbar("Cập nhật vai trò thành công", { variant: "success" });
       })
       .catch((error) => {
         enqueueSnackbar("Cập nhật thất bại: " + error.message, {
@@ -94,7 +94,7 @@ export default function UserDetail() {
         <Breadcrumb
           items={[
             { title: "Admin", href: "/admin" },
-            { title: "Quản Lý Người Dùng", href: "/admin/users" },
+            { title: "Quản Lý Vai Trò", href: "/admin/users" },
             { title: "Chi Tiết" },
           ]}
         />
@@ -114,7 +114,7 @@ export default function UserDetail() {
               <ArrowLeftIcon />
             </IconButton>
             <AntdTitle level={2} style={{ margin: 0 }}>
-              Chi Tiết Người Dùng
+              Chi Tiết Vai Trò
             </AntdTitle>
           </Box>
           <Box sx={{ width: 150 }}>
@@ -134,30 +134,30 @@ export default function UserDetail() {
           >
             <CardContent sx={{ p: 4 }}>
               <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
-                Thông Tin Cá Nhân
+                Thông Tin Vai Trò
               </Typography>
               <Grid container spacing={3}>
                 <Grid size={{ xs: 12 }}>
                   <AppInput
-                    label="Họ tên"
+                    label="Mã vai trò"
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
                   />
                 </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
+                <Grid size={{ xs: 12 }}>
                   <AppInput
-                    label="Email"
-                    name="email"
-                    value={formData.email}
+                    label="Tên hiển thị"
+                    name="display_name"
+                    value={formData.display_name}
                     onChange={handleInputChange}
                   />
                 </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
+                <Grid size={{ xs: 12 }}>
                   <AppInput
-                    label="Số điện thoại"
-                    name="phone"
-                    value={formData.phone}
+                    label="Mô tả"
+                    name="description"
+                    value={formData.description}
                     onChange={handleInputChange}
                   />
                 </Grid>
@@ -171,12 +171,12 @@ export default function UserDetail() {
           >
             <CardContent sx={{ p: 4 }}>
               <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
-                Vai Trò
+                Hệ Thống
               </Typography>
               <Divider sx={{ mb: 3 }} />
 
               <Typography variant="body2" color="text.secondary">
-                Vai trò: {formData.roles.join(", ") || "Chưa có vai trò"}
+                Guard name: {formData.guard_name}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
                 Ngày tạo: {formData.created_at && new Date(formData.created_at).toLocaleString()}

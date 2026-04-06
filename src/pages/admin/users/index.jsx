@@ -1,13 +1,27 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Typography, Breadcrumb, Card, Button, Space, Tabs } from "antd";
-import { PlusOutlined, UserOutlined, TeamOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  UserOutlined,
+  TeamOutlined,
+  KeyOutlined,
+} from "@ant-design/icons";
 import { Box } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { fetchUsers, deleteUser } from "@/api/users/user-lapi";
+import {
+  fetchCustomers,
+  fetchEmployees,
+  fetchRoles,
+  deleteUser,
+  deleteRole,
+} from "@/api/users/user-api";
 import { Meta } from "@/models/MetaData/meta";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
-import { getUserColumns } from "./components/grid-columns/setup";
+import { getUserColumns } from "./components/grid-columns/setup-user";
+import { getRoleColumns } from "./components/grid-columns/setup-role";
+import CreateUserModal from "./components/create-user-modal";
+import CreateRoleModal from "./components/create-role-modal";
 
 const { Title } = Typography;
 
@@ -16,18 +30,36 @@ const UsersManagement = () => {
   const [activeTab, setActiveTab] = useState("customer");
 
   const [isLoading, setIsLoading] = useState(true);
-  const [users, setUsers] = useState([]);
+  const [dataList, setDataList] = useState([]);
   const [meta, setMeta] = useState(new Meta());
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
     pageSize: 10,
   });
 
-  const loadUsers = useCallback(() => {
+  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
+  const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
+
+  const loadData = useCallback(() => {
     setIsLoading(true);
-    fetchUsers(paginationModel.page + 1, paginationModel.pageSize, activeTab)
+    let apiCall;
+    if (activeTab === "customer") {
+      apiCall = fetchCustomers(
+        paginationModel.page + 1,
+        paginationModel.pageSize,
+      );
+    } else if (activeTab === "staff") {
+      apiCall = fetchEmployees(
+        paginationModel.page + 1,
+        paginationModel.pageSize,
+      );
+    } else {
+      apiCall = fetchRoles(paginationModel.page + 1, paginationModel.pageSize);
+    }
+
+    apiCall
       .then((data) => {
-        setUsers(Array.isArray(data.data) ? data.data : [data.data]);
+        setDataList(Array.isArray(data.data) ? data.data : [data.data]);
         setMeta(data.meta);
       })
       .catch((error) => {
@@ -41,21 +73,34 @@ const UsersManagement = () => {
   }, [paginationModel, activeTab]);
 
   const handleDelete = (id) => {
-    deleteUser(id)
-      .then(() => {
-        enqueueSnackbar("Xóa tài khoản thành công", { variant: "success" });
-        loadUsers();
-      })
-      .catch((error) => {
-        enqueueSnackbar("Xóa tài khoản thất bại: " + error.message, {
-          variant: "error",
+    if (activeTab === "role") {
+      deleteRole(id)
+        .then(() => {
+          enqueueSnackbar("Xóa thành công", { variant: "success" });
+          loadData();
+        })
+        .catch((error) => {
+          enqueueSnackbar("Xóa thất bại: " + error.message, {
+            variant: "error",
+          });
         });
-      });
+    } else {
+      deleteUser(id)
+        .then(() => {
+          enqueueSnackbar("Xóa thành công", { variant: "success" });
+          loadData();
+        })
+        .catch((error) => {
+          enqueueSnackbar("Xóa thất bại: " + error.message, {
+            variant: "error",
+          });
+        });
+    }
   };
 
   useEffect(() => {
-    loadUsers();
-  }, [loadUsers]);
+    loadData();
+  }, [loadData]);
 
   const onTabChange = (key) => {
     setActiveTab(key);
@@ -65,8 +110,12 @@ const UsersManagement = () => {
   const renderDataGrid = () => (
     <Box sx={{ height: 600, width: "100%" }}>
       <DataGrid
-        rows={users}
-        columns={getUserColumns(handleDelete)}
+        rows={dataList}
+        columns={
+          activeTab === "role"
+            ? getRoleColumns(handleDelete)
+            : getUserColumns(handleDelete)
+        }
         loading={isLoading}
         rowCount={meta.total}
         pageSizeOptions={[10, 25, 50]}
@@ -80,7 +129,13 @@ const UsersManagement = () => {
             },
           },
         }}
-        onRowClick={(params) => navigate(`/admin/users/${params.row.id}`)}
+        onRowClick={(params) =>
+          navigate(
+            activeTab === "role"
+              ? `/admin/roles/${params.row.id}`
+              : `/admin/users/${params.row.id}`,
+          )
+        }
         sx={{
           border: "none",
           "& .MuiDataGrid-cell:focus": {
@@ -90,6 +145,14 @@ const UsersManagement = () => {
       />
     </Box>
   );
+
+  const handleCreateButtonClick = () => {
+    if (activeTab === "role") {
+      setIsRoleModalOpen(true);
+    } else {
+      setIsUserModalOpen(true);
+    }
+  };
 
   return (
     <Space direction="vertical" style={{ width: "100%" }} size="large">
@@ -112,11 +175,23 @@ const UsersManagement = () => {
           type="primary"
           icon={<PlusOutlined />}
           size="large"
-          onClick={() => {}}
+          onClick={handleCreateButtonClick}
         >
-          Thêm Tài Khoản
+          {activeTab === "role" ? "Thêm Vai Trò" : "Thêm Tài Khoản"}
         </Button>
       </div>
+
+      <CreateUserModal
+        visible={isUserModalOpen}
+        onClose={() => setIsUserModalOpen(false)}
+        onSuccess={loadData}
+      />
+
+      <CreateRoleModal
+        visible={isRoleModalOpen}
+        onClose={() => setIsRoleModalOpen(false)}
+        onSuccess={loadData}
+      />
 
       <Card
         style={{
@@ -146,6 +221,16 @@ const UsersManagement = () => {
                 <Space>
                   <UserOutlined />
                   Nhân viên
+                </Space>
+              ),
+              children: renderDataGrid(),
+            },
+            {
+              key: "role",
+              label: (
+                <Space>
+                  <KeyOutlined />
+                  Vai trò
                 </Space>
               ),
               children: renderDataGrid(),

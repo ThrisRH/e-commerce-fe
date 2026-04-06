@@ -26,6 +26,7 @@ const ProductsManagement = lazy(() => import("./pages/admin/products"));
 const CategoriesManagement = lazy(() => import("./pages/admin/categories"));
 const UsersManagement = lazy(() => import("./pages/admin/users/index"));
 import UserDetail from "./pages/admin/users/user-detail";
+import RoleDetail from "./pages/admin/users/role-detail";
 
 const OrdersManagement = lazy(() => import("./pages/admin/orders"));
 
@@ -96,6 +97,7 @@ function App() {
 
               <Route path="users" element={<UsersManagement />} />
               <Route path="users/:id" element={<UserDetail />} />
+              <Route path="roles/:id" element={<RoleDetail />} />
               <Route path="orders" element={<OrdersManagement />} />
               <Route path="orders/:id" element={<OrderDetail />} />
             </Route>
