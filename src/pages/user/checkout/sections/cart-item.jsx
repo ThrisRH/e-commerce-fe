@@ -1,6 +1,6 @@
 import React from "react";
 import { Typography, Tag } from "antd";
-import { formatCurrency } from "@/components/utils/format-currency";
+import { formatCurrency } from "@/utils/format-currency";
 
 const { Text } = Typography;
 

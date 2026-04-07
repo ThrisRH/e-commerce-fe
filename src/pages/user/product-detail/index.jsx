@@ -6,9 +6,9 @@ import { enqueueSnackbar } from "notistack";
 import { handleAddToCart } from "@/utils/add-to-cart";
 
 // Components
-import ProductGallery from "./components/ProductGallery";
-import ProductInfo from "./components/ProductInfo";
-import ProductTabs from "./components/ProductTabs";
+import ProductGallery from "./sections/ProductGallery";
+import ProductInfo from "./sections/ProductInfo";
+import ProductTabs from "./sections/ProductTabs";
 
 const MOCK_REVIEWS = [
   {

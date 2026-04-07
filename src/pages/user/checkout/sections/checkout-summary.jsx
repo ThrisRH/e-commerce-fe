@@ -9,7 +9,7 @@ import {
 } from "@ant-design/icons";
 import SectionCard from "./section-card";
 import CartItem from "./cart-item";
-import { formatCurrency } from "@/components/utils/format-currency";
+import { formatCurrency } from "@/utils/format-currency";
 
 const { Title, Text } = Typography;
 

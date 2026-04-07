@@ -10,10 +10,10 @@ import { createOrder } from "@/api/orders/order-api";
 import { fetchMe } from "@/api/auth/auth-api";
 
 // Components
-import AddressPickerModal from "./address-picker-modal";
-import CheckoutForm from "./components/checkout-form";
-import CheckoutSummary from "./components/checkout-summary";
-import SuccessInvoice from "./components/invoice";
+import AddressPickerModal from "./sections/address-picker-modal";
+import CheckoutForm from "./sections/checkout-form";
+import CheckoutSummary from "./sections/checkout-summary";
+import SuccessInvoice from "./sections/invoice";
 
 const { Title } = Typography;
 const SHIPPING_FEE = 30000;

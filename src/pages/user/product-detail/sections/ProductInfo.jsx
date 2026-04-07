@@ -6,7 +6,7 @@ import {
   SafetyCertificateOutlined,
   ReloadOutlined,
 } from "@ant-design/icons";
-import { formatCurrency } from "@/components/utils/format-currency";
+import { formatCurrency } from "@/utils/format-currency";
 import BorderButton from "@/components/common/buttons/border-button";
 import PolicyBadge from "./PolicyBadge";
 

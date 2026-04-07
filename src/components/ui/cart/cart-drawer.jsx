@@ -15,7 +15,7 @@ import {
   ThunderboltOutlined,
 } from "@ant-design/icons";
 import { fetchProductById } from "@/api/products/product-api";
-import { formatCurrency } from "@/components/utils/format-currency";
+import { formatCurrency } from "@/utils/format-currency";
 import { useNavigate } from "react-router-dom";
 
 const { Text, Title } = Typography;

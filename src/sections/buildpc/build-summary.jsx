@@ -18,7 +18,7 @@ import {
   WarningOutlined,
   QuestionCircleOutlined,
 } from "@ant-design/icons";
-import { formatCurrency } from "../../components/utils/format-currency";
+import { formatCurrency } from "../../utils/format-currency";
 
 const { Title, Text } = Typography;
 

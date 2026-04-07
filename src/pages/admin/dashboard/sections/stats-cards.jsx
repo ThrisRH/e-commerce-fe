@@ -1,11 +1,9 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Row, Col, Card, Space, Typography } from "antd";
 import {
   ShoppingOutlined,
   UserOutlined,
   DollarOutlined,
-  ArrowUpOutlined,
-  ArrowDownOutlined,
   ShopOutlined,
 } from "@ant-design/icons";
 
@@ -51,12 +49,18 @@ const DashboardStat = ({ title, value, icon, suffix = "" }) => (
 );
 
 const StatsCards = ({ orders = [], customers = [], orderItems = [] }) => {
-  const totalRevenue = orders.reduce(
-    (sum, order) => sum + (order.total_amount || 0),
-    0,
-  );
-  const totalOrders = orders.length;
-  const totalCustomers = customers.length;
+  const totalRevenue = useMemo(() => {
+    return orders.reduce((sum, order) => sum + (order.total_amount || 0), 0);
+  }, [orders]);
+  const totalOrders = useMemo(() => {
+    return orders.length;
+  }, [orders]);
+  const totalCustomers = useMemo(() => {
+    return customers.length;
+  }, [customers]);
+  const totalOrderItems = useMemo(() => {
+    return orderItems.reduce((sum, item) => sum + item.quantity, 0);
+  }, [orderItems]);
 
   return (
     <Row gutter={[20, 20]} style={{ marginBottom: 24 }}>
@@ -86,7 +90,7 @@ const StatsCards = ({ orders = [], customers = [], orderItems = [] }) => {
         <DashboardStat
           icon={<ShopOutlined />}
           title="Sản phẩm đã bán"
-          value={orderItems.length}
+          value={totalOrderItems}
         />
       </Col>
     </Row>

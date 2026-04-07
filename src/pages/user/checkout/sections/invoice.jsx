@@ -12,7 +12,7 @@ import {
 } from "antd";
 import { FileTextOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { formatCurrency } from "@/components/utils/format-currency";
+import { formatCurrency } from "@/utils/format-currency";
 
 const { Title, Text } = Typography;
 

@@ -1,10 +1,10 @@
 import { Card, Tag, Typography, Tooltip, Flex } from "antd";
 import { useNavigate } from "react-router-dom";
 import "./style.css";
-import { formatCurrency } from "../../utils/format-currency";
 import AppButton from "@/components/common/buttons/button";
 import BorderButton from "@/components/common/buttons/border-button";
 import { handleAddToCart } from "@/utils/add-to-cart";
+import { formatCurrency } from "@/utils/format-currency";
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();

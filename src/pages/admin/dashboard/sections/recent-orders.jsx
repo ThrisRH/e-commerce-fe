@@ -1,5 +1,5 @@
 import { Card, Table, Tag, Typography } from "antd";
-import { formatCurrency } from "@/components/utils/format-currency";
+import { formatCurrency } from "@/utils/format-currency";
 
 const { Text } = Typography;
 

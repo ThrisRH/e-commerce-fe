@@ -7,9 +7,9 @@ import { fetchProducts } from "@/api/products/product-api";
 import { ProductResponse } from "@/models/product";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
-import CreateProductModal from "./components/create-form";
+import CreateProductModal from "./sections/create-form";
 import { deleteProduct } from "@/api/products/product-api";
-import { getProductColumns } from "./components/grid-columns/setup";
+import { getProductColumns } from "./sections/grid-columns/setup";
 import { Meta } from "@/models/MetaData/meta";
 
 const { Title } = Typography;

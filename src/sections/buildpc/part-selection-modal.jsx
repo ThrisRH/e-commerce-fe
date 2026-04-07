@@ -12,7 +12,7 @@ import {
 } from "antd";
 import { SearchOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { fetchCategoryById } from "@/api/categories/category-api";
-import { formatCurrency } from "@/components/utils/format-currency";
+import { formatCurrency } from "@/utils/format-currency";
 import { Product } from "@/models/product";
 
 const { Text, Title } = Typography;

@@ -1,7 +1,7 @@
 import React from "react";
 import { Space, Button, Popconfirm } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
-import { formatCurrency } from "@/components/utils/format-currency";
+import { formatCurrency } from "@/utils/format-currency";
 
 export const getProductColumns = (handleDelete) => [
   { field: "name", headerName: "Tên sản phẩm", width: 300 },

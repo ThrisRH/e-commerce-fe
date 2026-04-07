@@ -1,6 +1,6 @@
-import { formatCurrency } from "@/components/utils/format-currency";
-import { formatStatus } from "@/components/utils/format-status";
-import { formatPaymentMethod } from "@/components/utils/payment-method";
+import { formatCurrency } from "@/utils/format-currency";
+import { formatStatus } from "@/utils/format-status";
+import { formatPaymentMethod } from "@/utils/payment-method";
 import { MenuItem, Select } from "@mui/material";
 
 export const getOrderColumns = (onUpdateStatus) => {

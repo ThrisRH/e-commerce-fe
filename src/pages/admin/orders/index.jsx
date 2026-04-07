@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Breadcrumb, Typography, Space, Card, Empty } from "antd";
 import { DataGrid } from "@mui/x-data-grid";
-import { getOrderColumns } from "./components/grid-columns/setup";
+import { getOrderColumns } from "./sections/grid-columns/setup";
 import Order from "@/models/order";
 import { fetchOrders, updateOrder } from "@/api/orders/order-api";
 import { enqueueSnackbar } from "notistack";

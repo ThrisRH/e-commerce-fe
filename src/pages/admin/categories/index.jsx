@@ -6,8 +6,8 @@ import { DataGrid } from "@mui/x-data-grid";
 import { fetchCategories, deleteCategory } from "@/api/categories/category-api";
 import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
-import CreateCategoryModal from "./components/create-form";
-import { getCategoryColumns } from "./components/grid-columns/setup";
+import CreateCategoryModal from "./sections/create-form";
+import { getCategoryColumns } from "./sections/grid-columns/setup";
 import { Meta } from "@/models/MetaData/meta";
 
 const { Title } = Typography;

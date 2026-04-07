@@ -18,10 +18,10 @@ import {
 import { Meta } from "@/models/MetaData/meta";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
-import { getUserColumns } from "./components/grid-columns/setup-user";
-import { getRoleColumns } from "./components/grid-columns/setup-role";
-import CreateUserModal from "./components/create-user-modal";
-import CreateRoleModal from "./components/create-role-modal";
+import { getUserColumns } from "./sections/grid-columns/setup-user";
+import { getRoleColumns } from "./sections/grid-columns/setup-role";
+import CreateUserModal from "./sections/create-user-modal";
+import CreateRoleModal from "./sections/create-role-modal";
 
 const { Title } = Typography;
 

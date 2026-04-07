@@ -1,36 +1,26 @@
 import { updateCategory } from "@/api/categories/category-api";
 import {
   Box,
-  Card,
-  CardContent,
-  Checkbox,
-  Chip,
   Container,
-  FormControl,
-  FormControlLabel,
   Grid,
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  Select,
-  Switch,
-  TextField,
-  Typography,
 } from "@mui/material";
 
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AppButton from "@/components/common/buttons/button";
-import AppInput from "@/components/common/input";
 import useCategoryDetail from "@/hooks/categories/category-detail";
 import Loading from "@/components/ui/state/loading";
 
 import {
   Breadcrumb,
   Typography as AntdTypography,
-  Space as AntdSpace,
 } from "antd";
+
+// Import sections
+import BasicInfo from "./sections/basic-info";
+import CategoryAttributes from "./sections/category-attributes";
+import CategoryClassification from "./sections/category-classification";
 
 const { Title: AntdTitle } = AntdTypography;
 
@@ -51,7 +41,7 @@ export default function CategoryDetail() {
 
   useEffect(() => {
     if (id) loadData();
-  }, [id]);
+  }, [id, loadData]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -72,7 +62,7 @@ export default function CategoryDetail() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e?.preventDefault?.();
 
     try {
       setSaving(true);
@@ -167,232 +157,25 @@ export default function CategoryDetail() {
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 8 }}>
-          <Card
-            sx={{ borderRadius: 3, boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}
-          >
-            <CardContent sx={{ p: 4 }}>
-              <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
-                Thông Tin Cơ Bản
-              </Typography>
-              <Grid container spacing={3}>
-                <Grid size={{ xs: 12 }}>
-                  <AppInput
-                    label="Tên danh mục"
-                    name="name"
-                    value={formData.name || ""}
-                    onChange={handleChange}
-                  />
-                </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <AppInput
-                    label="Đường dẫn (Slug)"
-                    name="slug"
-                    value={formData.slug || ""}
-                    onChange={handleChange}
-                  />
-                </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <AppInput
-                    label="Thứ tự hiển thị"
-                    type="number"
-                    name="sort_order"
-                    value={formData.sort_order || 0}
-                    onChange={handleChange}
-                  />
-                </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={formData.is_active == 1}
-                        onChange={(e) =>
-                          setFormData((p) => ({
-                            ...p,
-                            is_active: e.target.checked ? 1 : 0,
-                          }))
-                        }
-                      />
-                    }
-                    label="Đang kích hoạt"
-                  />
-                </Grid>
-                <Grid size={{ xs: 12 }}>
-                  <TextField
-                    fullWidth
-                    multiline
-                    rows={4}
-                    label="Mô tả danh mục"
-                    name="description"
-                    value={formData.description || ""}
-                    onChange={handleChange}
-                  />
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-
-          <Card
-            sx={{
-              mt: 3,
-              borderRadius: 3,
-              boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
-            }}
-          >
-            <CardContent sx={{ p: 4 }}>
-              <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
-                Thuộc Tính Danh Mục
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                Chọn các thuộc tính mà sản phẩm thuộc danh mục này sẽ có.
-              </Typography>
-
-              <Grid container spacing={3} alignItems="center">
-                <Grid size={{ xs: 12, sm: 9 }}>
-                  <FormControl fullWidth>
-                    <InputLabel>Chọn thuộc tính</InputLabel>
-                    <Select
-                      multiple
-                      value={formData.attribute_ids || []}
-                      onChange={(e) => {
-                        setFormData((p) => ({
-                          ...p,
-                          attribute_ids: e.target.value,
-                        }));
-                      }}
-                      input={<OutlinedInput label="Chọn thuộc tính" />}
-                      renderValue={(selected) => (
-                        <Box
-                          sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}
-                        >
-                          {selected.map((value) => (
-                            <Chip
-                              key={value}
-                              label={
-                                allAttributes.find((a) => a.id === value)
-                                  ?.name || value
-                              }
-                              size="small"
-                            />
-                          ))}
-                        </Box>
-                      )}
-                    >
-                      {allAttributes.map((attr) => (
-                        <MenuItem key={attr.id} value={attr.id}>
-                          <Checkbox
-                            checked={
-                              (formData.attribute_ids || []).indexOf(attr.id) >
-                              -1
-                            }
-                          />
-                          {attr.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid size={{ xs: 12, sm: 3 }}>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={formData.is_required || false}
-                        onChange={(e) =>
-                          setFormData((p) => ({
-                            ...p,
-                            is_required: e.target.checked,
-                          }))
-                        }
-                      />
-                    }
-                    label="Bắt buộc?"
-                  />
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
+          <BasicInfo 
+            formData={formData} 
+            handleChange={handleChange} 
+            setFormData={setFormData} 
+          />
+          <CategoryAttributes 
+            formData={formData} 
+            setFormData={setFormData} 
+            allAttributes={allAttributes} 
+          />
         </Grid>
 
         <Grid size={{ xs: 12, md: 4 }}>
-          <Card
-            sx={{ borderRadius: 3, boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}
-          >
-            <CardContent sx={{ p: 4 }}>
-              <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
-                Phân Loại
-              </Typography>
-
-              <FormControl fullWidth sx={{ mb: 3 }}>
-                <InputLabel>Danh Mục Cha</InputLabel>
-                <Select
-                  label="Danh Mục Cha"
-                  value={formData.parent_category?.id || ""}
-                  onChange={(e) =>
-                    setFormData((p) => ({
-                      ...p,
-                      parent_category:
-                        parentCategories.find((c) => c.id === e.target.value) ||
-                        null,
-                    }))
-                  }
-                >
-                  <MenuItem value="">
-                    <em>Không có (Gốc)</em>
-                  </MenuItem>
-                  {parentCategories.map((cat) => (
-                    <MenuItem key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-
-              <Typography
-                variant="subtitle2"
-                sx={{ mb: 1, color: "text.secondary" }}
-              >
-                Hình ảnh đại diện
-              </Typography>
-              <Box
-                sx={{
-                  width: "100%",
-                  height: 200,
-                  borderRadius: 2,
-                  bgcolor: "grey.100",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  overflow: "hidden",
-                  border: "1px dashed",
-                  borderColor: "grey.400",
-                  mb: 2,
-                }}
-              >
-                {formData.image_url ? (
-                  <img
-                    src={formData.image_url}
-                    alt={formData.name}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "contain",
-                    }}
-                  />
-                ) : (
-                  <Typography variant="body2" color="text.secondary">
-                    Không có hình ảnh
-                  </Typography>
-                )}
-              </Box>
-              <TextField
-                fullWidth
-                label="Đường dẫn hình ảnh (URL)"
-                name="image_url"
-                value={formData.image_url || ""}
-                onChange={handleChange}
-                size="small"
-              />
-            </CardContent>
-          </Card>
+          <CategoryClassification 
+            formData={formData} 
+            setFormData={setFormData} 
+            parentCategories={parentCategories} 
+            handleChange={handleChange} 
+          />
         </Grid>
       </Grid>
     </Container>
