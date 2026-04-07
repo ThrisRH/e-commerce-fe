@@ -9,7 +9,9 @@ import { Product } from "@/models/product";
 // @ts-ignore
 import LatestProInCateSection from "@/sections/home/latest-in-cart";
 import { fetchCateSection } from "@/api/home/cate-section-api";
+import { fetchCategories } from "@/api/categories/category-api";
 import BannerSection from "@/sections/home/banner";
+import CategoryListSection from "@/sections/home/category-list";
 
 // @ts-ignore
 const { Title } = Typography;
@@ -19,16 +21,22 @@ const Home = () => {
   /** @type {[Product[], Function]} */
   const [products, setProducts] = useState([]);
 
+  const [categories, setCategories] = useState([]);
   const [latestProductsByCategory, setLatestProductsByCategory] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
 
-    Promise.all([fetchProducts(), fetchCateSection()])
-      .then(([proRes, cateRes]) => {
+    Promise.all([
+      fetchProducts({ limit: 12 }),
+      fetchCateSection(),
+      fetchCategories({ limit: 16 }),
+    ])
+      .then(([proRes, cateRes, categoryListRes]) => {
         setProducts(proRes.data);
         setLatestProductsByCategory(cateRes.data);
+        setCategories(categoryListRes.data);
       })
       .catch((error) => {
         enqueueSnackbar(error.message, { variant: "error" });
@@ -57,7 +65,8 @@ const Home = () => {
     <div style={{ padding: "32px 0px", margin: "0 auto" }}>
       <BannerSection />
 
-      <Space direction="vertical" size={48} style={{ width: "100%" }}>
+      <Space direction="vertical" size={12} style={{ width: "100%" }}>
+        <CategoryListSection categories={categories} />
         <AllProductsSection
           products={products}
           sortOrder={sortOrder}

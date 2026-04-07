@@ -11,9 +11,6 @@ import {
 
 const { Title, Text, Paragraph } = Typography;
 
-const LOREM =
-  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
-
 const LOREM_FEATURES = [
   "Hiệu suất cao với bộ xử lý thế hệ mới nhất, tốc độ xử lý vượt trội",
   "Màn hình sắc nét với tấm nền IPS, dải màu rộng 100% sRGB",
@@ -37,16 +34,7 @@ const ProductTabs = ({ product, avgRating, mockReviews }) => {
               marginBottom: 20,
             }}
           >
-            {product.description || LOREM}
-          </Paragraph>
-          <Paragraph
-            style={{
-              color: "var(--neutral-700)",
-              lineHeight: 1.8,
-              marginBottom: 24,
-            }}
-          >
-            {LOREM}
+            {product.description}
           </Paragraph>
           <Title level={5} style={{ marginBottom: 12 }}>
             Tính năng nổi bật

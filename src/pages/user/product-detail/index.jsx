@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Breadcrumb, Spin, Row, Col } from "antd";
-import { fetchProductById } from "@/api/products/product-api";
+import { Breadcrumb, Spin, Row, Col, Typography, Divider } from "antd";
+import {
+  fetchProductById,
+  fetchProductsByCategory,
+} from "@/api/products/product-api";
 import { enqueueSnackbar } from "notistack";
 import { handleAddToCart } from "@/utils/add-to-cart";
 
 // Components
-import ProductGallery from "./sections/ProductGallery";
-import ProductInfo from "./sections/ProductInfo";
-import ProductTabs from "./sections/ProductTabs";
+import ProductGallery from "./sections/product-gallary";
+import ProductInfo from "./sections/product-info";
+import ProductTabs from "./sections/product-tabs";
+import ProductCard from "@/components/ui/products/product-card";
+
+const { Title } = Typography;
 
 const MOCK_REVIEWS = [
   {
@@ -35,20 +41,40 @@ const UserProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
+  const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
-    setLoading(true);
-    fetchProductById(id)
-      .then((data) => setProduct(data))
-      .catch((err) => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        const productData = await fetchProductById(id);
+        setProduct(productData);
+
+        if (productData.category?.id) {
+          const relatedRes = await fetchProductsByCategory(
+            productData.category.id,
+          );
+          // Filter out current product and take first 4-8 items
+          const filtered = (relatedRes.data || []).filter(
+            (p) => p.id !== productData.id,
+          );
+          setRelatedProducts(filtered.slice(0, 10));
+        }
+      } catch (err) {
         enqueueSnackbar(err.message || "Không tìm thấy sản phẩm", {
           variant: "error",
         });
         navigate("/");
-      })
-      .finally(() => setLoading(false));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+    setQuantity(1);
+    window.scrollTo(0, 0);
   }, [id, navigate]);
 
   const handleBuyNow = () => {
@@ -82,7 +108,10 @@ const UserProductDetail = () => {
         style={{ marginBottom: 20 }}
         items={[
           { title: "Trang chủ", href: "/" },
-          { title: product.category?.name || "Sản phẩm", href: `/category?category_id=${product.category?.id}` },
+          {
+            title: product.category?.name || "Sản phẩm",
+            href: `/category?category_id=${product.category?.id}`,
+          },
           { title: product.name },
         ]}
       />
@@ -100,7 +129,9 @@ const UserProductDetail = () => {
             quantity={quantity}
             setQuantity={setQuantity}
             handleBuyNow={handleBuyNow}
-            handleAddToCart={(e, prod, qty) => handleAddToCart([{ productId: prod.id, quantity: qty }], e)}
+            handleAddToCart={(e, prod, qty) =>
+              handleAddToCart([{ productId: prod.id, quantity: qty }], e)
+            }
           />
         </Col>
       </Row>
@@ -110,6 +141,25 @@ const UserProductDetail = () => {
         avgRating={avgRating}
         mockReviews={MOCK_REVIEWS}
       />
+
+      {relatedProducts.length > 0 && (
+        <div style={{ marginTop: 64 }}>
+          <Divider style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+            <div style={{ textAlign: "left", width: "100%" }}>
+              <Title level={3} style={{ margin: 0 }}>
+                Sản phẩm liên quan
+              </Title>
+            </div>
+          </Divider>
+          <Row gutter={[6, 6]} style={{ marginTop: 24 }}>
+            {relatedProducts.map((p) => (
+              <Col key={p.id} xs={12} sm={8} md={6} lg={6} xxl={6}>
+                <ProductCard product={p} />
+              </Col>
+            ))}
+          </Row>
+        </div>
+      )}
     </div>
   );
 };

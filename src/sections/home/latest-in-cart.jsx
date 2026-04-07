@@ -8,19 +8,20 @@ const LatestProInCateSection = ({ latestProducts = [], cateName }) => {
   }
 
   return (
-    <Box sx={{ mb: 6, borderRadius: 1, overflow: "hidden" }}>
+    <Box sx={{ overflow: "hidden" }}>
       <Box
         sx={{
           display: "flex",
           justifyContent: "left",
           alignContent: "center",
           width: "100%",
-          backgroundColor: "#d32f2f",
+          backgroundColor: "white",
+          borderBottom: "1px solid #c4c4c447",
           px: 2,
-          py: 1.5,
+          py: 3,
         }}
       >
-        <Typography variant="h3" sx={{ fontWeight: 700, color: "white" }}>
+        <Typography variant="h4" sx={{ fontWeight: 700, color: "#1c1c1c" }}>
           {cateName}
         </Typography>
       </Box>

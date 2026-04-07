@@ -15,7 +15,6 @@ const AllProductsSection = ({ products = [], sortOrder, onSortChange }) => {
         bodyStyle={{ padding: 0 }}
         style={{
           overflow: "hidden",
-          borderRadius: 8,
           boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
         }}
       >
@@ -25,13 +24,14 @@ const AllProductsSection = ({ products = [], sortOrder, onSortChange }) => {
             justifyContent: "space-between",
             alignItems: "center",
             width: "100%",
-            backgroundColor: "#e53935",
+            borderBottom: "1px solid #c4c4c447",
+            backgroundColor: "white",
             padding: "16px 24px",
           }}
         >
           <Title
-            level={3}
-            style={{ fontWeight: 700, color: "white", margin: 0 }}
+            level={4}
+            style={{ fontWeight: 700, color: "#1c1c1c", margin: 0 }}
           >
             Sản phẩm mới nhất
           </Title>
@@ -47,7 +47,7 @@ const AllProductsSection = ({ products = [], sortOrder, onSortChange }) => {
 
         <div style={{ padding: "32px 16px", backgroundColor: "#fff" }}>
           <Row gutter={[12, 12]}>
-            {products.slice(0, 10).map((product) => (
+            {products.slice(0, 12).map((product) => (
               <Col key={product.id} xs={12} sm={8} md={6} lg={6} xxl={4}>
                 <ProductCard product={product} />
               </Col>

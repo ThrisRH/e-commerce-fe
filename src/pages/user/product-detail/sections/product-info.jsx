@@ -8,7 +8,7 @@ import {
 } from "@ant-design/icons";
 import { formatCurrency } from "@/utils/format-currency";
 import BorderButton from "@/components/common/buttons/border-button";
-import PolicyBadge from "./PolicyBadge";
+import PolicyBadge from "./policy-badge";
 
 const { Title, Text } = Typography;
 
@@ -52,24 +52,11 @@ const ProductInfo = ({
         </Text>
       </div>
 
-      <div
-        style={{
-          padding: "16px 20px",
-          background: "var(--primary-50)",
-          borderRadius: 10,
-          borderLeft: "4px solid var(--primary-main)",
-        }}
-      >
-        <Title level={2} style={{ color: "var(--primary-main)", margin: 0 }}>
-          {formatCurrency(product.price)}
-        </Title>
-        <Text style={{ fontSize: 12, color: "var(--neutral-600)" }}>
-          Giá đã bao gồm VAT
-        </Text>
-      </div>
-
-      <Text style={{ color: "var(--neutral-600)", lineHeight: 1.8 }}>
-        {product.description?.slice(0, 200)}...
+      <Title level={2} style={{ color: "var(--primary-main)", margin: 0 }}>
+        {formatCurrency(product.price)}
+      </Title>
+      <Text style={{ fontSize: 12, color: "var(--neutral-600)" }}>
+        Giá đã bao gồm VAT
       </Text>
 
       <Divider style={{ margin: "4px 0" }} />
