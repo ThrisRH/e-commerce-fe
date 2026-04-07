@@ -1,19 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { Typography, Breadcrumb, Card, Button, Space } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import React, { useEffect, useState, useCallback } from "react";
+import { Typography, Breadcrumb, Card, Space, Input } from "antd";
 import { Box } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { fetchProducts } from "@/api/products/product-api";
+import { fetchProducts, searchProducts, deleteProduct } from "@/api/products/product-api";
 import { ProductResponse } from "@/models/product";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
 import CreateProductModal from "./sections/create-form";
-import { deleteProduct } from "@/api/products/product-api";
 import { getProductColumns } from "./sections/grid-columns/setup";
 import { Meta } from "@/models/MetaData/meta";
 import AppButton from "@/components/common/buttons/button";
 
 const { Title } = Typography;
+const { Search } = Input;
 
 const ProductsManagement = () => {
   const navigate = useNavigate();
@@ -21,12 +20,33 @@ const ProductsManagement = () => {
   /** @type {[ProductResponse, Function]} */
   const [products, setProducts] = useState(new ProductResponse());
   const [isLoading, setIsLoading] = useState(true);
-  const [meta, setMeta] = useState(new Meta());
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
     pageSize: 10,
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState("");
+
+  const loadProducts = useCallback(() => {
+    setIsLoading(true);
+    const fetchFunc = searchKeyword 
+      ? searchProducts(searchKeyword, paginationModel.page + 1, paginationModel.pageSize)
+      : fetchProducts({
+          page: paginationModel.page + 1,
+          limit: paginationModel.pageSize,
+        });
+
+    fetchFunc
+      .then((data) => {
+        setProducts(data);
+      })
+      .catch((error) => {
+        enqueueSnackbar(error.message, { variant: "error" });
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [paginationModel, searchKeyword]);
 
   const handleDelete = (id) => {
     deleteProduct(id)
@@ -41,26 +61,14 @@ const ProductsManagement = () => {
       });
   };
 
-  const loadProducts = () => {
-    setIsLoading(true);
-    fetchProducts({
-      page: paginationModel.page + 1,
-      limit: paginationModel.pageSize,
-    })
-      .then((data) => {
-        setProducts(data);
-      })
-      .catch((error) => {
-        enqueueSnackbar(error.message, { variant: "error" });
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
-
   useEffect(() => {
     loadProducts();
-  }, [paginationModel]);
+  }, [loadProducts]);
+
+  const handleSearch = (value) => {
+    setSearchKeyword(value);
+    setPaginationModel((prev) => ({ ...prev, page: 0 }));
+  };
 
   return (
     <Space direction="vertical" style={{ width: "100%" }} size="large">
@@ -85,6 +93,16 @@ const ProductsManagement = () => {
             onClick={() => setIsModalOpen(true)}
           />
         </div>
+      </div>
+
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
+        <Search
+          placeholder="Tìm kiếm sản phẩm theo tên..."
+          onSearch={handleSearch}
+          allowClear
+          enterButton
+          style={{ width: 400 }}
+        />
       </div>
 
       <CreateProductModal
