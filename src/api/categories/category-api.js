@@ -64,3 +64,25 @@ export const deleteCategory = async (id) => {
 
   return response.data;
 };
+
+/**
+ * @param {Object} options
+ * @param {string} [options.keyword=""]
+ * @param {number} [options.page=1]
+ * @param {number} [options.limit=10]
+ * @returns {Promise<{data: Category[], meta: Meta}>}
+ */
+export const searchCategories = async ({ keyword = "", page = 1, limit = 10 } = {}) => {
+  const response = await axios.get(
+    `/api/${API_VER}/categories/search?keyword=${keyword}&page=${page}&limit=${limit}`,
+  );
+
+  if (!response.data || !response.data.data) {
+    throw new Error("Failed to search categories");
+  }
+
+  return {
+    data: Category.fromJson(response.data.data),
+    meta: new Meta(response.data.meta),
+  };
+};
