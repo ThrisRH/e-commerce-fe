@@ -53,7 +53,14 @@ const ProductCard = ({ product }) => {
           </Typography.Text>
 
           <Flex gap="small">
-            <AppButton label="Mua ngay" onClick={goToDetail} />
+            <AppButton
+              label="Mua ngay"
+              onClick={() => {
+                navigate("/checkout", {
+                  state: { buyNowItem: { id: product.id, quantity: 1 } },
+                });
+              }}
+            />
             <BorderButton
               label="Thêm giỏ hàng"
               onClick={(e) =>

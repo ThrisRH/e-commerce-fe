@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Breadcrumb, Typography, Form } from "antd";
+import { useLocation } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 
 // API
@@ -17,6 +18,7 @@ const { Title } = Typography;
 const SHIPPING_FEE = 30000;
 
 const CheckoutPage = () => {
+  const location = useLocation();
   const [form] = Form.useForm();
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const [submitting, setSubmitting] = useState(false);
@@ -25,7 +27,22 @@ const CheckoutPage = () => {
   const [items, setItems] = useState([]);
   const [orderResult, setOrderResult] = useState(null);
 
+  const isBuyNow = !!location.state?.buyNowItem;
+
   const loadCart = useCallback(async () => {
+    // If buy now mode, use the item from state
+    if (isBuyNow) {
+      const { id, quantity } = location.state.buyNowItem;
+      try {
+        const product = await fetchProductById(id);
+        setItems([{ product, quantity }]);
+      } catch {
+        enqueueSnackbar("Không thể tải thông tin sản phẩm", { variant: "error" });
+      }
+      return;
+    }
+
+    // Normal checkout mode from cart
     const stored = getCartFromSession();
     if (!stored.length) {
       setItems([]);
@@ -49,7 +66,7 @@ const CheckoutPage = () => {
     } catch {
       enqueueSnackbar("Không thể tải giỏ hàng", { variant: "error" });
     }
-  }, []);
+  }, [isBuyNow, location.state]);
 
   useEffect(() => {
     loadCart();
@@ -70,6 +87,7 @@ const CheckoutPage = () => {
   const total = subtotal + SHIPPING_FEE;
 
   const clearCart = () => {
+    if (isBuyNow) return; // Don't clear main cart if we just did a Buy Now
     sessionStorage.removeItem("cart");
     window.dispatchEvent(new Event("cart-updated"));
   };
