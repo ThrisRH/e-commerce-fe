@@ -26,7 +26,7 @@ import {
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import AppButton from "@/components/common/button";
+import AppButton from "@/components/common/buttons/button";
 import AppInput from "@/components/common/input";
 import useProductDetail from "@/hooks/products/product-detail";
 import Loading from "@/components/ui/state/loading";

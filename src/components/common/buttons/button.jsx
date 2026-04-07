@@ -22,7 +22,7 @@ const AppButton = ({
         justifyContent: "center",
         alignItems: "center",
         fontWeight: 600,
-        borderRadius: "8px",
+        borderRadius: "4px",
       }}
     >
       {label}

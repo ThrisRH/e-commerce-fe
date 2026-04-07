@@ -25,7 +25,7 @@ import { Breadcrumb, Typography as AntdTypography } from "antd";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import AppButton from "@/components/common/button";
+import AppButton from "@/components/common/buttons/button";
 import AppInput from "@/components/common/input";
 import useOrderDetail from "@/hooks/orders/order-detail";
 import Loading from "@/components/ui/state/loading";

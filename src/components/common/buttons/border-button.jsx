@@ -13,6 +13,7 @@ const BorderButton = ({ label, onClick }) => {
         border: "1px solid var(--primary-main)",
         color: "var(--primary-main)",
         padding: "8px",
+        borderRadius: "4px",
       }}
     >
       {label}

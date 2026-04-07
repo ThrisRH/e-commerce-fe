@@ -1,7 +1,7 @@
 import React from "react";
 import { Row, Col, Typography, Select, Space, Card as AntdCard } from "antd";
 import ProductCard from "../../components/ui/products/product-card";
-import AppButton from "@/components/common/button";
+import AppButton from "@/components/common/buttons/button";
 import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;

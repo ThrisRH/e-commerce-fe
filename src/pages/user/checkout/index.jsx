@@ -7,6 +7,7 @@ import { enqueueSnackbar } from "notistack";
 import { getCartFromSession } from "@/components/ui/cart/cart-drawer";
 import { fetchProductById } from "@/api/products/product-api";
 import { createOrder } from "@/api/orders/order-api";
+import { fetchMe } from "@/api/auth/auth-api";
 
 // Components
 import AddressPickerModal from "./address-picker-modal";
@@ -29,20 +30,50 @@ const CheckoutPage = () => {
 
   const isBuyNow = !!location.state?.buyNowItem;
 
+  const loadUserInfo = useCallback(async () => {
+    const token = localStorage.getItem("access_token");
+    if (!token) return;
+
+    try {
+      const user = await fetchMe(token);
+      console.log(user);
+      if (user) {
+        const nameParts = user.name.trim().split(" ");
+        let fname = "";
+        let lname = "";
+
+        if (nameParts.length > 1) {
+          fname = nameParts.pop();
+          lname = nameParts.join(" ");
+        } else {
+          fname = user.name;
+        }
+
+        form.setFieldsValue({
+          lname: lname,
+          fname: fname,
+          phone: user.phone,
+        });
+      }
+    } catch (err) {
+      console.error("Failed to fetch user info", err);
+    }
+  }, [form]);
+
   const loadCart = useCallback(async () => {
-    // If buy now mode, use the item from state
     if (isBuyNow) {
       const { id, quantity } = location.state.buyNowItem;
       try {
         const product = await fetchProductById(id);
         setItems([{ product, quantity }]);
       } catch {
-        enqueueSnackbar("Không thể tải thông tin sản phẩm", { variant: "error" });
+        enqueueSnackbar("Không thể tải thông tin sản phẩm", {
+          variant: "error",
+        });
       }
       return;
     }
 
-    // Normal checkout mode from cart
     const stored = getCartFromSession();
     if (!stored.length) {
       setItems([]);
@@ -70,7 +101,8 @@ const CheckoutPage = () => {
 
   useEffect(() => {
     loadCart();
-  }, [loadCart]);
+    loadUserInfo();
+  }, [loadCart, loadUserInfo]);
 
   const handleAddressConfirm = ({ province, district }) => {
     setSelectedAddress({ province, district });
@@ -87,7 +119,7 @@ const CheckoutPage = () => {
   const total = subtotal + SHIPPING_FEE;
 
   const clearCart = () => {
-    if (isBuyNow) return; // Don't clear main cart if we just did a Buy Now
+    if (isBuyNow) return;
     sessionStorage.removeItem("cart");
     window.dispatchEvent(new Event("cart-updated"));
   };
@@ -99,7 +131,7 @@ const CheckoutPage = () => {
       setSubmitting(true);
 
       const payload = {
-        shipping_name: values.name,
+        shipping_name: `${values.lname} ${values.fname}`.trim(),
         shipping_phone: values.phone,
         shipping_address: `${values.address}, ${values.district}, ${values.city}`,
         note: values.note,

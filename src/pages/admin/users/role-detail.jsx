@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { ArrowBack as ArrowLeftIcon } from "@mui/icons-material";
 import { Breadcrumb, Typography as AntdTypography } from "antd";
-import AppButton from "@/components/common/button";
+import AppButton from "@/components/common/buttons/button";
 import AppInput from "@/components/common/input";
 import Loading from "@/components/ui/state/loading";
 import { enqueueSnackbar } from "notistack";

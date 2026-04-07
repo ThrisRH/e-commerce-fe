@@ -46,12 +46,7 @@ const ProductInfo = ({
       </Title>
 
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <Rate
-          value={avgRating}
-          allowHalf
-          disabled
-          style={{ fontSize: 14 }}
-        />
+        <Rate value={avgRating} allowHalf disabled style={{ fontSize: 14 }} />
         <Text type="secondary" style={{ fontSize: 13 }}>
           {avgRating}/5 · {mockReviewsCount} đánh giá
         </Text>

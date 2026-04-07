@@ -36,23 +36,29 @@ const CheckoutForm = ({
   return (
     <Form form={form} layout="vertical" requiredMark={false}>
       <SectionCard title="Thông tin người nhận" icon={<UserOutlined />}>
-        <div style={{ display: "flex", gap: 16 }}>
+        <div style={{ display: "flex", gap: 16, marginBottom: 16 }}>
           <TextField
-            label="Họ và tên"
-            placeholder="Nguyễn Văn A"
+            label="Họ"
+            placeholder="Nguyễn"
             style={{ borderRadius: 8 }}
-            name="name"
-            rules={[{ required: true, message: "Vui lòng nhập họ tên" }]}
+            name="lname"
+            rules={[{ required: true, message: "Vui lòng nhập họ" }]}
           />
-
           <TextField
-            label="Số điện thoại"
-            placeholder="0912 345 678"
+            label="Tên"
+            placeholder="Văn A"
             style={{ borderRadius: 8 }}
-            name="phone"
-            rules={[{ required: true, message: "Vui lòng nhập số điện thoại" }]}
+            name="fname"
+            rules={[{ required: true, message: "Vui lòng nhập tên" }]}
           />
         </div>
+        <TextField
+          label="Số điện thoại"
+          placeholder="0912 345 678"
+          style={{ borderRadius: 8 }}
+          name="phone"
+          rules={[{ required: true, message: "Vui lòng nhập số điện thoại" }]}
+        />
       </SectionCard>
 
       <SectionCard title="Địa chỉ giao hàng" icon={<EnvironmentOutlined />}>
