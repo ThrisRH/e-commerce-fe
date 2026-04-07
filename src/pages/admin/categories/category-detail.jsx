@@ -1,9 +1,5 @@
 import { updateCategory } from "@/api/categories/category-api";
-import {
-  Box,
-  Container,
-  Grid,
-} from "@mui/material";
+import { Box, Container, Grid } from "@mui/material";
 
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
@@ -12,12 +8,8 @@ import AppButton from "@/components/common/buttons/button";
 import useCategoryDetail from "@/hooks/categories/category-detail";
 import Loading from "@/components/ui/state/loading";
 
-import {
-  Breadcrumb,
-  Typography as AntdTypography,
-} from "antd";
+import { Breadcrumb, Typography as AntdTypography } from "antd";
 
-// Import sections
 import BasicInfo from "./sections/basic-info";
 import CategoryAttributes from "./sections/category-attributes";
 import CategoryClassification from "./sections/category-classification";
@@ -141,7 +133,7 @@ export default function CategoryDetail() {
             ]}
           />
           <AntdTitle level={2} style={{ margin: "8px 0 0" }}>
-            Chi Tiết Danh Mục: {formData.name}
+            Chi Tiết Danh Mục
           </AntdTitle>
         </Box>
         <Box sx={{ width: 220 }}>
@@ -157,24 +149,24 @@ export default function CategoryDetail() {
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 8 }}>
-          <BasicInfo 
-            formData={formData} 
-            handleChange={handleChange} 
-            setFormData={setFormData} 
+          <BasicInfo
+            formData={formData}
+            handleChange={handleChange}
+            setFormData={setFormData}
           />
-          <CategoryAttributes 
-            formData={formData} 
-            setFormData={setFormData} 
-            allAttributes={allAttributes} 
+          <CategoryAttributes
+            formData={formData}
+            setFormData={setFormData}
+            allAttributes={allAttributes}
           />
         </Grid>
 
         <Grid size={{ xs: 12, md: 4 }}>
-          <CategoryClassification 
-            formData={formData} 
-            setFormData={setFormData} 
-            parentCategories={parentCategories} 
-            handleChange={handleChange} 
+          <CategoryClassification
+            formData={formData}
+            setFormData={setFormData}
+            parentCategories={parentCategories}
+            handleChange={handleChange}
           />
         </Grid>
       </Grid>

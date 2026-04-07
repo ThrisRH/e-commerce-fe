@@ -62,3 +62,20 @@ export const logout = async (token) => {
 
   return response.data;
 };
+export const changePassword = async (token, payload) => {
+  const response = await axios.post(
+    `/api/${API_VER}/auth/change-password`,
+    payload,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  if (!response.data) {
+    throw new Error("Đổi mật khẩu thất bại");
+  }
+
+  return response.data;
+};

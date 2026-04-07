@@ -2,13 +2,10 @@ import {
   Box,
   Card,
   CardContent,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
   Typography,
+  TextField,
 } from "@mui/material";
+import { Select } from "antd";
 
 export default function CategoryClassification({
   formData,
@@ -23,29 +20,31 @@ export default function CategoryClassification({
           Phân Loại
         </Typography>
 
-        <FormControl fullWidth sx={{ mb: 3 }}>
-          <InputLabel>Danh Mục Cha</InputLabel>
-          <Select
-            label="Danh Mục Cha"
-            value={formData.parent_category?.id || ""}
-            onChange={(e) =>
-              setFormData((p) => ({
-                ...p,
-                parent_category:
-                  parentCategories.find((c) => c.id === e.target.value) || null,
-              }))
-            }
-          >
-            <MenuItem value="">
-              <em>Không có (Gốc)</em>
-            </MenuItem>
-            {parentCategories.map((cat) => (
-              <MenuItem key={cat.id} value={cat.id}>
-                {cat.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <Typography variant="subtitle2" sx={{ mb: 1, color: "text.secondary" }}>
+          Danh Mục Cha
+        </Typography>
+        <Select
+          showSearch
+          style={{ width: "100%", marginBottom: "24px" }}
+          placeholder="Chọn danh mục cha"
+          optionFilterProp="children"
+          onChange={(value) =>
+            setFormData((p) => ({
+              ...p,
+              parent_category:
+                parentCategories.find((c) => c.id === value) || null,
+            }))
+          }
+          value={formData.parent_category?.id || null}
+          allowClear
+          options={[
+            { label: "Không có (Gốc)", value: null },
+            ...parentCategories.map((cat) => ({
+              label: cat.name,
+              value: cat.id,
+            })),
+          ]}
+        />
 
         <Typography variant="subtitle2" sx={{ mb: 1, color: "text.secondary" }}>
           Hình ảnh đại diện

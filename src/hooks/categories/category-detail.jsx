@@ -25,7 +25,7 @@ export default function useCategoryDetail(id) {
 
       const [categoryData, allCats, allAttrs] = await Promise.all([
         fetchCategoryById(id),
-        fetchCategories(),
+        fetchCategories({ limit: 100 }),
         fetchAttributes(),
       ]);
 
@@ -44,7 +44,7 @@ export default function useCategoryDetail(id) {
       setOriginData(category);
 
       setParentCategories(
-        (Array.isArray(allCats) ? allCats : [allCats]).filter(
+        (Array.isArray(allCats.data) ? allCats.data : [allCats]).filter(
           (cat) => cat.id !== Number(id),
         ),
       );

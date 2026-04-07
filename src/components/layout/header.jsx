@@ -23,6 +23,8 @@ import {
 } from "@ant-design/icons";
 import CartDrawer, { getCartCount } from "@/components/ui/cart/cart-drawer";
 import { fetchMe, logout } from "@/api/auth/auth-api";
+import ChangePasswordModal from "./header/change-password-modal";
+import { KeyOutlined } from "@ant-design/icons";
 
 const { Header: AntHeader } = Layout;
 const { Title, Text } = Typography;
@@ -33,6 +35,7 @@ const Header = ({ onMenuClick }) => {
   const [cartCount, setCartCount] = useState(getCartCount());
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [changePasswordOpen, setChangePasswordOpen] = useState(false);
   const token = localStorage.getItem("access_token");
 
   useEffect(() => {
@@ -72,7 +75,7 @@ const Header = ({ onMenuClick }) => {
       localStorage.removeItem("access_token");
     }
     setUser(null);
-    navigate("/");
+    window.location.href = "/";
   };
 
   const profileContent = (
@@ -108,20 +111,35 @@ const Header = ({ onMenuClick }) => {
               </div>
             </div>
             <Divider style={{ margin: "12px 0" }} />
-            <Button
-              type="text"
-              danger
-              icon={<LogoutOutlined />}
-              onClick={handleLogout}
-              style={{
-                width: "100%",
-                textAlign: "left",
-                height: 40,
-                borderRadius: 8,
-              }}
-            >
-              Đăng xuất
-            </Button>
+            <Space direction="vertical" style={{ width: "100%" }} size={4}>
+              <Button
+                type="text"
+                icon={<KeyOutlined />}
+                onClick={() => setChangePasswordOpen(true)}
+                style={{
+                  width: "100%",
+                  textAlign: "left",
+                  height: 40,
+                  borderRadius: 8,
+                }}
+              >
+                Đổi mật khẩu
+              </Button>
+              <Button
+                type="text"
+                danger
+                icon={<LogoutOutlined />}
+                onClick={handleLogout}
+                style={{
+                  width: "100%",
+                  textAlign: "left",
+                  height: 40,
+                  borderRadius: 8,
+                }}
+              >
+                Đăng xuất
+              </Button>
+            </Space>
           </>
         )
       ) : (
@@ -283,6 +301,11 @@ const Header = ({ onMenuClick }) => {
           setCartOpen(false);
           setCartCount(getCartCount());
         }}
+      />
+
+      <ChangePasswordModal
+        open={changePasswordOpen}
+        onClose={() => setChangePasswordOpen(false)}
       />
     </>
   );

@@ -47,6 +47,8 @@ import NotFound from "./components/common/not-found";
 import Middleware from "./middleware/middleware";
 import AdminDashboard from "./pages/admin/dashboard";
 
+import GuestMiddleware from "./middleware/guest-middleware";
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -57,8 +59,22 @@ function App() {
             {/* Main Store Layout */}
             <Route path="/" element={<MainLayout />}>
               <Route index element={<Home />} />
-              <Route path="login" element={<UserLogin />} />
-              <Route path="register" element={<UserRegister />} />
+              <Route
+                path="login"
+                element={
+                  <GuestMiddleware>
+                    <UserLogin />
+                  </GuestMiddleware>
+                }
+              />
+              <Route
+                path="register"
+                element={
+                  <GuestMiddleware>
+                    <UserRegister />
+                  </GuestMiddleware>
+                }
+              />
               <Route path="products/:id" element={<UserProductDetail />} />
               <Route path="search" element={<SearchPage />} />
 

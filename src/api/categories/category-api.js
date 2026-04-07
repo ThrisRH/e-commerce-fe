@@ -2,6 +2,7 @@ import axios from "axios";
 import Category from "../../models/category";
 import { API_VER } from "@/constants/env";
 import { Meta } from "@/models/MetaData/meta";
+import axiosClient from "@/config/axios-client";
 
 export const fetchCategories = async ({ page = 1, limit = 10 } = {}) => {
   const response = await axios.get(
@@ -18,7 +19,7 @@ export const fetchCategories = async ({ page = 1, limit = 10 } = {}) => {
 };
 
 export const fetchCategoryById = async (id, page = 1) => {
-  const response = await axios.get(
+  const response = await axiosClient.get(
     `${import.meta.env.VITE_API_URL}/api/${API_VER}/categories/${id}?page=${page}`,
   );
   if (!response.data || !response.data.data) {
@@ -28,10 +29,7 @@ export const fetchCategoryById = async (id, page = 1) => {
   return new Category(response.data.data.data || response.data.data);
 };
 export const createCategory = async (data) => {
-  const response = await axios.post(
-    `${import.meta.env.VITE_API_URL}/api/${API_VER}/categories`,
-    data,
-  );
+  const response = await axiosClient.post(`/${API_VER}/categories`, data);
 
   if (!response.data || !response.data.data) {
     throw new Error("Failed to create category");
@@ -41,8 +39,8 @@ export const createCategory = async (data) => {
 };
 
 export const updateCategory = async (id, data) => {
-  const response = await axios.patch(
-    `${import.meta.env.VITE_API_URL}/api/${API_VER}/categories/${id}`,
+  const response = await axiosClient.patch(
+    `/${API_VER}/categories/${id}`,
     data,
   );
 
@@ -54,9 +52,7 @@ export const updateCategory = async (id, data) => {
 };
 
 export const deleteCategory = async (id) => {
-  const response = await axios.delete(
-    `${import.meta.env.VITE_API_URL}/api/${API_VER}/categories/${id}`,
-  );
+  const response = await axiosClient.delete(`/${API_VER}/categories/${id}`);
 
   if (response.status !== 200 && response.status !== 204) {
     throw new Error("Failed to delete category");
@@ -72,9 +68,13 @@ export const deleteCategory = async (id) => {
  * @param {number} [options.limit=10]
  * @returns {Promise<{data: Category[], meta: Meta}>}
  */
-export const searchCategories = async ({ keyword = "", page = 1, limit = 10 } = {}) => {
-  const response = await axios.get(
-    `/api/${API_VER}/categories/search?keyword=${keyword}&page=${page}&limit=${limit}`,
+export const searchCategories = async ({
+  keyword = "",
+  page = 1,
+  limit = 10,
+} = {}) => {
+  const response = await axiosClient.get(
+    `/${API_VER}/categories/search?keyword=${keyword}&page=${page}&limit=${limit}`,
   );
 
   if (!response.data || !response.data.data) {
