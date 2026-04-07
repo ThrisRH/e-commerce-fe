@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Typography, Breadcrumb, Card, Button, Space } from "antd";
+import React, { useEffect, useState, useCallback } from "react";
+import { Typography, Breadcrumb, Card, Button, Space, Input } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Box } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { fetchCategories, deleteCategory } from "@/api/categories/category-api";
+import { fetchCategories, deleteCategory, searchCategories } from "@/api/categories/category-api";
 import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import CreateCategoryModal from "./components/create-form";
@@ -11,6 +11,7 @@ import { getCategoryColumns } from "./components/grid-columns/setup";
 import { Meta } from "@/models/MetaData/meta";
 
 const { Title } = Typography;
+const { Search } = Input;
 
 const CategoriesManagement = () => {
   const [categories, setCategories] = useState([]);
@@ -21,14 +22,23 @@ const CategoriesManagement = () => {
     page: 0,
     pageSize: 10,
   });
+  const [searchKeyword, setSearchKeyword] = useState("");
   const navigate = useNavigate();
 
-  const loadCategories = () => {
+  const loadCategories = useCallback(() => {
     setIsLoading(true);
-    fetchCategories({
-      page: paginationModel.page + 1,
-      limit: paginationModel.pageSize,
-    })
+    const fetchFunc = searchKeyword 
+      ? searchCategories({
+          keyword: searchKeyword,
+          page: paginationModel.page + 1,
+          limit: paginationModel.pageSize,
+        })
+      : fetchCategories({
+          page: paginationModel.page + 1,
+          limit: paginationModel.pageSize,
+        });
+
+    fetchFunc
       .then((data) => {
         setCategories(data.data);
         setMeta(data.meta);
@@ -41,7 +51,7 @@ const CategoriesManagement = () => {
       .finally(() => {
         setIsLoading(false);
       });
-  };
+  }, [paginationModel, searchKeyword]);
 
   const handleDelete = (id) => {
     deleteCategory(id)
@@ -58,7 +68,12 @@ const CategoriesManagement = () => {
 
   useEffect(() => {
     loadCategories();
-  }, [paginationModel]);
+  }, [loadCategories]);
+
+  const handleSearch = (value) => {
+    setSearchKeyword(value);
+    setPaginationModel((prev) => ({ ...prev, page: 0 }));
+  };
 
   return (
     <Space direction="vertical" style={{ width: "100%" }} size="large">
@@ -85,6 +100,16 @@ const CategoriesManagement = () => {
         >
           Thêm Danh Mục
         </Button>
+      </div>
+
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
+        <Search
+          placeholder="Tìm kiếm danh mục theo tên..."
+          onSearch={handleSearch}
+          allowClear
+          enterButton
+          style={{ width: 400 }}
+        />
       </div>
 
       <CreateCategoryModal
