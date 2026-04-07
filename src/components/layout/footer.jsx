@@ -1,20 +1,10 @@
 import React from "react";
-import {
-  Layout,
-  Row,
-  Col,
-  Typography,
-  Space,
-  Button,
-  Divider,
-  Input,
-} from "antd";
+import { Layout, Row, Col, Typography, Space, Divider } from "antd";
 import {
   FacebookFilled,
   TwitterOutlined,
   InstagramOutlined,
   GithubFilled,
-  SendOutlined,
 } from "@ant-design/icons";
 
 const { Footer: AntFooter } = Layout;
@@ -24,116 +14,168 @@ const Footer = () => {
   return (
     <AntFooter
       style={{
-        backgroundColor: "#f5f5f5",
-        color: "#595959",
-        padding: "64px 50px 32px",
+        backgroundColor: "#141414",
+        color: "#ffffff",
+        padding: "80px 50px 40px",
       }}
     >
-      <div style={{ maxWidth: 1280, margin: "0 auto", width: "100%" }}>
-        <Row gutter={[32, 32]}>
-          <Col xs={24} sm={8}>
-            <Title level={4} style={{ color: "#262626", fontWeight: 700 }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto", width: "100%" }}>
+        <Row gutter={[48, 40]}>
+          <Col xs={24} sm={12} lg={10}>
+            <Title
+              level={3}
+              style={{
+                color: "#ffffff",
+                fontWeight: 800,
+                letterSpacing: "-0.5px",
+                marginBottom: 24,
+              }}
+            >
               GALAXY STORE
             </Title>
             <Text
-              type="secondary"
-              style={{ display: "block", marginBottom: 24, maxWidth: 300 }}
+              style={{
+                color: "rgba(255, 255, 255, 0.65)",
+                display: "block",
+                marginBottom: 32,
+                maxWidth: 400,
+                lineHeight: "1.8",
+              }}
             >
-              Your one-stop destination for the latest in electronics, fashion,
-              and home essentials. Quality products, delivered to your doorstep.
+              Hệ thống bán lẻ thiết bị công nghệ hàng đầu, chuyên cung cấp các
+              dòng Laptop, PC và Gaming Gear cao cấp từ các thương hiệu nổi
+              tiếng thế giới. Chúng tôi cam kết mang đến trải nghiệm mua sắm
+              công nghệ tuyệt vời nhất.
             </Text>
             <Space size="large">
-              <Link href="#" style={{ fontSize: 20, color: "#595959" }}>
-                <FacebookFilled />
+              <Link href="#" className="footer-social-link">
+                <FacebookFilled
+                  style={{ fontSize: 24, color: "rgba(255, 255, 255, 0.65)" }}
+                />
               </Link>
-              <Link href="#" style={{ fontSize: 20, color: "#595959" }}>
-                <TwitterOutlined />
+              <Link href="#" className="footer-social-link">
+                <TwitterOutlined
+                  style={{ fontSize: 24, color: "rgba(255, 255, 255, 0.65)" }}
+                />
               </Link>
-              <Link href="#" style={{ fontSize: 20, color: "#595959" }}>
-                <InstagramOutlined />
+              <Link href="#" className="footer-social-link">
+                <InstagramOutlined
+                  style={{ fontSize: 24, color: "rgba(255, 255, 255, 0.65)" }}
+                />
               </Link>
-              <Link href="#" style={{ fontSize: 20, color: "#595959" }}>
-                <GithubFilled />
+              <Link href="#" className="footer-social-link">
+                <GithubFilled
+                  style={{ fontSize: 24, color: "rgba(255, 255, 255, 0.65)" }}
+                />
               </Link>
             </Space>
           </Col>
 
-          <Col xs={12} sm={4}>
-            <Title level={5} style={{ color: "#262626", marginBottom: 24 }}>
-              Shop
+          <Col xs={12} sm={6} lg={7}>
+            <Title
+              level={5}
+              style={{ color: "#ffffff", marginBottom: 32, fontWeight: 600 }}
+            >
+              Chính sách & Quy định
             </Title>
             <Space direction="vertical" size="middle">
-              <Link href="#" style={{ color: "#595959" }}>
-                Electronics
+              <Link
+                href="#"
+                style={{
+                  color: "rgba(255, 255, 255, 0.65)",
+                  transition: "all 0.3s",
+                }}
+              >
+                Chính sách bảo hành
               </Link>
-              <Link href="#" style={{ color: "#595959" }}>
-                Fashion
+              <Link
+                href="#"
+                style={{
+                  color: "rgba(255, 255, 255, 0.65)",
+                  transition: "all 0.3s",
+                }}
+              >
+                Chính sách bảo mật
               </Link>
-              <Link href="#" style={{ color: "#595959" }}>
-                Home
+              <Link
+                href="#"
+                style={{
+                  color: "rgba(255, 255, 255, 0.65)",
+                  transition: "all 0.3s",
+                }}
+              >
+                Chính sách đổi trả
               </Link>
-              <Link href="#" style={{ color: "#595959" }}>
-                Deals
+              <Link
+                href="#"
+                style={{
+                  color: "rgba(255, 255, 255, 0.65)",
+                  transition: "all 0.3s",
+                }}
+              >
+                Chính sách vận chuyển
               </Link>
             </Space>
           </Col>
 
-          <Col xs={12} sm={4}>
-            <Title level={5} style={{ color: "#262626", marginBottom: 24 }}>
-              Support
+          <Col xs={12} sm={6} lg={7}>
+            <Title
+              level={5}
+              style={{ color: "#ffffff", marginBottom: 32, fontWeight: 600 }}
+            >
+              Dịch vụ khách hàng
             </Title>
             <Space direction="vertical" size="middle">
-              <Link href="#" style={{ color: "#595959" }}>
-                Help Center
+              <Link
+                href="#"
+                style={{
+                  color: "rgba(255, 255, 255, 0.65)",
+                  transition: "all 0.3s",
+                }}
+              >
+                Câu hỏi thường gặp
               </Link>
-              <Link href="#" style={{ color: "#595959" }}>
-                Track Order
+              <Link
+                href="#"
+                style={{
+                  color: "rgba(255, 255, 255, 0.65)",
+                  transition: "all 0.3s",
+                }}
+              >
+                Hướng dẫn mua hàng
               </Link>
-              <Link href="#" style={{ color: "#595959" }}>
-                Returns
+              <Link
+                href="#"
+                style={{
+                  color: "rgba(255, 255, 255, 0.65)",
+                  transition: "all 0.3s",
+                }}
+              >
+                Theo dõi đơn hàng
               </Link>
-              <Link href="#" style={{ color: "#595959" }}>
-                Shipping Info
+              <Link
+                href="#"
+                style={{
+                  color: "rgba(255, 255, 255, 0.65)",
+                  transition: "all 0.3s",
+                }}
+              >
+                Liên hệ hỗ trợ
               </Link>
             </Space>
-          </Col>
-
-          <Col xs={24} sm={8}>
-            <Title level={5} style={{ color: "#262626", marginBottom: 24 }}>
-              Newsletter
-            </Title>
-            <Text
-              type="secondary"
-              style={{ display: "block", marginBottom: 24 }}
-            >
-              Subscribe to stay updated with our latest offers and product
-              launches.
-            </Text>
-            <div style={{ display: "flex", gap: 8 }}>
-              <Input
-                placeholder="Enter your email"
-                style={{ borderRadius: 4, height: 40 }}
-              />
-              <Button
-                type="primary"
-                icon={<SendOutlined />}
-                style={{ height: 40 }}
-              />
-            </div>
-            <Text
-              type="secondary"
-              style={{ fontSize: 12, marginTop: 16, display: "block" }}
-            >
-              Join 50,000+ happy customers
-            </Text>
           </Col>
         </Row>
 
-        <Divider style={{ margin: "48px 0 24px" }} />
+        <Divider
+          style={{
+            borderColor: "rgba(255, 255, 255, 0.1)",
+            margin: "64px 0 32px",
+          }}
+        />
 
         <div style={{ textAlign: "center" }}>
-          <Text type="secondary">
-            © {new Date().getFullYear()} Galaxy Store. All rights reserved.
+          <Text style={{ color: "rgba(255, 255, 255, 0.45)", fontSize: 13 }}>
+            © {new Date().getFullYear()} Galaxy Store - Design by Tri.Tran
           </Text>
         </div>
       </div>
