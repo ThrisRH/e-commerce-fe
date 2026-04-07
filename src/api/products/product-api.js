@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Product, ProductResponse } from "../../models/product";
 import { API_VER, env } from "@/constants/env";
+import axiosClient from "@/config/axios-client";
 
 export const fetchProducts = async ({ page = 1, limit = 10 } = {}) => {
   const response = await axios.get(

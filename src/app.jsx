@@ -20,7 +20,6 @@ import CategoryPage from "./pages/user/category";
 import OrderDetail from "./pages/admin/orders/order-details";
 
 // Lazy load admin pages for better initial bundle size
-const AdminDashboard = lazy(() => import("./pages/admin/dashboard"));
 const ProductsManagement = lazy(() => import("./pages/admin/products"));
 const CategoriesManagement = lazy(() => import("./pages/admin/categories"));
 const UsersManagement = lazy(() => import("./pages/admin/users/index"));
@@ -45,6 +44,7 @@ const LoadingFallback = () => (
 import SearchPage from "./pages/user/search";
 import NotFound from "./components/common/not-found";
 import Middleware from "./middleware/middleware";
+import AdminDashboard from "./pages/admin/dashboard";
 
 function App() {
   return (

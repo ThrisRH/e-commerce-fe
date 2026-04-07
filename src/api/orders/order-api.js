@@ -1,7 +1,7 @@
+import axiosClient from "@/config/axios-client";
 import { API_VER, env } from "@/constants/env";
 import { Meta } from "@/models/MetaData/meta";
 import Order from "@/models/order";
-import { Product } from "@/models/product";
 import axios from "axios";
 
 export const createOrder = async (data) => {
@@ -15,8 +15,8 @@ export const createOrder = async (data) => {
 };
 
 export const fetchOrders = async (page = 1, limit = 10) => {
-  const result = await axios.get(
-    `/api/${API_VER}/orders?page=${page}&limit=${limit}`,
+  const result = await axiosClient.get(
+    `/${API_VER}/orders?page=${page}&limit=${limit}`,
   );
 
   if (!result.data) {
@@ -30,9 +30,7 @@ export const fetchOrders = async (page = 1, limit = 10) => {
 };
 
 export const fetchOrderById = async (id) => {
-  const result = await axios.get(
-    `${env.VITE_API_URL}/api/${API_VER}/orders/${id}`,
-  );
+  const result = await axiosClient.get(`/${API_VER}/orders/${id}`);
 
   if (!result.data) {
     throw new Error("Failed to fetch order");
@@ -42,10 +40,7 @@ export const fetchOrderById = async (id) => {
 };
 
 export const updateOrder = async (id, data) => {
-  const result = await axios.patch(
-    `${env.VITE_API_URL}/api/${API_VER}/orders/${id}`,
-    data,
-  );
+  const result = await axiosClient.patch(`/${API_VER}/orders/${id}`, data);
 
   if (!result.data) {
     throw new Error("Failed to update order");
@@ -54,3 +49,24 @@ export const updateOrder = async (id, data) => {
   return result.data;
 };
 
+export const fetchOrderItems = async () => {
+  const result = await axiosClient.get(`/${API_VER}/order-items`);
+
+  if (!result.data) {
+    throw new Error("Failed to fecth order items");
+  }
+
+  return result.data;
+};
+
+export const fetchWeeklyRevenue = async () => {
+  const response = await axiosClient.get(
+    `/${API_VER}/orders/stats/revenue/weekly`,
+  );
+
+  if (!response.data || !response.data.data) {
+    throw new Error("Failed to fetch weekly revenue");
+  }
+
+  return response.data.data;
+};
