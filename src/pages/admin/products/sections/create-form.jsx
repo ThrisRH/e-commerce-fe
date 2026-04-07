@@ -11,7 +11,6 @@ import { enqueueSnackbar } from "notistack";
 
 import InfoStep from "./steps/info-step";
 import ClassificationStep from "./steps/classification-step";
-import AttributeStep from "./steps/attributes-step";
 import PublicStep from "./steps/public-step";
 
 const { Title, Text, Paragraph } = Typography;
@@ -94,7 +93,6 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
   const steps = [
     { title: "Details", description: "Product info" },
     { title: "Classification", description: "Category and Brand" },
-    { title: "Specs", description: "Technical data" },
     { title: "Visibility", description: "Finalize" },
   ];
 
@@ -239,9 +237,8 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
             allAttributes={attributes}
             onAddExtraAttribute={handleAddExtraAttribute}
             attrLoading={attrLoading}
+            categoryId={Form.useWatch("category_id", form)}
           />
-
-          <AttributeStep display={currentStep === 2 ? "block" : "none"} />
 
           <PublicStep display={currentStep === 3 ? "block" : "none"} />
         </Form>
