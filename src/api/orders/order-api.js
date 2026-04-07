@@ -70,3 +70,12 @@ export const fetchWeeklyRevenue = async () => {
 
   return response.data.data;
 };
+export const trackOrder = async (search) => {
+  const result = await axios.get(
+    `/api/${API_VER}/orders/search?shipping_phone=${search}`,
+  );
+  if (!result.data || !result.data.data) {
+    throw new Error("Không tìm thấy đơn hàng");
+  }
+  return Order.fromJson(result.data.data);
+};

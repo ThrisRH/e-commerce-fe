@@ -151,6 +151,7 @@ const CheckoutPage = () => {
       setOrderResult({
         ...payload,
         id: response?.data?.id || null,
+        tracking_code: response?.data?.tracking_code || null,
       });
     } catch (err) {
       if (err?.errorFields) return;

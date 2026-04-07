@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Breadcrumb, Typography, Space, Card, Empty } from "antd";
+import { Breadcrumb, Typography, Space, Card, Input } from "antd";
 import { DataGrid } from "@mui/x-data-grid";
 import { getOrderColumns } from "./sections/grid-columns/setup";
 import Order from "@/models/order";
-import { fetchOrders, updateOrder } from "@/api/orders/order-api";
+import { fetchOrders, updateOrder, trackOrder } from "@/api/orders/order-api";
 import { enqueueSnackbar } from "notistack";
 import { Meta } from "@/models/MetaData/meta";
 
 const { Title } = Typography;
+const { Search } = Input;
 
 const OrdersManagement = () => {
   const navigate = useNavigate();
@@ -20,13 +21,24 @@ const OrdersManagement = () => {
     page: 0,
     pageSize: 10,
   });
+  const [searchPhone, setSearchPhone] = useState("");
 
-  const loadOrders = () => {
+  const loadOrders = useCallback(() => {
     setIsLoading(true);
-    fetchOrders(paginationModel.page + 1, paginationModel.pageSize)
+    const fetchFunc = searchPhone
+      ? trackOrder(searchPhone)
+      : fetchOrders(paginationModel.page + 1, paginationModel.pageSize);
+
+    fetchFunc
       .then((data) => {
-        setOrders(data.data);
-        setMeta(data.meta);
+        if (searchPhone) {
+          const resultData = Array.isArray(data) ? data : data.data || [];
+          setOrders(resultData);
+          setMeta(new Meta({ total: resultData.length }));
+        } else {
+          setOrders(data.data);
+          setMeta(data.meta);
+        }
       })
       .catch((error) => {
         enqueueSnackbar(error.message, { variant: "error" });
@@ -34,7 +46,7 @@ const OrdersManagement = () => {
       .finally(() => {
         setIsLoading(false);
       });
-  };
+  }, [paginationModel, searchPhone]);
 
   const handleUpdateStatus = async (id, data) => {
     try {
@@ -50,17 +62,38 @@ const OrdersManagement = () => {
 
   useEffect(() => {
     loadOrders();
-  }, [paginationModel]);
+  }, [loadOrders]);
+
+  const handleSearch = (value) => {
+    setSearchPhone(value);
+    setPaginationModel((prev) => ({ ...prev, page: 0 }));
+  };
 
   return (
     <Space direction="vertical" style={{ width: "100%" }} size="large">
-      <div>
-        <Breadcrumb
-          items={[{ title: "Admin" }, { title: "Quản Lý Đơn Hàng" }]}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <div>
+          <Breadcrumb
+            items={[{ title: "Admin" }, { title: "Quản Lý Đơn Hàng" }]}
+          />
+          <Title level={2} style={{ margin: "8px 0 0" }}>
+            Quản Lý Đơn Hàng
+          </Title>
+        </div>
+        <Search
+          placeholder="Tìm đơn hàng theo số điện thoại..."
+          onSearch={handleSearch}
+          allowClear
+          enterButton
+          size="large"
+          style={{ width: 400 }}
         />
-        <Title level={2} style={{ margin: "8px 0 0" }}>
-          Quản Lý Đơn Hàng
-        </Title>
       </div>
 
       <Card
@@ -84,7 +117,7 @@ const OrdersManagement = () => {
           rowCount={meta.total}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
-          paginationMode="server"
+          paginationMode={searchPhone ? "client" : "server"}
           pageSizeOptions={[10, 25, 50]}
           initialState={{
             pagination: {

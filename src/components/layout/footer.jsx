@@ -145,7 +145,7 @@ const Footer = () => {
                 Hướng dẫn mua hàng
               </Link>
               <Link
-                href="#"
+                href="/order-tracking"
                 style={{
                   color: "rgba(255, 255, 255, 0.65)",
                   transition: "all 0.3s",

@@ -56,6 +56,14 @@ const SuccessInvoice = ({ order, items, total, subtotal, shippingFee }) => {
           >
             Tiếp tục mua sắm
           </Button>,
+          <Button
+            size="large"
+            key="tracking"
+            onClick={() => navigate("/order-tracking")}
+            style={{ borderRadius: 8, height: 45 }}
+          >
+            Tra cứu đơn hàng
+          </Button>,
         ]}
       />
 
@@ -125,6 +133,16 @@ const SuccessInvoice = ({ order, items, total, subtotal, shippingFee }) => {
                 {order.shipping_address}
               </Text>
             </div>
+            {order.tracking_code && (
+              <div style={{ marginBottom: 20 }}>
+                <Text type="secondary" style={{ fontSize: 13, display: "block" }}>
+                  Mã vận đơn (Tracking Code)
+                </Text>
+                <Tag color="green" style={{ fontSize: 16, padding: "4px 12px", borderRadius: 4, fontWeight: 'bold' }}>
+                  {order.tracking_code}
+                </Tag>
+              </div>
+            )}
             <div style={{ marginBottom: 20 }}>
               <Text type="secondary" style={{ fontSize: 13, display: "block" }}>
                 Phương thức thanh toán

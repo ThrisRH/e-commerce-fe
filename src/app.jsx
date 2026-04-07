@@ -17,6 +17,7 @@ import UserProductDetail from "./pages/user/product-detail";
 import UserRegister from "./pages/user/register";
 import CheckoutPage from "./pages/user/checkout";
 import CategoryPage from "./pages/user/category";
+import OrderTracking from "./pages/user/order-tracking";
 import OrderDetail from "./pages/admin/orders/order-details";
 
 // Lazy load admin pages for better initial bundle size
@@ -63,6 +64,7 @@ function App() {
 
               <Route path="build-pc" element={<BuildPC />} />
               <Route path="checkout" element={<CheckoutPage />} />
+              <Route path="order-tracking" element={<OrderTracking />} />
               <Route path="category" element={<CategoryPage />} />
 
               <Route
