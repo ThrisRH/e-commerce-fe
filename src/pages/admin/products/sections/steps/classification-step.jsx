@@ -1,4 +1,6 @@
 import { Col, Divider, Form, Row, Select, Typography, Input, Spin, Empty } from "antd";
+import { useNavigate } from "react-router-dom";
+import AppButton from "@/components/common/buttons/button";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -13,7 +15,9 @@ export default function ClassificationStep({
   allAttributes = [],
   onAddExtraAttribute,
   attrLoading,
+  categoryId,
 }) {
+  const navigate = useNavigate();
   const mergedAttributes = [...categoryAttributes, ...extraAttributes];
   
   return (
@@ -99,10 +103,22 @@ export default function ClassificationStep({
                 </Col>
               ))}
             </Row>
+          ) : categoryId ? (
+            <div style={{ textAlign: "center", padding: "32px 0" }}>
+              <Paragraph style={{ marginBottom: 16 }}>
+                Danh mục này chưa được thiết lập các thuộc tính đặc trưng.
+              </Paragraph>
+              <div style={{ maxWidth: "250px", margin: "0 auto" }}>
+                <AppButton 
+                  label="Thiết lập thuộc tính ngay"
+                  onClick={() => navigate(`/admin/categories/${categoryId}`)}
+                />
+              </div>
+            </div>
           ) : (
             <Empty
               image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description="No attributes found for this category"
+              description="Vui lòng chọn danh mục để xem các thuộc tính"
             />
           )}
         </Col>
