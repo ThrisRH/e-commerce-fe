@@ -6,7 +6,7 @@ import { fetchAttributes } from "@/api/attributes/attribute-api";
 import Category from "@/models/category";
 
 import { enqueueSnackbar } from "notistack";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function useCategoryDetail(id) {
@@ -19,7 +19,7 @@ export default function useCategoryDetail(id) {
 
   const navigate = useNavigate();
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -54,7 +54,7 @@ export default function useCategoryDetail(id) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, navigate]);
 
   return {
     loading,

@@ -9,6 +9,7 @@ import { enqueueSnackbar } from "notistack";
 import CreateCategoryModal from "./sections/create-form";
 import { getCategoryColumns } from "./sections/grid-columns/setup";
 import { Meta } from "@/models/MetaData/meta";
+import AppButton from "@/components/common/buttons/button";
 
 const { Title } = Typography;
 
@@ -77,14 +78,12 @@ const CategoriesManagement = () => {
             Quản Lý Danh Mục
           </Title>
         </div>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          size="large"
-          onClick={() => setIsModalOpen(true)}
-        >
-          Thêm Danh Mục
-        </Button>
+        <div style={{ width: 200 }}>
+          <AppButton
+            label={"Thêm Danh Mục"}
+            onClick={() => setIsModalOpen(true)}
+          />
+        </div>
       </div>
 
       <CreateCategoryModal

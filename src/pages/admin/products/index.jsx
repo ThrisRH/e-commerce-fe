@@ -11,6 +11,7 @@ import CreateProductModal from "./sections/create-form";
 import { deleteProduct } from "@/api/products/product-api";
 import { getProductColumns } from "./sections/grid-columns/setup";
 import { Meta } from "@/models/MetaData/meta";
+import AppButton from "@/components/common/buttons/button";
 
 const { Title } = Typography;
 
@@ -78,14 +79,12 @@ const ProductsManagement = () => {
             Quản Lý Sản Phẩm
           </Title>
         </div>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          size="large"
-          onClick={() => setIsModalOpen(true)}
-        >
-          Thêm Sản Phẩm
-        </Button>
+        <div style={{ width: 200 }}>
+          <AppButton
+            label={"Thêm Sản Phẩm"}
+            onClick={() => setIsModalOpen(true)}
+          />
+        </div>
       </div>
 
       <CreateProductModal

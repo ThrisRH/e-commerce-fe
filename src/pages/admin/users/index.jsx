@@ -22,6 +22,7 @@ import { getUserColumns } from "./sections/grid-columns/setup-user";
 import { getRoleColumns } from "./sections/grid-columns/setup-role";
 import CreateUserModal from "./sections/create-user-modal";
 import CreateRoleModal from "./sections/create-role-modal";
+import AppButton from "@/components/common/buttons/button";
 
 const { Title } = Typography;
 
@@ -172,14 +173,12 @@ const UsersManagement = () => {
           </Title>
         </div>
         {activeTab !== "customer" && (
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            size="large"
-            onClick={handleCreateButtonClick}
-          >
-            {activeTab === "role" ? "Thêm Vai Trò" : "Thêm Tài Khoản"}
-          </Button>
+          <div style={{ width: 200 }}>
+            <AppButton
+              label={activeTab === "role" ? "Thêm Vai Trò" : "Thêm Tài Khoản"}
+              onClick={handleCreateButtonClick}
+            />
+          </div>
         )}
       </div>
 

@@ -1,14 +1,6 @@
 import { updateProduct } from "@/api/products/product-api";
-import {
-  Box,
-  Container,
-  Grid,
-  IconButton,
-  Typography,
-} from "@mui/material";
-import {
-  ArrowBack as ArrowLeftIcon,
-} from "@mui/icons-material";
+import { Box, Container, Grid, IconButton, Typography } from "@mui/material";
+import { ArrowBack as ArrowLeftIcon } from "@mui/icons-material";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -16,7 +8,6 @@ import AppButton from "@/components/common/buttons/button";
 import useProductDetail from "@/hooks/products/product-detail";
 import Loading from "@/components/ui/state/loading";
 
-// Import sections
 import BasicInfo from "./sections/basic-info";
 import ProductAttributes from "./sections/product-attributes";
 import ProductClassification from "./sections/product-classification";
@@ -169,27 +160,27 @@ export default function ProductDetail() {
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 8 }}>
-          <BasicInfo 
-            formData={formData} 
-            handleChange={handleChange} 
-            setFormData={setFormData} 
+          <BasicInfo
+            formData={formData}
+            handleChange={handleChange}
+            setFormData={setFormData}
           />
-          <ProductAttributes 
-            formData={formData} 
-            attributes={attributes} 
-            handleAttributeChange={handleAttributeChange} 
-            addAttribute={addAttribute} 
-            removeAttribute={removeAttribute} 
+          <ProductAttributes
+            formData={formData}
+            attributes={attributes}
+            handleAttributeChange={handleAttributeChange}
+            addAttribute={addAttribute}
+            removeAttribute={removeAttribute}
           />
         </Grid>
 
         <Grid size={{ xs: 12, md: 4 }}>
-          <ProductClassification 
-            formData={formData} 
-            setFormData={setFormData} 
-            categories={categories} 
-            brands={brands} 
-            handleChange={handleChange} 
+          <ProductClassification
+            formData={formData}
+            setFormData={setFormData}
+            categories={categories}
+            brands={brands}
+            handleChange={handleChange}
           />
         </Grid>
       </Grid>

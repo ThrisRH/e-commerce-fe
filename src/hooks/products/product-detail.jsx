@@ -8,7 +8,7 @@ import Brand from "@/models/brand";
 import Category from "@/models/category";
 import { Product } from "@/models/product";
 import { enqueueSnackbar } from "notistack";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function useProductDetail(id) {
@@ -25,7 +25,7 @@ export default function useProductDetail(id) {
 
   const navigate = useNavigate();
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -55,7 +55,7 @@ export default function useProductDetail(id) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, navigate]);
 
   return {
     loading,

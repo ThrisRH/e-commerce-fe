@@ -27,7 +27,7 @@ export const fetchProductById = async (id) => {
 
 export const updateProduct = async (id, data) => {
   console.log("data: ", data);
-  const response = await axios.patch(`/api/${API_VER}/products/${id}`, data);
+  const response = await axiosClient.patch(`/${API_VER}/products/${id}`, data);
 
   if (!response.data || !response.data.data) {
     throw new Error("Failed to update product");
@@ -36,7 +36,7 @@ export const updateProduct = async (id, data) => {
   return new Product(response.data.data);
 };
 export const createProduct = async (data) => {
-  const response = await axios.post(`/api/${API_VER}/products`, data);
+  const response = await axiosClient.post(`/${API_VER}/products`, data);
 
   if (!response.data || !response.data.data) {
     throw new Error("Failed to create product");
@@ -45,7 +45,7 @@ export const createProduct = async (data) => {
   return new Product(response.data.data);
 };
 export const deleteProduct = async (id) => {
-  const response = await axios.delete(`/api/${API_VER}/products/${id}`);
+  const response = await axiosClient.delete(`/${API_VER}/products/${id}`);
 
   if (response.status !== 200 && response.status !== 204) {
     throw new Error("Failed to delete product");
