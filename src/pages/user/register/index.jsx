@@ -102,6 +102,7 @@ const UserRegister = () => {
                 },
               ]}
               placeholder="VD: 0987654321"
+              maxLength={10}
             />
 
             <Flex gap={16}>

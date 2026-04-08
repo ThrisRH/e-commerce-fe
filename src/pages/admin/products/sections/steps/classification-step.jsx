@@ -1,4 +1,14 @@
-import { Col, Divider, Form, Row, Select, Typography, Input, Spin, Empty } from "antd";
+import {
+  Col,
+  Divider,
+  Form,
+  Row,
+  Select,
+  Typography,
+  Input,
+  Spin,
+  Empty,
+} from "antd";
 import { useNavigate } from "react-router-dom";
 import AppButton from "@/components/common/buttons/button";
 
@@ -19,24 +29,24 @@ export default function ClassificationStep({
 }) {
   const navigate = useNavigate();
   const mergedAttributes = [...categoryAttributes, ...extraAttributes];
-  
+
   return (
     <div style={{ display: display }}>
-      <Title level={5}>Classify your product</Title>
+      <Title level={5}>Phân loại sản phẩm</Title>
       <Paragraph type="secondary">
-        Adding specific categories and brands helps buyers find your items faster.
+        Thêm danh mục và thương hiệu cụ thể.
       </Paragraph>
       <Divider />
       <Row gutter={24}>
         <Col span={12}>
           <Form.Item
             name="category_id"
-            label="Category"
-            rules={[{ required: true, message: "Please select a category" }]}
+            label="Danh mục"
+            rules={[{ required: true, message: "Vui lòng chọn danh mục" }]}
           >
             <Select
               showSearch
-              placeholder="Select a category"
+              placeholder="Chọn danh mục"
               loading={loading}
               options={categories.map((c) => ({
                 label: c.name,
@@ -49,12 +59,12 @@ export default function ClassificationStep({
         <Col span={12}>
           <Form.Item
             name="brand_id"
-            label="Brand"
-            rules={[{ required: true, message: "Please select a brand" }]}
+            label="Thương hiệu"
+            rules={[{ required: true, message: "Vui lòng chọn thương hiệu" }]}
           >
             <Select
               showSearch
-              placeholder="Select a brand"
+              placeholder="Chọn thương hiệu"
               loading={loading}
               options={brands.map((b) => ({
                 label: b.name,
@@ -65,22 +75,27 @@ export default function ClassificationStep({
         </Col>
 
         <Col span={24}>
-          <Divider>Attributes</Divider>
+          <Divider>Thông số sản phẩm</Divider>
           <div style={{ marginBottom: 16 }}>
             <Text type="secondary" style={{ fontSize: 13 }}>
-              Select additional attributes or fill the suggested ones for this category.
+              Chọn thông số bổ sung hoặc điền các thông số được đề xuất cho danh
+              mục này.
             </Text>
           </div>
-          
-          <Form.Item label="Add Extra Attribute">
+
+          <Form.Item label="Thêm thông số">
             <Select
               showSearch
-              placeholder="Search and add an attribute"
+              placeholder="Tìm và thêm thông số"
               options={allAttributes
-                .filter((attr) => !mergedAttributes.some((ma) => ma.id === attr.id))
+                .filter(
+                  (attr) => !mergedAttributes.some((ma) => ma.id === attr.id),
+                )
                 .map((attr) => ({ label: attr.name, value: attr.id }))}
               filterOption={(input, option) =>
-                (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
               }
               onSelect={onAddExtraAttribute}
             />
@@ -88,7 +103,7 @@ export default function ClassificationStep({
 
           {attrLoading ? (
             <div style={{ textAlign: "center", padding: "20px" }}>
-              <Spin tip="Loading attributes..." />
+              <Spin tip="Loading..." />
             </div>
           ) : mergedAttributes.length > 0 ? (
             <Row gutter={[16, 0]}>
@@ -98,7 +113,7 @@ export default function ClassificationStep({
                     name={["attributes", attr.id]}
                     label={`${attr.name} ${attr.unit ? `(${attr.unit})` : ""}`}
                   >
-                    <Input placeholder={`Enter ${attr.name.toLowerCase()}`} />
+                    <Input placeholder={`Nhập ${attr.name.toLowerCase()}`} />
                   </Form.Item>
                 </Col>
               ))}
@@ -106,11 +121,11 @@ export default function ClassificationStep({
           ) : categoryId ? (
             <div style={{ textAlign: "center", padding: "32px 0" }}>
               <Paragraph style={{ marginBottom: 16 }}>
-                Danh mục này chưa được thiết lập các thuộc tính đặc trưng.
+                Danh mục này chưa được thiết lập các thông số đặc trưng.
               </Paragraph>
               <div style={{ maxWidth: "250px", margin: "0 auto" }}>
-                <AppButton 
-                  label="Thiết lập thuộc tính ngay"
+                <AppButton
+                  label="Thiết lập thông số ngay"
                   onClick={() => navigate(`/admin/categories/${categoryId}`)}
                 />
               </div>
@@ -118,7 +133,7 @@ export default function ClassificationStep({
           ) : (
             <Empty
               image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description="Vui lòng chọn danh mục để xem các thuộc tính"
+              description="Vui lòng chọn danh mục để xem các thông số"
             />
           )}
         </Col>
@@ -126,4 +141,3 @@ export default function ClassificationStep({
     </div>
   );
 }
-

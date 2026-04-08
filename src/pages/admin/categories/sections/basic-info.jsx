@@ -15,6 +15,7 @@ export default function BasicInfo({ formData, handleChange, setFormData }) {
               name="name"
               value={formData.name || ""}
               onChange={handleChange}
+              maxLength={255}
             />
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
@@ -24,6 +25,7 @@ export default function BasicInfo({ formData, handleChange, setFormData }) {
               value={formData.slug || ""}
               onChange={handleChange}
               disabled
+              maxLength={255}
             />
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
@@ -60,6 +62,11 @@ export default function BasicInfo({ formData, handleChange, setFormData }) {
               name="description"
               value={formData.description || ""}
               onChange={handleChange}
+              slotProps={{
+                htmlInput: {
+                  maxLength: 1000,
+                },
+              }}
             />
           </Grid>
         </Grid>

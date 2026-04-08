@@ -145,6 +145,7 @@ export default function UserDetail() {
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
+                    maxLength={255}
                   />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
@@ -153,6 +154,7 @@ export default function UserDetail() {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
+                    maxLength={255}
                   />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
@@ -161,6 +163,7 @@ export default function UserDetail() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleInputChange}
+                    maxLength={10}
                   />
                 </Grid>
               </Grid>

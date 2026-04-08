@@ -91,9 +91,9 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
   };
 
   const steps = [
-    { title: "Details", description: "Product info" },
-    { title: "Classification", description: "Category and Brand" },
-    { title: "Visibility", description: "Finalize" },
+    { title: "Thông tin cơ bản", description: "Product info" },
+    { title: "Phân loại", description: "Category and Brand" },
+    { title: "Hiển thị", description: "Finalize" },
   ];
 
   const handleNext = async () => {
@@ -160,17 +160,17 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
       }}
     >
       <Text type="secondary" style={{ fontSize: "12px" }}>
-        Step {currentStep + 1} of {steps.length}
+        Bước {currentStep + 1} / {steps.length}
       </Text>
       <div style={{ display: "flex", gap: "8px" }}>
         {currentStep > 0 && (
           <Button onClick={handleBack} disabled={submitting}>
-            Back
+            Quay lại
           </Button>
         )}
         {currentStep < steps.length - 1 ? (
           <Button type="primary" onClick={handleNext}>
-            Next
+            Tiếp tục
           </Button>
         ) : (
           <Button
@@ -178,7 +178,7 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
             onClick={() => form.submit()}
             loading={submitting}
           >
-            Create Product
+            Thêm sản phẩm
           </Button>
         )}
       </div>
@@ -194,7 +194,7 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
           style={{ width: "100%", justifyContent: "space-between" }}
         >
           <Text strong style={{ fontSize: "18px" }}>
-            Create New Product
+            Thêm sản phẩm mới
           </Text>
         </Space>
       }
@@ -240,7 +240,7 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
             categoryId={Form.useWatch("category_id", form)}
           />
 
-          <PublicStep display={currentStep === 3 ? "block" : "none"} />
+          <PublicStep display={currentStep === 2 ? "block" : "none"} />
         </Form>
       </div>
     </Modal>

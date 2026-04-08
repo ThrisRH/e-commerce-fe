@@ -58,6 +58,7 @@ const CheckoutForm = ({
           style={{ borderRadius: 8 }}
           name="phone"
           rules={[{ required: true, message: "Vui lòng nhập số điện thoại" }]}
+          maxLength={10}
         />
       </SectionCard>
 

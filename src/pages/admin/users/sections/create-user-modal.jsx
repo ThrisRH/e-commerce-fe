@@ -135,6 +135,7 @@ const CreateUserModal = ({ visible, onClose, onSuccess }) => {
             { pattern: /^\d{10}$/, message: "Số điện thoại phải có 10 chữ số" },
           ]}
           placeholder="VD: 0389919233"
+          maxLength={10}
         />
 
         <Form.Item

@@ -97,6 +97,11 @@ export default function ProductAttributes({
                   onChange={(e) =>
                     handleAttributeChange(index, "value", e.target.value)
                   }
+                  slotProps={{
+                    htmlInput: {
+                      maxLength: 255,
+                    },
+                  }}
                 />
               </Grid>
 

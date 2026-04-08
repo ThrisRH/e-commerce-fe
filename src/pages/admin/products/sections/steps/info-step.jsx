@@ -9,33 +9,32 @@ export default function InfoStep({ display }) {
         <Col span={16}>
           <Form.Item
             name="name"
-            label="Product Name"
-            rules={[{ required: true, message: "Please enter product name" }]}
+            label="Tên sản phẩm"
+            rules={[{ required: true, message: "Vui lòng nhập tên sản phẩm" }]}
           >
-            <Input placeholder='Enter a title that describes your product (e.g., "iPhone 15 Pro Max")' />
+            <Input placeholder='Nhập tên sản phẩm (VD: "iPhone 15 Pro Max")' />
           </Form.Item>
           <Form.Item
             name="description"
-            label="Description"
-            rules={[{ required: true, message: "Please enter description" }]}
+            label="Mô tả"
+            rules={[{ required: true, message: "Vui lòng nhập mô tả" }]}
           >
-            <TextArea
-              rows={5}
-              placeholder="Tell shoppers about your product..."
-            />
+            <TextArea rows={5} placeholder="Mô tả sản phẩm..." />
           </Form.Item>
         </Col>
         <Col span={8}>
           <Form.Item
             name="image_url"
-            label="Thumbnail URL"
-            rules={[{ required: true, message: "Please provide image URL" }]}
+            label="Đường dẫn ảnh"
+            rules={[
+              { required: true, message: "Vui lòng cung cấp đường dẫn ảnh" },
+            ]}
           >
             <Input prefix={<CloudUploadOutlined />} placeholder="https://..." />
           </Form.Item>
           <Form.Item
             name="price"
-            label="Price (VND)"
+            label="Giá (VND)"
             rules={[{ required: true }]}
           >
             <InputNumber
@@ -46,7 +45,7 @@ export default function InfoStep({ display }) {
               parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
             />
           </Form.Item>
-          <Form.Item name="stock" label="Stock" rules={[{ required: true }]}>
+          <Form.Item name="stock" label="Tồn kho" rules={[{ required: true }]}>
             <InputNumber style={{ width: "100%" }} min={0} />
           </Form.Item>
         </Col>

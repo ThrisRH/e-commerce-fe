@@ -31,6 +31,7 @@ export default function ShippingInfo({ order, handleChange }) {
               value={order.shipping_phone || ""}
               onChange={() => {}}
               disabled
+              maxLength={10}
             />
           </Grid>
           <Grid size={{ xs: 12 }}>

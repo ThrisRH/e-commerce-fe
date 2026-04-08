@@ -6,9 +6,9 @@ const { Title, Text, Paragraph } = Typography;
 export default function PublicStep({ display }) {
   return (
     <div style={{ display: display }}>
-      <Title level={5}>Visibility & Checks</Title>
+      <Title level={5}>Chế độ hiển thị</Title>
       <Paragraph type="secondary">
-        Decide when to show your product to the public.
+        Quyết định thời điểm hiển thị sản phẩm.
       </Paragraph>
       <Divider />
       <div
@@ -30,31 +30,28 @@ export default function PublicStep({ display }) {
             <CheckCircleFilled
               style={{ color: "#52c41a", marginRight: "8px" }}
             />{" "}
-            Ready to list
-          </Text>
-          <Text type="secondary" style={{ marginLeft: "24px" }}>
-            Checks complete. No issues found.
+            Sẵn sàng hiển thị
           </Text>
         </Space>
       </div>
 
       <Divider />
-      <Title level={5}>Summary</Title>
+      <Title level={5}>Thông tin cơ bản</Title>
       <Form.Item noStyle shouldUpdate>
         {({ getFieldsValue }) => {
           const { name, price, stock } = getFieldsValue();
           return (
             <Space direction="vertical" style={{ width: "100%" }}>
               <Row justify="space-between">
-                <Text>Name:</Text>
+                <Text>Tên sản phẩm:</Text>
                 <Text strong>{name}</Text>
               </Row>
               <Row justify="space-between">
-                <Text>Price:</Text>
+                <Text>Giá:</Text>
                 <Text strong>{price?.toLocaleString()} VND</Text>
               </Row>
               <Row justify="space-between">
-                <Text>Initial Stock:</Text>
+                <Text>Số lượng tồn kho:</Text>
                 <Text strong>{stock}</Text>
               </Row>
             </Space>
