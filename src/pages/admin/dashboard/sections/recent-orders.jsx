@@ -20,11 +20,7 @@ const columns = [
     dataIndex: "shipping_phone",
     key: "shipping_phone",
   },
-  {
-    title: "Địa chỉ",
-    dataIndex: "shipping_address",
-    key: "shipping_address",
-  },
+
   {
     title: "Tổng Tiền",
     dataIndex: "total",

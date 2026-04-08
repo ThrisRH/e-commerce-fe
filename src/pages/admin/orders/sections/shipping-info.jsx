@@ -21,7 +21,7 @@ export default function ShippingInfo({ order, handleChange }) {
               name="shipping_name"
               value={order.shipping_name || ""}
               onChange={() => {}}
-              readOnly
+              disabled
             />
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
@@ -30,7 +30,7 @@ export default function ShippingInfo({ order, handleChange }) {
               name="shipping_phone"
               value={order.shipping_phone || ""}
               onChange={() => {}}
-              readOnly
+              disabled
             />
           </Grid>
           <Grid size={{ xs: 12 }}>
@@ -39,11 +39,7 @@ export default function ShippingInfo({ order, handleChange }) {
               label="Địa chỉ giao hàng"
               name="shipping_address"
               value={order.shipping_address || ""}
-              slotProps={{
-                htmlInput: {
-                  readOnly: true,
-                },
-              }}
+              disabled
             />
           </Grid>
           <Grid size={{ xs: 12 }}>
@@ -55,6 +51,7 @@ export default function ShippingInfo({ order, handleChange }) {
               name="note"
               value={order.note || ""}
               onChange={handleChange}
+              disabled
             />
           </Grid>
         </Grid>

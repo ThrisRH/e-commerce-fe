@@ -9,9 +9,11 @@ const AppInput = ({
   maxLength = 250,
   type = "text",
   readOnly = false,
+  disabled = false,
 }) => {
   return (
     <TextField
+      disabled={disabled}
       fullWidth
       slotProps={{
         htmlInput: {

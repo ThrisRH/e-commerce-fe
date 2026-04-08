@@ -23,6 +23,7 @@ export default function BasicInfo({ formData, handleChange, setFormData }) {
               name="slug"
               value={formData.slug || ""}
               onChange={handleChange}
+              disabled
             />
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>

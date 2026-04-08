@@ -70,6 +70,7 @@ export default function OrderStatusPayment({ order, handleChange }) {
         <Divider sx={{ my: 3 }} />
 
         <TextField
+          disabled
           fullWidth
           label="Mã vận đơn (nếu có)"
           name="tracking_code"
