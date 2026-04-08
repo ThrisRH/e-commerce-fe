@@ -12,11 +12,13 @@ export const getOrderColumns = (onUpdateStatus) => {
     },
     { field: "tracking_code", headerName: "Mã vận đơn", width: 150 },
     { field: "shipping_name", headerName: "Khách hàng", width: 150 },
+    { field: "shipping_phone", headerName: "Số điện thoại", width: 150 },
+    { field: "shipping_address", headerName: "Địa chỉ", width: 150 },
     {
-      field: "total_amount",
+      field: "total",
       headerName: "Tổng tiền",
       width: 130,
-      valueFormatter: (value, row) => formatCurrency(row.total_amount),
+      valueFormatter: (value, row) => formatCurrency(row.total),
     },
     {
       field: "status",

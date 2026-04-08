@@ -78,7 +78,17 @@ const CheckoutSummary = ({
             >
               <Space>
                 <Text type="secondary">Phí vận chuyển</Text>
-                <Tooltip title="Miễn phí đơn từ 500.000đ">
+                <Tooltip
+                  title={
+                    <div>
+                      <p style={{ margin: 0 }}>• Miễn phí đơn từ 4.000.000đ</p>
+                      <p style={{ margin: 0 }}>
+                        • Phí cơ bản 35k + 6k/mỗi sp thêm
+                      </p>
+                      <p style={{ margin: 0 }}>• Phí tối đa 50k</p>
+                    </div>
+                  }
+                >
                   <InfoCircleOutlined
                     style={{
                       fontSize: 12,

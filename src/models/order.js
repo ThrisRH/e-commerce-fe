@@ -6,7 +6,8 @@ class Order {
     this.shipping_address = data.shipping_address;
     this.tracking_code = data.tracking_code;
 
-    this.total_amount = data.total_amount;
+    this.subtotal = data.subtotal;
+    this.total = data.total;
     this.shipping_fee = data.shipping_fee;
 
     this.status = data.status;

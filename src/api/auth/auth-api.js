@@ -1,3 +1,4 @@
+import axiosClient from "@/config/axios-client";
 import { env, API_VER } from "@/constants/env";
 import { User } from "@/models/user";
 import axios from "axios";
@@ -45,16 +46,8 @@ export const fetchMe = async (token) => {
   return new User(response.data.data);
 };
 
-export const logout = async (token) => {
-  const response = await axios.post(
-    `/api/${API_VER}/auth/logout`,
-    {},
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  );
+export const logout = async () => {
+  const response = await axiosClient.post(`/${API_VER}/auth/logout`, {});
 
   if (!response.data || !response.data.data) {
     throw new Error("Đăng xuất thất bại");

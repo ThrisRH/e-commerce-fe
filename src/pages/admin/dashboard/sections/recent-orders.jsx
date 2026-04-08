@@ -16,9 +16,19 @@ const columns = [
     key: "shipping_name",
   },
   {
+    title: "Số điện thoại",
+    dataIndex: "shipping_phone",
+    key: "shipping_phone",
+  },
+  {
+    title: "Địa chỉ",
+    dataIndex: "shipping_address",
+    key: "shipping_address",
+  },
+  {
     title: "Tổng Tiền",
-    dataIndex: "total_amount",
-    key: "total_amount",
+    dataIndex: "total",
+    key: "total",
     render: (value) => (
       <Text style={{ color: "var(--primary-main)", fontWeight: 600 }}>
         {formatCurrency(value)}

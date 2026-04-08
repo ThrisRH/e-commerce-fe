@@ -70,7 +70,7 @@ const Header = ({ onMenuClick }) => {
   };
 
   const handleLogout = async () => {
-    const response = await logout(token);
+    const response = await logout();
     if (response?.data) {
       localStorage.removeItem("access_token");
     }

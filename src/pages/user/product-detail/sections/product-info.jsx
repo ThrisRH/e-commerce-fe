@@ -103,7 +103,7 @@ const ProductInfo = ({
         <PolicyBadge
           icon={<TruckOutlined />}
           title="Miễn phí vận chuyển"
-          subtitle="Đơn từ 500.000đ"
+          subtitle="Đơn từ 4.000.000đ"
         />
         <PolicyBadge
           icon={<SafetyCertificateOutlined />}

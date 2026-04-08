@@ -74,13 +74,13 @@ export default function OrderItems({ order }) {
           }}
         >
           <Typography variant="body2">
-            Tạm tính: {formatCurrency(order.total_amount - order.shipping_fee)}
+            Tạm tính: {formatCurrency(order.subtotal)}
           </Typography>
           <Typography variant="body2">
             Phí ship: {formatCurrency(order.shipping_fee)}
           </Typography>
           <Typography variant="h6" sx={{ fontWeight: 700 }}>
-            Tổng cộng: {formatCurrency(order.total_amount)}
+            Tổng cộng: {formatCurrency(order.total)}
           </Typography>
         </Box>
       </CardContent>

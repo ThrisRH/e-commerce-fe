@@ -50,7 +50,7 @@ const DashboardStat = ({ title, value, icon, suffix = "" }) => (
 
 const StatsCards = ({ orders = [], customers = [], orderItems = [] }) => {
   const totalRevenue = useMemo(() => {
-    return orders.reduce((sum, order) => sum + (order.total_amount || 0), 0);
+    return orders.reduce((sum, order) => sum + (order.total || 0), 0);
   }, [orders]);
   const totalOrders = useMemo(() => {
     return orders.length;

@@ -66,9 +66,7 @@ const ProductDetails = ({ order }) => {
         <Space direction="vertical" align="end">
           <div>
             <Text type="secondary">Tạm tính: </Text>
-            <Text>
-              {formatCurrency(order.total_amount - order.shipping_fee)}
-            </Text>
+            <Text>{formatCurrency(order.subtotal)}</Text>
           </div>
           <div>
             <Text type="secondary">Phí vận chuyển: </Text>
@@ -78,11 +76,8 @@ const ProductDetails = ({ order }) => {
             <Text strong style={{ fontSize: 18 }}>
               Tổng thanh toán:{" "}
             </Text>
-            <Text
-              strong
-              style={{ fontSize: 22, color: "var(--primary-main)" }}
-            >
-              {formatCurrency(order.total_amount)}
+            <Text strong style={{ fontSize: 22, color: "var(--primary-main)" }}>
+              {formatCurrency(order.total)}
             </Text>
           </div>
         </Space>

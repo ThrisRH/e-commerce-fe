@@ -16,7 +16,7 @@ import CheckoutSummary from "./sections/checkout-summary";
 import SuccessInvoice from "./sections/invoice";
 
 const { Title } = Typography;
-const SHIPPING_FEE = 30000;
+import { calculateShippingFee } from "@/utils/shipping-calculator";
 
 const CheckoutPage = () => {
   const location = useLocation();
@@ -116,7 +116,8 @@ const CheckoutPage = () => {
     (sum, { product, quantity }) => sum + product.price * quantity,
     0,
   );
-  const total = subtotal + SHIPPING_FEE;
+  const shippingFee = calculateShippingFee(subtotal, items);
+  const total = subtotal + shippingFee;
 
   const clearCart = () => {
     if (isBuyNow) return;
@@ -136,7 +137,7 @@ const CheckoutPage = () => {
         shipping_address: `${values.address}, ${values.district}, ${values.city}`,
         note: values.note,
         payment_method: paymentMethod,
-        shipping_fee: SHIPPING_FEE,
+        shipping_fee: shippingFee,
         items: items.map((i) => ({
           product_id: i.product.id,
           quantity: i.quantity,
@@ -168,7 +169,7 @@ const CheckoutPage = () => {
         items={items}
         total={total}
         subtotal={subtotal}
-        shippingFee={SHIPPING_FEE}
+        shippingFee={shippingFee}
       />
     );
   }
@@ -211,7 +212,7 @@ const CheckoutPage = () => {
             items={items}
             subtotal={subtotal}
             total={total}
-            shippingFee={SHIPPING_FEE}
+            shippingFee={shippingFee}
             submitting={submitting}
             handleSubmit={handleSubmit}
           />
