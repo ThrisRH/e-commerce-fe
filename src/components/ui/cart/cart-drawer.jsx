@@ -14,7 +14,7 @@ import {
   DeleteOutlined,
   ThunderboltOutlined,
 } from "@ant-design/icons";
-import { fetchProductById } from "@/api/products/product-api";
+import { fetchProductBySlug } from "@/api/products/product-api";
 import { formatCurrency } from "@/utils/format-currency";
 import { useNavigate } from "react-router-dom";
 
@@ -161,7 +161,7 @@ const CartDrawer = ({ open, onClose }) => {
     setLoading(true);
     try {
       const results = await Promise.allSettled(
-        stored.map((entry) => fetchProductById(entry.id)),
+        stored.map((entry) => fetchProductBySlug(entry.id)),
       );
 
       const merged = stored.reduce((acc, entry, idx) => {

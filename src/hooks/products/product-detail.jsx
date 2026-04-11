@@ -3,7 +3,7 @@ import {
   fetchCategories,
   fetchCategoryById,
 } from "@/api/categories/category-api";
-import { fetchProductById } from "@/api/products/product-api";
+import { fetchProductBySlug } from "@/api/products/product-api";
 import Brand from "@/models/brand";
 import Category from "@/models/category";
 import { Product } from "@/models/product";
@@ -29,7 +29,7 @@ export default function useProductDetail(id) {
     try {
       setLoading(true);
 
-      const productData = await fetchProductById(id);
+      const productData = await fetchProductBySlug(id);
       if (productData == null) {
         enqueueSnackbar("Không tìm thấy sản phẩm", { variant: "error" });
         navigate("/admin/products");

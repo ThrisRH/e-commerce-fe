@@ -30,13 +30,12 @@ const Home = () => {
 
     Promise.all([
       fetchProducts({ limit: 12 }),
-      fetchCateSection(),
+      // fetchCateSection(),
       fetchCategories({ limit: 16 }),
     ])
-      .then(([proRes, cateRes, categoryListRes]) => {
+      .then(([proRes, cateRes]) => {
         setProducts(proRes.data);
         setLatestProductsByCategory(cateRes.data);
-        setCategories(categoryListRes.data);
       })
       .catch((error) => {
         enqueueSnackbar(error.message, { variant: "error" });
@@ -73,7 +72,7 @@ const Home = () => {
           onSortChange={setSortOrder}
         />
 
-        {latestProductsByCategory.map((item, index) => {
+        {/* {latestProductsByCategory.map((item, index) => {
           return (
             <LatestProInCateSection
               key={index}
@@ -81,7 +80,7 @@ const Home = () => {
               latestProducts={item.products}
             />
           );
-        })}
+        })} */}
       </Space>
     </div>
   );

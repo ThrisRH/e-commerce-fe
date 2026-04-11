@@ -31,8 +31,6 @@ const RevenueChart = ({ loading }) => {
       });
   }, []);
 
-  console.log(revenue);
-
   return (
     <Card
       title={

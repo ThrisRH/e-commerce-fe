@@ -1,0 +1,203 @@
+import { IconButton, Typography, Grid } from "@mui/material";
+import {
+  Form,
+  Modal,
+  Input,
+  InputNumber,
+  Divider,
+  Space,
+  Tag,
+  Button,
+  Select,
+} from "antd";
+import { Add as AddIcon, Delete as DeleteIcon } from "@mui/icons-material";
+
+export default function AddVariantModal({
+  open,
+  onCancel,
+  onFinish,
+  saving,
+  category,
+  form,
+}) {
+  return (
+    <Modal
+      title="Thêm Biến Thể Mới"
+      open={open}
+      onCancel={onCancel}
+      width={650}
+      footer={null}
+    >
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={onFinish}
+        initialValues={{ stock: 0, price: 0, attributes: [{}] }}
+      >
+        <Grid container spacing={2}>
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <Form.Item
+              name="price"
+              label="Giá bán (VND)"
+              rules={[{ required: true, message: "Vui lòng nhập giá!" }]}
+            >
+              <InputNumber
+                style={{ width: "100%" }}
+                formatter={(value) =>
+                  `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                }
+                parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+              />
+            </Form.Item>
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <Form.Item
+              name="stock"
+              label="Số lượng tồn kho"
+              rules={[{ required: true, message: "Vui lòng nhập số lượng!" }]}
+            >
+              <InputNumber style={{ width: "100%" }} min={0} />
+            </Form.Item>
+          </Grid>
+        </Grid>
+
+        <Form.Item
+          name="image_url"
+          label="Đường dẫn ảnh"
+          rules={[{ required: true, message: "Vui lòng nhập URL ảnh!" }]}
+        >
+          <Input placeholder="https://..." />
+        </Form.Item>
+
+        <Divider plain>
+          <Typography variant="caption" sx={{ fontWeight: 600 }}>
+            Cấu hình thuộc tính
+          </Typography>
+        </Divider>
+
+        <div style={{ marginBottom: 16 }}>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ display: "block", mb: 1 }}
+          >
+            Thuộc tính gợi ý từ danh mục:
+          </Typography>
+          <Space wrap>
+            {category?.attributes?.map((attr) => (
+              <Tag key={attr.id} color="cyan">
+                ID {attr.id}: {attr.name}
+              </Tag>
+            ))}
+          </Space>
+        </div>
+
+        <Form.List name="attributes">
+          {(fields, { add, remove }) => (
+            <>
+              {fields.map(({ key, name, ...restField }) => (
+                <div
+                  key={key}
+                  style={{
+                    background: "#f9f9f9",
+                    padding: "12px",
+                    borderRadius: "8px",
+                    marginBottom: 12,
+                    position: "relative",
+                  }}
+                >
+                  <Grid container spacing={2}>
+                    <Grid size={{ xs: 4 }}>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "attribute_value_id"]}
+                        label="Value ID"
+                      >
+                        <InputNumber
+                          placeholder="ID giá trị"
+                          style={{ width: "100%" }}
+                        />
+                      </Form.Item>
+                    </Grid>
+                    <Grid size={{ xs: 3 }}>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "attribute_id"]}
+                        label="Thuộc tính"
+                      >
+                        <Select
+                          placeholder="Chọn tt"
+                          style={{ width: "100%" }}
+                          options={category?.attributes?.map((attr) => ({
+                            label: attr.name,
+                            value: attr.id,
+                          }))}
+                        />
+                      </Form.Item>
+                    </Grid>
+                    <Grid size={{ xs: 3 }}>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "value"]}
+                        label="Giá trị mới"
+                      >
+                        <Input placeholder="Giá trị" />
+                      </Form.Item>
+                    </Grid>
+                    <Grid size={{ xs: 2 }}>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "unit"]}
+                        label="Đvị"
+                      >
+                        <Input placeholder="Unit" />
+                      </Form.Item>
+                    </Grid>
+                  </Grid>
+                  {fields.length > 1 && (
+                    <IconButton
+                      size="small"
+                      onClick={() => remove(name)}
+                      sx={{
+                        position: "absolute",
+                        top: -10,
+                        right: -10,
+                        bgcolor: "white",
+                        border: "1px solid #ddd",
+                        "&:hover": { bgcolor: "#fff1f0", color: "red" },
+                      }}
+                    >
+                      <DeleteIcon sx={{ fontSize: 16 }} />
+                    </IconButton>
+                  )}
+                </div>
+              ))}
+              <Button
+                type="dashed"
+                onClick={() => add()}
+                block
+                icon={<AddIcon />}
+              >
+                Thêm thuộc tính
+              </Button>
+            </>
+          )}
+        </Form.List>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: 12,
+            marginTop: 24,
+          }}
+        >
+          <Button onClick={onCancel}>Hủy</Button>
+          <Button type="primary" htmlType="submit" loading={saving}>
+            Tạo Biến Thể
+          </Button>
+        </div>
+      </Form>
+    </Modal>
+  );
+}

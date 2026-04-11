@@ -9,13 +9,19 @@ export const getProductColumns = (handleDelete) => [
   {
     field: "price",
     headerName: "Giá",
-    width: 150,
-    valueGetter: (value, row) => formatCurrency(row?.price),
+    width: 200,
+    valueGetter: (value, row) => {
+      if (row.price_min && row.price_max && row.price_min !== row.price_max) {
+        return `${formatCurrency(row.price_min)} - ${formatCurrency(row.price_max)}`;
+      }
+      return formatCurrency(row.price_min || row.price || 0);
+    },
   },
   {
-    field: "stock",
+    field: "total_stock",
     headerName: "Tồn kho",
     width: 100,
+    valueGetter: (value, row) => row.total_stock ?? row.stock ?? 0,
   },
   {
     field: "category",

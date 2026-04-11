@@ -5,7 +5,7 @@ import { enqueueSnackbar } from "notistack";
 
 // API
 import { getCartFromSession } from "@/components/ui/cart/cart-drawer";
-import { fetchProductById } from "@/api/products/product-api";
+import { fetchProductBySlug } from "@/api/products/product-api";
 import { createOrder } from "@/api/orders/order-api";
 import { fetchMe } from "@/api/auth/auth-api";
 
@@ -36,7 +36,6 @@ const CheckoutPage = () => {
 
     try {
       const user = await fetchMe(token);
-      console.log(user);
       if (user) {
         const nameParts = user.name.trim().split(" ");
         let fname = "";
@@ -64,7 +63,7 @@ const CheckoutPage = () => {
     if (isBuyNow) {
       const { id, quantity } = location.state.buyNowItem;
       try {
-        const product = await fetchProductById(id);
+        const product = await fetchProductBySlug(id);
         setItems([{ product, quantity }]);
       } catch {
         enqueueSnackbar("Không thể tải thông tin sản phẩm", {
@@ -82,7 +81,7 @@ const CheckoutPage = () => {
 
     try {
       const results = await Promise.allSettled(
-        stored.map((entry) => fetchProductById(entry.id)),
+        stored.map((entry) => fetchProductBySlug(entry.id)),
       );
 
       const merged = stored.reduce((acc, entry, idx) => {

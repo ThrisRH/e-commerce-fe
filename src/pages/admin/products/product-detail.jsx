@@ -1,120 +1,130 @@
-import { updateProduct } from "@/api/products/product-api";
-import { Box, Container, Grid, IconButton, Typography } from "@mui/material";
-import { ArrowBack as ArrowLeftIcon } from "@mui/icons-material";
+import {
+  fetchAdminProductDetail,
+  updateProduct,
+  createVariant,
+  updateVariant,
+  deleteVariant,
+} from "@/api/products/product-api";
+import {
+  fetchCategoryById,
+  fetchCategories,
+} from "@/api/categories/category-api";
+import { fetchBrands } from "@/api/brands/brand-api";
+import {
+  Box,
+  Container,
+  IconButton,
+  Typography,
+  CircularProgress,
+  Grid,
+} from "@mui/material";
+import {
+  ArrowBack as ArrowLeftIcon,
+  Add as AddIcon,
+} from "@mui/icons-material";
+import { Form, Button } from "antd";
 import { enqueueSnackbar } from "notistack";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AppButton from "@/components/common/buttons/button";
-import useProductDetail from "@/hooks/products/product-detail";
-import Loading from "@/components/ui/state/loading";
 
-import BasicInfo from "./sections/basic-info";
-import ProductAttributes from "./sections/product-attributes";
-import ProductClassification from "./sections/product-classification";
+// Section Components
+import GeneralInfo from "./detail-sections/GeneralInfo";
+import Specifications from "./detail-sections/Specifications";
+import VariantList from "./detail-sections/VariantList";
+import AddVariantModal from "./detail-sections/AddVariantModal";
 
 export default function ProductDetail() {
-  const { id } = useParams();
-
-  const [saving, setSaving] = useState(false);
+  const { slug } = useParams();
   const navigate = useNavigate();
+  const [masterForm] = Form.useForm();
+  const [addVariantForm] = Form.useForm();
 
-  const {
-    loading,
-    formData,
-    setFormData,
-    originData,
-    attributes,
-    categories,
-    brands,
-    loadData,
-  } = useProductDetail(id);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [productData, setProductData] = useState(null);
+  const [localVariants, setLocalVariants] = useState([]);
+  const [category, setCategory] = useState(null);
+  const [brands, setBrands] = useState([]);
+  const [categoriesList, setCategoriesList] = useState([]);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+  const categoryId = Form.useWatch(["product", "category_id"], masterForm);
 
   useEffect(() => {
-    if (id) loadData();
-  }, [id, loadData]);
+    if (categoryId) {
+      fetchCategoryById(categoryId)
+        .then(setCategory)
+        .catch((err) => enqueueSnackbar("Lỗi tải thông tin danh mục", { variant: "error" }));
+    }
+  }, [categoryId]);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? (checked ? 1 : 0) : value,
-    }));
-  };
-
-  const handleAttributeChange = (index, field, value) => {
-    const updatedAttributes = [...formData.attributes];
-    updatedAttributes[index] = { ...updatedAttributes[index], [field]: value };
-    setFormData((prev) => ({ ...prev, attributes: updatedAttributes }));
-  };
-
-  const addAttribute = () => {
-    setFormData((prev) => ({
-      ...prev,
-      attributes: [
-        ...prev.attributes,
-        {
-          id: null,
-          name: "",
-          value: "",
-          unit: "",
-        },
-      ],
-    }));
-  };
-
-  const removeAttribute = (index) => {
-    const updatedAttributes = formData.attributes.filter((_, i) => i !== index);
-    setFormData((prev) => ({ ...prev, attributes: updatedAttributes }));
-  };
-
-  const getChangedField = (data, curr) => {
-    const changed = {};
-
-    Object.keys(curr).forEach((key) => {
-      if (JSON.stringify(data[key]) !== JSON.stringify(curr[key])) {
-        changed[key] = curr[key];
-      }
-    });
-
-    return changed;
-  };
-
-  const handleSubmit = async (e) => {
-    e?.preventDefault?.();
-
+  const loadData = useCallback(async () => {
     try {
-      setSaving(true);
+      setLoading(true);
+      const [data, brandsData, categoriesData] = await Promise.all([
+        fetchAdminProductDetail(slug),
+        fetchBrands(),
+        fetchCategories({ limit: 100 }),
+      ]);
 
-      const payload = {
-        name: formData.name,
-        slug: formData.slug,
-        description: formData.description,
-        price: formData.price,
-        stock: formData.stock,
-        is_active: formData.is_active,
-        image_url: formData.image_url,
-        category_id: formData.category ? formData.category?.id : null,
-        brand_id: formData.brand ? formData.brand?.id : null,
-        attributes: [
-          ...formData.attributes.map((attr) => {
-            return {
-              attribute_id: attr.id,
-              value: attr.value,
-            };
-          }),
-        ],
-        specs: formData.specs,
-      };
+      setProductData(data);
+      setLocalVariants(data.variants || []);
+      // @ts-ignore
+      setBrands(brandsData);
+      setCategoriesList(categoriesData.data || []);
 
-      const changedPayload = getChangedField(originData.normalize(), payload);
-
-      await updateProduct(id, changedPayload);
-
-      enqueueSnackbar("Sản phẩm đã được cập nhật thành công!", {
-        variant: "success",
+      // Initialize master form
+      masterForm.setFieldsValue({
+        item_name: data.name, // The specific item, e.g., "iPhone Air 256 GB"
+        name: data.product?.name, // The master product, e.g., "iPhone Air"
+        product: {
+          ...data.product,
+          brand_id: data.product.brand?.id,
+          category_id: data.product.category?.id,
+        },
+        product_specifications: data.product_specifications,
       });
 
-      window.location.reload();
+      if (data.product?.category_id) {
+        const catData = await fetchCategoryById(data.product.category_id);
+        setCategory(catData);
+      }
+    } catch (err) {
+      enqueueSnackbar(err.message, { variant: "error" });
+      navigate("/admin/products");
+    } finally {
+      setLoading(false);
+    }
+  }, [slug, navigate, masterForm]);
+
+  useEffect(() => {
+    if (slug) loadData();
+  }, [slug, loadData]);
+
+  const handleVariantFieldChange = (id, field, value) => {
+    setLocalVariants((prev) =>
+      prev.map((v) => (v.id === id ? { ...v, [field]: value } : v)),
+    );
+  };
+
+  const onUpdateVariant = async (variant) => {
+    try {
+      setSaving(true);
+      await updateVariant(variant.id, {
+        product_item_id: productData.id,
+        price: variant.price,
+        image_url: variant.image_url,
+        stock: variant.stock,
+        attributes:
+          variant.attributes?.map((attr) => ({
+            attribute_value_id: attr.attribute_value_id || attr.id,
+          })) || [],
+      });
+      enqueueSnackbar(`Variant ${variant.sku} đã được cập nhật!`, {
+        variant: "success",
+      });
+      loadData();
     } catch (err) {
       enqueueSnackbar(err.message, { variant: "error" });
     } finally {
@@ -122,12 +132,85 @@ export default function ProductDetail() {
     }
   };
 
-  if (loading) {
-    return <Loading />;
-  }
+  const onCreateVariant = async (values) => {
+    try {
+      setSaving(true);
+      await createVariant({
+        product_item_id: productData.id,
+        price: values.price,
+        image_url: values.image_url,
+        stock: values.stock,
+        attributes: (values.attributes || []).map((attr) => ({
+          attribute_value_id: attr.attribute_value_id,
+          attribute_id: attr.attribute_id,
+          value: attr.value,
+          unit: attr.unit,
+        })),
+      });
+      enqueueSnackbar("Variant mới đã tạo thành công!", { variant: "success" });
+      setIsAddModalOpen(false);
+      addVariantForm.resetFields();
+      loadData();
+    } catch (err) {
+      enqueueSnackbar(err.message, { variant: "error" });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const onDeleteVariant = async (id) => {
+    try {
+      setSaving(true);
+      await deleteVariant(id);
+      enqueueSnackbar("Đã xóa variant thành công!", { variant: "success" });
+      loadData();
+    } catch (err) {
+      enqueueSnackbar(err.message, { variant: "error" });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleUpdateMaster = async () => {
+    try {
+      setSaving(true);
+      const values = await masterForm.validateFields();
+      await updateProduct(productData.product.id, {
+        name: values.name,
+        brand_id: values.product.brand_id,
+        category_id: values.product.category_id,
+        specifications: values.product_specifications,
+      });
+      enqueueSnackbar("Đã cập nhật thông tin sản phẩm!", {
+        variant: "success",
+      });
+      loadData();
+    } catch (err) {
+      enqueueSnackbar("Vui lòng kiểm tra lại thông tin", { variant: "error" });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading)
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "60vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+
+  if (!productData) return null;
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
+      {/* Header */}
       <Box
         sx={{
           mb: 4,
@@ -143,47 +226,57 @@ export default function ProductDetail() {
           >
             <ArrowLeftIcon />
           </IconButton>
-          <Typography variant="h4" sx={{ fontWeight: 700 }}>
-            Chi Tiết Sản Phẩm
-          </Typography>
+          <Box>
+            <Typography variant="h4" sx={{ fontWeight: 700 }}>
+              {productData.name}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Slug: {productData.slug}
+            </Typography>
+          </Box>
         </Box>
-        <Box sx={{ width: 200 }}>
+        <Box sx={{ display: "flex", gap: 2 }}>
+          <Button icon={<AddIcon />} onClick={() => setIsAddModalOpen(true)}>
+            Thêm Variant
+          </Button>
           <AppButton
-            disabled={
-              saving || JSON.stringify(originData) === JSON.stringify(formData)
-            }
-            onClick={handleSubmit}
+            disabled={saving}
+            onClick={handleUpdateMaster}
             label={saving ? "Đang lưu..." : "Lưu Thay Đổi"}
+            width="160px"
           />
         </Box>
       </Box>
 
-      <Grid container spacing={3}>
-        <Grid size={{ xs: 12, md: 8 }}>
-          <BasicInfo
-            formData={formData}
-            handleChange={handleChange}
-            setFormData={setFormData}
-          />
-          <ProductAttributes
-            formData={formData}
-            attributes={attributes}
-            handleAttributeChange={handleAttributeChange}
-            addAttribute={addAttribute}
-            removeAttribute={removeAttribute}
-          />
-        </Grid>
+      <Form form={masterForm} layout="vertical">
+        <Grid container spacing={3}>
+          <Grid size={{ xs: 12, md: 5 }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+              <GeneralInfo brands={brands} categoriesList={categoriesList} />
+              <Specifications category={category} />
+            </Box>
+          </Grid>
 
-        <Grid size={{ xs: 12, md: 4 }}>
-          <ProductClassification
-            formData={formData}
-            setFormData={setFormData}
-            categories={categories}
-            brands={brands}
-            handleChange={handleChange}
-          />
+          <Grid size={{ xs: 12, md: 7 }}>
+            <VariantList
+              variants={localVariants}
+              onUpdateVariant={onUpdateVariant}
+              onDeleteVariant={onDeleteVariant}
+              handleVariantFieldChange={handleVariantFieldChange}
+              saving={saving}
+            />
+          </Grid>
         </Grid>
-      </Grid>
+      </Form>
+
+      <AddVariantModal
+        open={isAddModalOpen}
+        form={addVariantForm}
+        onCancel={() => setIsAddModalOpen(false)}
+        onFinish={onCreateVariant}
+        saving={saving}
+        category={category}
+      />
     </Container>
   );
 }

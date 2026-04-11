@@ -9,7 +9,18 @@ import { formatCurrency } from "@/utils/format-currency";
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
 
-  const goToDetail = () => navigate(`/products/${product.id}`);
+  const goToDetail = () => {
+    const sku =
+      product.sku || (product.variants && product.variants[0]?.sku) || "";
+    navigate(`/products/${product.slug}?sku=${sku}`);
+  };
+
+  const displayPrice = () => {
+    if (product.price_min && product.price_max && product.price_min !== product.price_max) {
+      return `${formatCurrency(product.price_min)} - ${formatCurrency(product.price_max)}`;
+    }
+    return formatCurrency(product.price_min || product.variants?.[0]?.price || 0);
+  };
 
   return (
     <Card
@@ -33,7 +44,7 @@ const ProductCard = ({ product }) => {
       <div className="card-content">
         <div className="card-body">
           <Tag color="blue" className="brand-tag">
-            {product.brand.name}
+            {product.brand?.name}
           </Tag>
 
           <Tooltip title={product.name}>
@@ -49,7 +60,7 @@ const ProductCard = ({ product }) => {
 
         <div className="card-footer">
           <Typography.Text className="text-lg price">
-            {formatCurrency(product.price)}
+            {displayPrice()}
           </Typography.Text>
 
           <Flex gap="small">

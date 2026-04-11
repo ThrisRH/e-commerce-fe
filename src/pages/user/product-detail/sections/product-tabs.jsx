@@ -34,7 +34,7 @@ const ProductTabs = ({ product, avgRating, mockReviews }) => {
               marginBottom: 20,
             }}
           >
-            {product.description}
+            {product.basic_info?.description}
           </Paragraph>
           <Title level={5} style={{ marginBottom: 12 }}>
             Tính năng nổi bật
@@ -64,7 +64,8 @@ const ProductTabs = ({ product, avgRating, mockReviews }) => {
       label: "Thông số kỹ thuật",
       children: (
         <div style={{ padding: "24px 0" }}>
-          {product.attributes && product.attributes.length > 0 ? (
+          {product.product_specifications &&
+          product.product_specifications.length > 0 ? (
             <TableContainer
               component={Paper}
               elevation={0}
@@ -72,9 +73,9 @@ const ProductTabs = ({ product, avgRating, mockReviews }) => {
             >
               <Table size="small">
                 <TableBody>
-                  {product.attributes.map((attr, idx) => (
+                  {product.product_specifications.map((attr, idx) => (
                     <TableRow
-                      key={attr.id || idx}
+                      key={attr.attribute_id || idx}
                       sx={{
                         background:
                           idx % 2 === 0 ? "var(--neutral-50)" : "#fff",
@@ -91,7 +92,7 @@ const ProductTabs = ({ product, avgRating, mockReviews }) => {
                           py: 1.5,
                         }}
                       >
-                        {attr.name}
+                        {attr.attribute_name}
                       </TableCell>
                       <TableCell
                         sx={{
@@ -100,8 +101,8 @@ const ProductTabs = ({ product, avgRating, mockReviews }) => {
                           py: 1.5,
                         }}
                       >
-                        {attr.value}
-                        {attr.unit ? ` ${attr.unit}` : ""}
+                        {attr.attribute_value}
+                        {attr.attribute_unit ? ` ${attr.attribute_unit}` : ""}
                       </TableCell>
                     </TableRow>
                   ))}

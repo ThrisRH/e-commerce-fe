@@ -121,7 +121,7 @@ const ProductsManagement = () => {
       >
         <Box sx={{ height: 600, width: "100%" }}>
           <DataGrid
-            rows={products.data}
+            rows={Array.isArray(products.data) ? products.data : []}
             columns={getProductColumns(handleDelete)}
             loading={isLoading}
             rowCount={products.meta.total}
@@ -137,7 +137,7 @@ const ProductsManagement = () => {
               },
             }}
             onRowClick={(params) =>
-              navigate(`/admin/products/${params.row.id}`)
+              navigate(`/admin/products/${params.row.slug}`)
             }
             sx={{
               border: "none",

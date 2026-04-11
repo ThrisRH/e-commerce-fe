@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import {
+  useParams,
+  useNavigate,
+  useLocation,
+  useSearchParams,
+} from "react-router-dom";
 import { Breadcrumb, Spin, Row, Col, Typography, Divider } from "antd";
 import {
-  fetchProductById,
+  fetchProductBySlug,
   fetchProductsByCategory,
 } from "@/api/products/product-api";
 import { enqueueSnackbar } from "notistack";
@@ -38,10 +43,13 @@ const MOCK_REVIEWS = [
 ];
 
 const UserProductDetail = () => {
-  const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const sku = searchParams.get("sku");
+
+  const { slug } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
-  const [relatedProducts, setRelatedProducts] = useState([]);
+  // const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
 
@@ -49,24 +57,23 @@ const UserProductDetail = () => {
     const loadData = async () => {
       try {
         setLoading(true);
-        const productData = await fetchProductById(id);
+        const productData = await fetchProductBySlug(slug, sku);
         setProduct(productData);
 
-        if (productData.category?.id) {
-          const relatedRes = await fetchProductsByCategory(
-            productData.category.id,
-          );
-          // Filter out current product and take first 4-8 items
-          const filtered = (relatedRes.data || []).filter(
-            (p) => p.id !== productData.id,
-          );
-          setRelatedProducts(filtered.slice(0, 10));
-        }
+        // if (productData.basic_info?.category?.id) {
+        //   const relatedRes = await fetchProductsByCategory(
+        //     productData.basic_info.category.id,
+        //   );
+        //   // Filter out current product and take first 4-8 items
+        //   const filtered = (relatedRes.data || []).filter(
+        //     (p) => p.id !== productData.id,
+        //   );
+        //   setRelatedProducts(filtered.slice(0, 10));
+        // }
       } catch (err) {
         enqueueSnackbar(err.message || "Không tìm thấy sản phẩm", {
           variant: "error",
         });
-        navigate("/");
       } finally {
         setLoading(false);
       }
@@ -75,7 +82,7 @@ const UserProductDetail = () => {
     loadData();
     setQuantity(1);
     window.scrollTo(0, 0);
-  }, [id, navigate]);
+  }, [slug, sku, navigate]);
 
   const handleBuyNow = () => {
     navigate("/checkout", {
@@ -109,8 +116,8 @@ const UserProductDetail = () => {
         items={[
           { title: "Trang chủ", href: "/" },
           {
-            title: product.category?.name || "Sản phẩm",
-            href: `/category?category_id=${product.category?.id}`,
+            title: product.basic_info?.category?.name || "Sản phẩm",
+            href: `/category?category_id=${product.basic_info?.category?.id}`,
           },
           { title: product.name },
         ]}
@@ -142,7 +149,7 @@ const UserProductDetail = () => {
         mockReviews={MOCK_REVIEWS}
       />
 
-      {relatedProducts.length > 0 && (
+      {/* {relatedProducts.length > 0 && (
         <div style={{ marginTop: 64 }}>
           <Divider style={{ borderColor: "rgba(0,0,0,0.06)" }}>
             <div style={{ textAlign: "left", width: "100%" }}>
@@ -159,7 +166,7 @@ const UserProductDetail = () => {
             ))}
           </Row>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

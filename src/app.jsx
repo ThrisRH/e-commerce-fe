@@ -75,7 +75,7 @@ function App() {
                   </GuestMiddleware>
                 }
               />
-              <Route path="products/:id" element={<UserProductDetail />} />
+              <Route path="products/:slug" element={<UserProductDetail />} />
               <Route path="search" element={<SearchPage />} />
 
               <Route path="build-pc" element={<BuildPC />} />
@@ -108,7 +108,7 @@ function App() {
               <Route index element={<AdminDashboard />} />
 
               <Route path="products" element={<ProductsManagement />} />
-              <Route path="products/:id" element={<ProductDetail />} />
+              <Route path="products/:slug" element={<ProductDetail />} />
               <Route path="categories" element={<CategoriesManagement />} />
               <Route path="categories/:id" element={<CategoryDetail />} />
 
