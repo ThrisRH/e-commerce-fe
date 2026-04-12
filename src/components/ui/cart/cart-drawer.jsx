@@ -14,7 +14,10 @@ import {
   DeleteOutlined,
   ThunderboltOutlined,
 } from "@ant-design/icons";
-import { fetchProductBySlug } from "@/api/products/product-api";
+import {
+  fetchProductBySlug,
+  fetchVariantById,
+} from "@/api/products/product-api";
 import { formatCurrency } from "@/utils/format-currency";
 import { useNavigate } from "react-router-dom";
 
@@ -52,7 +55,7 @@ const CartItem = ({ item, onQuantityChange, onRemove }) => {
       }}
     >
       <div
-        onClick={() => window.location.replace(`/products/${product.id}`)}
+        onClick={() => window.location.replace(`/products/${product.slug}`)}
         style={{
           width: 76,
           height: 76,
@@ -93,7 +96,7 @@ const CartItem = ({ item, onQuantityChange, onRemove }) => {
             overflow: "hidden",
             cursor: "pointer",
           }}
-          onClick={() => window.location.replace(`/products/${product.id}`)}
+          onClick={() => window.location.replace(`/products/${product.slug}`)}
         >
           {product.name}
         </Text>
@@ -161,7 +164,7 @@ const CartDrawer = ({ open, onClose }) => {
     setLoading(true);
     try {
       const results = await Promise.allSettled(
-        stored.map((entry) => fetchProductBySlug(entry.id)),
+        stored.map((entry) => fetchProductBySlug(entry.slug, entry.sku)),
       );
 
       const merged = stored.reduce((acc, entry, idx) => {
@@ -173,6 +176,8 @@ const CartDrawer = ({ open, onClose }) => {
       }, []);
 
       setCartItems(merged);
+    } catch (error) {
+      console.error("Cart fetch error:", error);
     } finally {
       setLoading(false);
     }
@@ -182,25 +187,27 @@ const CartDrawer = ({ open, onClose }) => {
     if (open) loadCart();
   }, [open, loadCart]);
 
-  const handleQuantityChange = (productId, newQty) => {
+  const handleQuantityChange = (variantId, newQty) => {
     if (!newQty || newQty < 1) return;
     const stored = getCartFromSession();
     const updated = stored.map((item) =>
-      item.id === productId ? { ...item, quantity: newQty } : item,
+      item.variantId === variantId ? { ...item, quantity: newQty } : item,
     );
     saveCartToSession(updated);
     setCartItems((prev) =>
       prev.map((item) =>
-        item.product.id === productId ? { ...item, quantity: newQty } : item,
+        item.product.id === variantId ? { ...item, quantity: newQty } : item,
       ),
     );
   };
 
-  const handleRemove = (productId) => {
-    const stored = getCartFromSession().filter((item) => item.id !== productId);
+  const handleRemove = (variantId) => {
+    const stored = getCartFromSession().filter(
+      (item) => item.variantId !== variantId,
+    );
     saveCartToSession(stored);
     setCartItems((prev) =>
-      prev.filter((item) => item.product.id !== productId),
+      prev.filter((item) => item.product.id !== variantId),
     );
     window.dispatchEvent(new Event("cart-updated"));
   };

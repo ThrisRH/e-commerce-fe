@@ -13,11 +13,15 @@ export const handleAddToCart = (items, e = null) => {
   const cart = JSON.parse(sessionStorage.getItem(SESSION_KEY) || "[]");
 
   items.forEach((item) => {
-    const existing = cart.find((c) => c.id === item.productId);
+    const existing = cart.find((c) => c.sku === item.sku);
     if (existing) {
       existing.quantity += item.quantity || 1;
     } else {
-      cart.push({ id: item.productId, quantity: item.quantity || 1 });
+      cart.push({
+        sku: item.sku,
+        quantity: item.quantity || 1,
+        slug: item.slug,
+      });
     }
   });
 

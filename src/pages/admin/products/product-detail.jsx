@@ -1,6 +1,7 @@
 import {
   fetchAdminProductDetail,
   updateProduct,
+  updateProductItem,
   createVariant,
   updateVariant,
   deleteVariant,
@@ -10,6 +11,7 @@ import {
   fetchCategories,
 } from "@/api/categories/category-api";
 import { fetchBrands } from "@/api/brands/brand-api";
+import { fetchAttributes, fetchAttributeValues } from "@/api/attributes/attribute-api";
 import {
   Box,
   Container,
@@ -27,10 +29,11 @@ import { enqueueSnackbar } from "notistack";
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AppButton from "@/components/common/buttons/button";
+import { sortAttributeValues } from "@/utils/attribute-utils";
 
 // Section Components
-import GeneralInfo from "./detail-sections/GeneralInfo";
-import Specifications from "./detail-sections/Specifications";
+import ProductBase from "./detail-sections/ProductBase";
+import ProductItemInfo from "./detail-sections/ProductItem";
 import VariantList from "./detail-sections/VariantList";
 import AddVariantModal from "./detail-sections/AddVariantModal";
 
@@ -47,6 +50,8 @@ export default function ProductDetail() {
   const [category, setCategory] = useState(null);
   const [brands, setBrands] = useState([]);
   const [categoriesList, setCategoriesList] = useState([]);
+  const [attributes, setAttributes] = useState([]);
+  const [attributeValues, setAttributeValues] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const categoryId = Form.useWatch(["product", "category_id"], masterForm);
@@ -55,39 +60,45 @@ export default function ProductDetail() {
     if (categoryId) {
       fetchCategoryById(categoryId)
         .then(setCategory)
-        .catch((err) => enqueueSnackbar("Lỗi tải thông tin danh mục", { variant: "error" }));
+        .catch((err) =>
+          enqueueSnackbar("Lỗi tải thông tin danh mục", { variant: "error" }),
+        );
     }
   }, [categoryId]);
 
   const loadData = useCallback(async () => {
     try {
       setLoading(true);
-      const [data, brandsData, categoriesData] = await Promise.all([
+      const [data, brandsData, categoriesData, attrValues, allAttrs] = await Promise.all([
         fetchAdminProductDetail(slug),
         fetchBrands(),
         fetchCategories({ limit: 100 }),
+        fetchAttributeValues(),
+        fetchAttributes(),
       ]);
 
       setProductData(data);
       setLocalVariants(data.variants || []);
-      // @ts-ignore
-      setBrands(brandsData);
+      setBrands(Array.isArray(brandsData) ? brandsData : []);
       setCategoriesList(categoriesData.data || []);
+      setAttributes(Array.isArray(allAttrs) ? allAttrs : []);
+      setAttributeValues(sortAttributeValues(attrValues));
 
       // Initialize master form
       masterForm.setFieldsValue({
-        item_name: data.name, // The specific item, e.g., "iPhone Air 256 GB"
-        name: data.product?.name, // The master product, e.g., "iPhone Air"
+        item_name: data.name,
+        name: data.product?.name,
         product: {
-          ...data.product,
-          brand_id: data.product.brand?.id,
-          category_id: data.product.category?.id,
+          id: data.product?.id,
+          brand_id: data.product?.brand?.id,
+          category_id: data.product?.category?.id,
+          description: data.product?.description || "Đang cập nhật",
         },
         product_specifications: data.product_specifications,
       });
 
-      if (data.product?.category_id) {
-        const catData = await fetchCategoryById(data.product.category_id);
+      if (data.product?.category?.id) {
+        const catData = await fetchCategoryById(data.product.category.id);
         setCategory(catData);
       }
     } catch (err) {
@@ -175,18 +186,33 @@ export default function ProductDetail() {
     try {
       setSaving(true);
       const values = await masterForm.validateFields();
-      await updateProduct(productData.product.id, {
-        name: values.name,
-        brand_id: values.product.brand_id,
-        category_id: values.product.category_id,
-        specifications: values.product_specifications,
-      });
-      enqueueSnackbar("Đã cập nhật thông tin sản phẩm!", {
+
+      await Promise.all([
+        updateProduct(productData.product.id, {
+          name: values.name,
+          brand_id: values.product.brand_id,
+          category_id: values.product.category_id,
+          description: values.product.description,
+          specs: (values.product_specifications || []).map((s) => ({
+            attribute_id: s.attribute_id,
+            value: s.value,
+            unit: s.unit || null,
+          })),
+        }),
+        updateProductItem(productData.id, {
+          name: values.item_name,
+        }),
+      ]);
+
+      enqueueSnackbar("Đã cập nhật thông tin sản phẩm và phiên bản!", {
         variant: "success",
       });
       loadData();
     } catch (err) {
-      enqueueSnackbar("Vui lòng kiểm tra lại thông tin", { variant: "error" });
+      enqueueSnackbar(
+        "Lỗi cập nhật: " + (err.response?.data?.message || err.message),
+        { variant: "error" },
+      );
     } finally {
       setSaving(false);
     }
@@ -231,7 +257,7 @@ export default function ProductDetail() {
               {productData.name}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Slug: {productData.slug}
+              ID Gốc: {productData.product?.id}
             </Typography>
           </Box>
         </Box>
@@ -251,20 +277,25 @@ export default function ProductDetail() {
       <Form form={masterForm} layout="vertical">
         <Grid container spacing={3}>
           <Grid size={{ xs: 12, md: 5 }}>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-              <GeneralInfo brands={brands} categoriesList={categoriesList} />
-              <Specifications category={category} />
-            </Box>
+            <ProductBase
+              brands={brands}
+              categoriesList={categoriesList}
+              category={category}
+              allAttributes={attributes}
+            />
           </Grid>
 
           <Grid size={{ xs: 12, md: 7 }}>
-            <VariantList
-              variants={localVariants}
-              onUpdateVariant={onUpdateVariant}
-              onDeleteVariant={onDeleteVariant}
-              handleVariantFieldChange={handleVariantFieldChange}
-              saving={saving}
-            />
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+              <ProductItemInfo productData={productData} />
+              <VariantList
+                variants={localVariants}
+                onUpdateVariant={onUpdateVariant}
+                onDeleteVariant={onDeleteVariant}
+                handleVariantFieldChange={handleVariantFieldChange}
+                saving={saving}
+              />
+            </Box>
           </Grid>
         </Grid>
       </Form>
@@ -276,6 +307,8 @@ export default function ProductDetail() {
         onFinish={onCreateVariant}
         saving={saving}
         category={category}
+        attributes={attributes}
+        attributeValues={attributeValues}
       />
     </Container>
   );

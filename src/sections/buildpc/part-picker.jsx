@@ -7,7 +7,7 @@ import {
 } from "@ant-design/icons";
 import { formatCurrency } from "../../utils/format-currency";
 
-const { Text } = Typography;
+const { Text, Paragraph } = Typography;
 
 const PartPicker = ({ category, title, selected, onPick, onRemove }) => {
   return (
@@ -61,15 +61,17 @@ const PartPicker = ({ category, title, selected, onPick, onRemove }) => {
               }}
             />
             <div style={{ flexGrow: 1 }}>
-              <div
+              <Paragraph
                 style={{
                   fontWeight: 600,
                   fontSize: 15,
                   color: "var(--neutral-900)",
+                  marginBottom: 0,
                 }}
+                ellipsis={{ rows: 2 }}
               >
                 {selected.name}
-              </div>
+              </Paragraph>
               <div style={{ fontSize: 13, color: "var(--neutral-500)" }}>
                 {selected.specs || selected.brandName || selected.brand?.name}
               </div>

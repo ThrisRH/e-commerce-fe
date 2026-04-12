@@ -27,6 +27,16 @@ export const fetchProductBySlug = async (slug, sku) => {
   return response.data.data;
 };
 
+export const fetchProductByCateId = async (id) => {
+  const response = await axios.get(`/api/${API_VER}/categories/${id}/products`);
+
+  if (!response.data || !response.data.data) {
+    throw new Error("Failed to fetch product");
+  }
+
+  return response.data.data;
+};
+
 export const fetchAdminProductDetail = async (slug) => {
   const response = await axiosClient.get(`/${API_VER}/products/admin/${slug}`);
 
@@ -45,6 +55,19 @@ export const updateProduct = async (id, data) => {
   }
 
   return new Product(response.data.data);
+};
+
+export const updateProductItem = async (itemId, data) => {
+  const response = await axiosClient.patch(
+    `/${API_VER}/products/items/${itemId}`,
+    data,
+  );
+
+  if (!response.data || !response.data.data) {
+    throw new Error("Failed to update product item");
+  }
+
+  return response.data;
 };
 export const createProduct = async (data) => {
   const response = await axiosClient.post(`/${API_VER}/products`, data);
@@ -125,4 +148,14 @@ export const deleteVariant = async (variantId) => {
   }
 
   return response.data;
+};
+
+export const fetchVariantById = async (id) => {
+  const response = await axiosClient.get(`/${API_VER}/products/variants/${id}`);
+
+  if (!response.data || !response.data.data) {
+    throw new Error("Failed to fetch variant");
+  }
+
+  return response.data.data;
 };

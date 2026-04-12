@@ -5,9 +5,13 @@ import {
   fetchCategoryById,
 } from "@/api/categories/category-api";
 import { fetchBrands } from "@/api/brands/brand-api";
-import { fetchAttributes } from "@/api/attributes/attribute-api";
+import {
+  fetchAttributes,
+  fetchAttributeValues,
+} from "@/api/attributes/attribute-api";
 import { createProduct } from "@/api/products/product-api";
 import { enqueueSnackbar } from "notistack";
+import { sortAttributeValues } from "@/utils/attribute-utils";
 
 import InfoStep from "./steps/info-step";
 import ClassificationStep from "./steps/classification-step";
@@ -26,6 +30,7 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
   const [categoryAttributes, setCategoryAttributes] = useState([]);
   const [extraAttributes, setExtraAttributes] = useState([]);
   const [attributes, setAttributes] = useState([]);
+  const [attributeValues, setAttributeValues] = useState([]);
 
   const [submitting, setSubmitting] = useState(false);
   const [attrLoading, setAttrLoading] = useState(false);
@@ -41,14 +46,16 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
   const loadInitialData = async () => {
     setLoading(true);
     try {
-      const [cats, brs, attrs] = await Promise.all([
+      const [cats, brs, attrs, attrValues] = await Promise.all([
         fetchCategories({ page: 1, limit: 100 }),
         fetchBrands(),
         fetchAttributes(),
+        fetchAttributeValues(),
       ]);
       setCategories(Array.isArray(cats.data) ? cats.data : []);
       setBrands(Array.isArray(brs) ? brs : []);
       setAttributes(Array.isArray(attrs) ? attrs : []);
+      setAttributeValues(sortAttributeValues(attrValues));
     } catch (err) {
       enqueueSnackbar("Error loading labels: " + err.message, {
         variant: "error",
@@ -102,15 +109,17 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
         await form.validateFields([
           "name",
           "description",
-          "price",
-          "stock",
           "image_url",
+          "brand_id",
+          "category_id",
         ]);
       } else if (currentStep === 1) {
-        await form.validateFields(["category_id", "brand_id"]);
+        await form.validateFields(["children"]);
       }
       setCurrentStep(currentStep + 1);
-    } catch (error) {}
+    } catch (error) {
+      console.log("Validation Failed:", error);
+    }
   };
 
   const handleBack = () => {
@@ -118,29 +127,51 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
   };
 
   const onFinish = async (values) => {
+    console.log("values", values);
     setSubmitting(true);
     try {
-      const attributes = Object.entries(values.attributes || {})
-        .filter(
-          ([_, value]) => value !== undefined && value !== null && value !== "",
-        )
-        .map(([id, value]) => ({
-          attribute_id: Number(id),
-          value: value,
-        }));
+      const specs = Object.entries(values.attributes || {})
+        .filter(([_, val]) => val !== undefined && val !== null && val !== "")
+        .map(([id, val]) => {
+          const attr = attributes.find((a) => a.id === Number(id));
+          return {
+            attribute_id: Number(id),
+            value: val,
+            unit: attr?.unit || "",
+          };
+        });
 
       const data = {
-        ...values,
-        attributes: attributes,
-        is_active: values.is_active ? 1 : 0,
-        slug: values.name
-          .toLowerCase()
-          .replace(/ /g, "-")
-          .replace(/[^\w-]+/g, ""),
+        name: values.name,
+        description: values.description,
+        image_url: values.image_url,
+        brand_id: values.brand_id,
+        category_id: values.category_id,
+        specs: specs,
+        children: (values.children || []).map((child) => ({
+          name: child.name,
+          attributes: (child.attributes || [])
+            .map((attr) => ({
+              attribute_value_id: attr.attribute_value_id,
+            }))
+            .filter((a) => a.attribute_value_id),
+          variants: (child.variants || []).map((v) => ({
+            price: v.price,
+            stock: v.stock,
+            image_url: v.image_url || values.image_url,
+            attribute_value_id: v.attribute_value_id || null,
+          })),
+        })),
       };
 
+      if (data.children.length === 0) {
+        throw new Error("Cần ít nhất một phiên bản sản phẩm (child item)");
+      }
+
       await createProduct(data);
-      enqueueSnackbar("Sản phẩm đã được tạo!", { variant: "success" });
+      enqueueSnackbar("Sản phẩm đã được tạo thành công!", {
+        variant: "success",
+      });
       onSuccess();
       onClose();
     } catch (error) {
@@ -222,19 +253,25 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
           form={form}
           layout="vertical"
           onFinish={onFinish}
-          initialValues={{ is_active: true, stock: 10, price: 0 }}
+          initialValues={{
+            is_active: true,
+            children: [{ name: "", variants: [{ price: 0, stock: 1 }] }],
+          }}
         >
-          <InfoStep display={currentStep === 0 ? "block" : "none"} />
+          <InfoStep
+            display={currentStep === 0 ? "block" : "none"}
+            brands={brands}
+            categories={categories}
+            onCategoryChange={onCategoryChange}
+            loading={loading}
+          />
 
           <ClassificationStep
             display={currentStep === 1 ? "block" : "none"}
-            loading={loading}
-            categories={categories}
-            brands={brands}
-            onCategoryChange={onCategoryChange}
             categoryAttributes={categoryAttributes}
             extraAttributes={extraAttributes}
             allAttributes={attributes}
+            attributeValues={attributeValues}
             onAddExtraAttribute={handleAddExtraAttribute}
             attrLoading={attrLoading}
             categoryId={Form.useWatch("category_id", form)}

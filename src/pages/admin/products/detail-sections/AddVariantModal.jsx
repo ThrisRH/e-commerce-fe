@@ -11,6 +11,7 @@ import {
   Select,
 } from "antd";
 import { Add as AddIcon, Delete as DeleteIcon } from "@mui/icons-material";
+import { filterAttributeValuesByAttributes } from "@/utils/attribute-utils";
 
 export default function AddVariantModal({
   open,
@@ -19,7 +20,14 @@ export default function AddVariantModal({
   saving,
   category,
   form,
+  attributes = [],
+  attributeValues = [],
 }) {
+  const filteredValues = filterAttributeValuesByAttributes(
+    attributeValues,
+    category?.attributes || [],
+  );
+
   return (
     <Modal
       title="Thêm Biến Thể Mới"
@@ -107,19 +115,45 @@ export default function AddVariantModal({
                   }}
                 >
                   <Grid container spacing={2}>
-                    <Grid size={{ xs: 4 }}>
+                    <Grid size={{ xs: 12 }}>
                       <Form.Item
                         {...restField}
                         name={[name, "attribute_value_id"]}
-                        label="Value ID"
+                        label="Giá trị định sẵn (Chọn từ thư viện)"
                       >
-                        <InputNumber
-                          placeholder="ID giá trị"
+                        <Select
+                          showSearch
+                          placeholder="Tìm thông số (VD: RAM: 16GB)"
                           style={{ width: "100%" }}
+                          optionFilterProp="children"
+                          allowClear
+                          filterOption={(input, option) =>
+                            (option?.label?.toString() ?? "")
+                              .toLowerCase()
+                              .includes(input.toLowerCase())
+                          }
+                          options={filteredValues.map((v) => ({
+                            label: `${v.attribute_name}: ${v.value} ${v.unit || ""}`,
+                            value: v.id,
+                          }))}
                         />
                       </Form.Item>
                     </Grid>
-                    <Grid size={{ xs: 3 }}>
+
+                    <Grid size={{ xs: 12 }}>
+                      <Divider
+                        plain
+                        style={{
+                          margin: "8px 0",
+                          fontSize: "11px",
+                          color: "#8c8c8c",
+                        }}
+                      >
+                        Hoặc nhập giá trị mới
+                      </Divider>
+                    </Grid>
+
+                    <Grid size={{ xs: 4 }}>
                       <Form.Item
                         {...restField}
                         name={[name, "attribute_id"]}
@@ -135,20 +169,20 @@ export default function AddVariantModal({
                         />
                       </Form.Item>
                     </Grid>
-                    <Grid size={{ xs: 3 }}>
+                    <Grid size={{ xs: 5 }}>
                       <Form.Item
                         {...restField}
                         name={[name, "value"]}
-                        label="Giá trị mới"
+                        label="Giá trị"
                       >
                         <Input placeholder="Giá trị" />
                       </Form.Item>
                     </Grid>
-                    <Grid size={{ xs: 2 }}>
+                    <Grid size={{ xs: 3 }}>
                       <Form.Item
                         {...restField}
                         name={[name, "unit"]}
-                        label="Đvị"
+                        label="Đơn vị"
                       >
                         <Input placeholder="Unit" />
                       </Form.Item>

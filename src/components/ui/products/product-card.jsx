@@ -16,10 +16,16 @@ const ProductCard = ({ product }) => {
   };
 
   const displayPrice = () => {
-    if (product.price_min && product.price_max && product.price_min !== product.price_max) {
+    if (
+      product.price_min &&
+      product.price_max &&
+      product.price_min !== product.price_max
+    ) {
       return `${formatCurrency(product.price_min)} - ${formatCurrency(product.price_max)}`;
     }
-    return formatCurrency(product.price_min || product.variants?.[0]?.price || 0);
+    return formatCurrency(
+      product.price_min || product.variants?.[0]?.price || 0,
+    );
   };
 
   return (
@@ -67,16 +73,35 @@ const ProductCard = ({ product }) => {
             <AppButton
               label="Mua ngay"
               onClick={() => {
+                const variantId = product.variants?.[0]?.id || product.id;
                 navigate("/checkout", {
-                  state: { buyNowItem: { id: product.id, quantity: 1 } },
+                  state: {
+                    buyNowItem: {
+                      variantId,
+                      quantity: 1,
+                      slug: product.slug,
+                      sku: product.sku,
+                    },
+                  },
                 });
               }}
             />
             <BorderButton
               label="Thêm giỏ hàng"
-              onClick={(e) =>
-                handleAddToCart([{ productId: product.id, quantity: 1 }], e)
-              }
+              onClick={(e) => {
+                const variantId = product.variants?.[0]?.id || product.id;
+                handleAddToCart(
+                  [
+                    {
+                      slug: product.slug,
+                      variantId,
+                      quantity: 1,
+                      sku: product.sku,
+                    },
+                  ],
+                  e,
+                );
+              }}
             />
           </Flex>
         </div>

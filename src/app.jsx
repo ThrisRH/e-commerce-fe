@@ -28,6 +28,7 @@ import UserDetail from "./pages/admin/users/user-detail";
 import RoleDetail from "./pages/admin/users/role-detail";
 
 const OrdersManagement = lazy(() => import("./pages/admin/orders"));
+const AttributeManagement = lazy(() => import("./pages/admin/attributes"));
 
 const LoadingFallback = () => (
   <Box
@@ -117,6 +118,7 @@ function App() {
               <Route path="roles/:id" element={<RoleDetail />} />
               <Route path="orders" element={<OrdersManagement />} />
               <Route path="orders/:id" element={<OrderDetail />} />
+              <Route path="attributes" element={<AttributeManagement />} />
             </Route>
           </Routes>
         </Suspense>

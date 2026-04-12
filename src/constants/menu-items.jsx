@@ -4,6 +4,7 @@ import {
   LogoutOutlined,
   OrderedListOutlined,
   ShoppingOutlined,
+  TagsOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 
@@ -22,6 +23,11 @@ export const menuItems = [
     key: "/admin/categories",
     icon: <AppstoreOutlined />,
     label: "Danh mục",
+  },
+  {
+    key: "/admin/attributes",
+    icon: <TagsOutlined />,
+    label: "Thuộc tính",
   },
   {
     key: "/admin/users",

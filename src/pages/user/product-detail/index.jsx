@@ -17,7 +17,6 @@ import { handleAddToCart } from "@/utils/add-to-cart";
 import ProductGallery from "./sections/product-gallary";
 import ProductInfo from "./sections/product-info";
 import ProductTabs from "./sections/product-tabs";
-import ProductCard from "@/components/ui/products/product-card";
 
 const { Title } = Typography;
 
@@ -86,7 +85,14 @@ const UserProductDetail = () => {
 
   const handleBuyNow = () => {
     navigate("/checkout", {
-      state: { buyNowItem: { id: product.id, quantity: quantity } },
+      state: {
+        buyNowItem: {
+          variantId: product.id,
+          quantity: quantity,
+          slug: product.basic_info.slug,
+          sku: product.sku,
+        },
+      },
     });
   };
 
@@ -109,6 +115,7 @@ const UserProductDetail = () => {
 
   const avgRating = 4.5;
 
+  console.log(product);
   return (
     <div style={{ padding: "32px 50px", margin: "0 auto", maxWidth: 1440 }}>
       <Breadcrumb
@@ -137,7 +144,17 @@ const UserProductDetail = () => {
             setQuantity={setQuantity}
             handleBuyNow={handleBuyNow}
             handleAddToCart={(e, prod, qty) =>
-              handleAddToCart([{ productId: prod.id, quantity: qty }], e)
+              handleAddToCart(
+                [
+                  {
+                    slug: prod.basic_info.slug,
+                    variantId: prod.id,
+                    sku: prod.sku,
+                    quantity: qty,
+                  },
+                ],
+                e,
+              )
             }
           />
         </Col>

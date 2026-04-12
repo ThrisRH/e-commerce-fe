@@ -5,7 +5,10 @@ import { enqueueSnackbar } from "notistack";
 
 // API
 import { getCartFromSession } from "@/components/ui/cart/cart-drawer";
-import { fetchProductBySlug } from "@/api/products/product-api";
+import {
+  fetchProductBySlug,
+  fetchVariantById,
+} from "@/api/products/product-api";
 import { createOrder } from "@/api/orders/order-api";
 import { fetchMe } from "@/api/auth/auth-api";
 
@@ -61,9 +64,9 @@ const CheckoutPage = () => {
 
   const loadCart = useCallback(async () => {
     if (isBuyNow) {
-      const { id, quantity } = location.state.buyNowItem;
+      const { slug, sku, quantity } = location.state.buyNowItem;
       try {
-        const product = await fetchProductBySlug(id);
+        const product = await fetchProductBySlug(slug, sku);
         setItems([{ product, quantity }]);
       } catch {
         enqueueSnackbar("Không thể tải thông tin sản phẩm", {
@@ -81,7 +84,7 @@ const CheckoutPage = () => {
 
     try {
       const results = await Promise.allSettled(
-        stored.map((entry) => fetchProductBySlug(entry.id)),
+        stored.map((entry) => fetchProductBySlug(entry.slug, entry.sku)),
       );
 
       const merged = stored.reduce((acc, entry, idx) => {
@@ -138,7 +141,7 @@ const CheckoutPage = () => {
         payment_method: paymentMethod,
         shipping_fee: shippingFee,
         items: items.map((i) => ({
-          product_id: i.product.id,
+          variant_id: i.product.id,
           quantity: i.quantity,
         })),
       };

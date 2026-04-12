@@ -124,10 +124,17 @@ const BuildPC = () => {
       (part) => part && typeof part !== "function",
     );
 
-    const cartItems = selectedItems.map((item) => ({
-      productId: item.id,
-      quantity: 1,
-    }));
+    const cartItems = selectedItems.map((item) => {
+      console.log(item);
+      return {
+        slug: item.slug,
+        sku: item.sku,
+        variantId: item.variant_id || item.id,
+        quantity: 1,
+      };
+    });
+
+    console.log(cartItems);
 
     handleAddToCart(cartItems);
   };
