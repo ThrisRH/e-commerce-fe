@@ -137,7 +137,7 @@ const ProductInfo = ({
             {product.basic_info.category.name}
           </Tag>
         )}
-        {product.is_active ? (
+        {product.stock > 0 ? (
           <Tag color="success">Còn hàng ({product.stock})</Tag>
         ) : (
           <Tag color="error">Hết hàng</Tag>
@@ -201,6 +201,7 @@ const ProductInfo = ({
           min={1}
           max={product.stock || 99}
           value={quantity}
+          disabled={product.stock <= 0}
           onChange={(val) => setQuantity(val)}
           style={{ width: 100 }}
         />
@@ -215,19 +216,21 @@ const ProductInfo = ({
           size="large"
           icon={<ThunderboltOutlined />}
           onClick={handleBuyNow}
+          disabled={product.stock <= 0}
           style={{
             flex: 1,
             minWidth: 140,
             height: 48,
-            background: "var(--primary-main)",
-            borderColor: "var(--primary-main)",
+            background: product.stock > 0 ? "var(--primary-main)" : "#d9d9d9",
+            borderColor: product.stock > 0 ? "var(--primary-main)" : "#d9d9d9",
             fontWeight: 600,
-            boxShadow: "0 4px 12px rgba(229,57,53,0.4)",
+            boxShadow: product.stock > 0 ? "0 4px 12px rgba(229,57,53,0.4)" : "none",
           }}
         >
-          Mua ngay
+          {product.stock > 0 ? "Mua ngay" : "Hết hàng"}
         </Button>
         <BorderButton
+          disabled={product.stock <= 0}
           label={"Thêm vào giỏ hàng"}
           onClick={(e) => handleAddToCart(e, product, quantity)}
         />

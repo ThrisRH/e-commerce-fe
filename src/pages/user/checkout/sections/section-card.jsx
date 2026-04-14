@@ -7,7 +7,7 @@ const SectionCard = ({ title, icon, children }) => (
   <div
     style={{
       background: "#fff",
-      borderRadius: 12,
+      borderRadius: 4,
       border: "1px solid var(--neutral-200)",
       overflow: "hidden",
       marginBottom: 16,

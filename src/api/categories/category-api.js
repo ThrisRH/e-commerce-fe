@@ -1,7 +1,7 @@
 import axios from "axios";
 import Category from "../../models/category";
 import { API_VER } from "@/constants/env";
-import { Meta } from "@/models/MetaData/meta";
+import { Meta } from "@/models/meta";
 import axiosClient from "@/config/axios-client";
 
 export const fetchCategories = async ({ page = 1, limit = 10 } = {}) => {

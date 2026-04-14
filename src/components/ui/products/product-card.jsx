@@ -9,6 +9,14 @@ import { formatCurrency } from "@/utils/format-currency";
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
 
+  const totalStock = Number(
+    product.variants && product.variants.length > 0
+      ? product.variants.reduce((acc, v) => acc + Number(v.stock || 0), 0)
+      : product.stock || 0,
+  );
+
+  const isOutOfStock = totalStock <= 0;
+
   const goToDetail = () => {
     const sku =
       product.sku || (product.variants && product.variants[0]?.sku) || "";
@@ -24,7 +32,7 @@ const ProductCard = ({ product }) => {
       return `${formatCurrency(product.price_min)} - ${formatCurrency(product.price_max)}`;
     }
     return formatCurrency(
-      product.price_min || product.variants?.[0]?.price || 0,
+      product.price_min || product.variants?.[0]?.price || product.price || 0,
     );
   };
 
@@ -44,6 +52,11 @@ const ProductCard = ({ product }) => {
             className="product-image"
           />
           <Tag className="tag">MỚI</Tag>
+          {isOutOfStock && (
+            <div className="out-of-stock-overlay">
+              <Tag color="red">HẾT HÀNG</Tag>
+            </div>
+          )}
         </div>
       }
     >
@@ -65,14 +78,16 @@ const ProductCard = ({ product }) => {
         </div>
 
         <div className="card-footer">
-          <Typography.Text className="text-lg price">
+          <Typography.Text className="text-md price">
             {displayPrice()}
           </Typography.Text>
 
           <Flex gap="small">
             <AppButton
-              label="Mua ngay"
+              label={isOutOfStock ? "Hết hàng" : "Mua ngay"}
+              disabled={isOutOfStock}
               onClick={() => {
+                if (isOutOfStock) return;
                 const variantId = product.variants?.[0]?.id || product.id;
                 navigate("/checkout", {
                   state: {
@@ -88,7 +103,9 @@ const ProductCard = ({ product }) => {
             />
             <BorderButton
               label="Thêm giỏ hàng"
+              disabled={isOutOfStock}
               onClick={(e) => {
+                if (isOutOfStock) return;
                 const variantId = product.variants?.[0]?.id || product.id;
                 handleAddToCart(
                   [

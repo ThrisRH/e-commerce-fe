@@ -6,7 +6,7 @@ import { getOrderColumns } from "./sections/grid-columns/setup";
 import Order from "@/models/order";
 import { fetchOrders, updateOrder, trackOrder } from "@/api/orders/order-api";
 import { enqueueSnackbar } from "notistack";
-import { Meta } from "@/models/MetaData/meta";
+import { Meta } from "@/models/meta";
 
 const { Title } = Typography;
 const { Search } = Input;

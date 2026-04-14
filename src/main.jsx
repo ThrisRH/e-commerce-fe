@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./styles/global.css";
 import App from "./app.jsx";
 import { ConfigProvider } from "antd";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider } from "./context/auth-context";
 
 const theme = {
   token: {

@@ -1,6 +1,6 @@
 import axiosClient from "@/config/axios-client";
 import { API_VER, env } from "@/constants/env";
-import { Meta } from "@/models/MetaData/meta";
+import { Meta } from "@/models/meta";
 import Order from "@/models/order";
 import axios from "axios";
 

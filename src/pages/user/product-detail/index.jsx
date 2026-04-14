@@ -14,7 +14,7 @@ import { enqueueSnackbar } from "notistack";
 import { handleAddToCart } from "@/utils/add-to-cart";
 
 // Components
-import ProductGallery from "./sections/product-gallary";
+import ProductGallery from "./sections/product-gallery";
 import ProductInfo from "./sections/product-info";
 import ProductTabs from "./sections/product-tabs";
 
@@ -84,6 +84,7 @@ const UserProductDetail = () => {
   }, [slug, sku, navigate]);
 
   const handleBuyNow = () => {
+    if (product.stock <= 0) return;
     navigate("/checkout", {
       state: {
         buyNowItem: {
@@ -143,7 +144,8 @@ const UserProductDetail = () => {
             quantity={quantity}
             setQuantity={setQuantity}
             handleBuyNow={handleBuyNow}
-            handleAddToCart={(e, prod, qty) =>
+            handleAddToCart={(e, prod, qty) => {
+              if (prod.stock <= 0) return;
               handleAddToCart(
                 [
                   {
@@ -154,8 +156,8 @@ const UserProductDetail = () => {
                   },
                 ],
                 e,
-              )
-            }
+              );
+            }}
           />
         </Col>
       </Row>

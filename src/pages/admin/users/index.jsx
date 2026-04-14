@@ -15,7 +15,7 @@ import {
   deleteUser,
   deleteRole,
 } from "@/api/users/user-api";
-import { Meta } from "@/models/MetaData/meta";
+import { Meta } from "@/models/meta";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
 import { getUserColumns } from "./sections/grid-columns/setup-user";

@@ -237,27 +237,6 @@ const CategoryPage = () => {
                 </Text>
               )}
             </div>
-
-            <Space wrap>
-              <Input
-                prefix={
-                  <SearchOutlined style={{ color: "var(--neutral-400)" }} />
-                }
-                placeholder="Tìm theo tên..."
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                onPressEnter={handleSearch}
-                allowClear
-                onClear={() => updateParams({ search: "" })}
-                style={{ width: 220, borderRadius: 8 }}
-              />
-              <Select
-                value={sortParam}
-                onChange={(val) => updateParams({ sort: val })}
-                options={SORT_OPTIONS}
-                style={{ width: 170 }}
-              />
-            </Space>
           </div>
 
           {(categoryId || searchParam) && (

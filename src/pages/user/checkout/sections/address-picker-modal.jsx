@@ -6,7 +6,11 @@ import {
   ArrowLeftOutlined,
   CheckOutlined,
 } from "@ant-design/icons";
-import { fetchProvinces, fetchDistricts } from "@/api/profiles/address-api";
+import {
+  fetchProvinces,
+  fetchDistricts,
+  fetchWards,
+} from "@/api/profiles/address-api";
 
 const { Text } = Typography;
 
@@ -71,12 +75,19 @@ const ListItem = ({ label, sublabel, isSelected, onClick }) => {
 
 const AddressPickerModal = ({ open, onClose, onConfirm, initialValue }) => {
   const [step, setStep] = useState("province");
+
   const [provinces, setProvinces] = useState([]);
-  const [districts, setDistricts] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState(null);
-  const [selectedDistrict, setSelectedDistrict] = useState(null);
   const [loadingProvinces, setLoadingProvinces] = useState(false);
+
+  const [districts, setDistricts] = useState([]);
+  const [selectedDistrict, setSelectedDistrict] = useState(null);
   const [loadingDistricts, setLoadingDistricts] = useState(false);
+
+  const [wards, setWards] = useState([]);
+  const [selectedWard, setSelectedWard] = useState(null);
+  const [loadingWards, setLoadingWards] = useState(false);
+
   const [search, setSearch] = useState("");
   const searchRef = useRef(null);
 
@@ -87,6 +98,7 @@ const AddressPickerModal = ({ open, onClose, onConfirm, initialValue }) => {
     setSearch("");
     setSelectedProvince(initialValue?.province || null);
     setSelectedDistrict(initialValue?.district || null);
+    setSelectedWard(initialValue?.ward || null);
 
     setLoadingProvinces(true);
     fetchProvinces()
@@ -117,13 +129,35 @@ const AddressPickerModal = ({ open, onClose, onConfirm, initialValue }) => {
     }
   };
 
-  const handleSelectDistrict = (district) => {
+  const handleSelectDistrict = async (district) => {
     setSelectedDistrict(district);
+    setSelectedWard(null);
+    setSearch("");
+    setStep("ward");
+    setLoadingWards(true);
+    try {
+      const data = await fetchWards(district.code);
+      setWards(data.wards || []);
+    } catch {
+      setWards([]);
+    } finally {
+      setLoadingWards(false);
+    }
   };
 
+  const handleSelectWard = (ward) => {
+    setSelectedWard(ward);
+  };
+
+  console.log(selectedWard);
+
   const handleConfirm = () => {
-    if (!selectedProvince || !selectedDistrict) return;
-    onConfirm({ province: selectedProvince, district: selectedDistrict });
+    if (!selectedProvince || !selectedDistrict || !selectedWard) return;
+    onConfirm({
+      province: selectedProvince,
+      district: selectedDistrict,
+      ward: selectedWard,
+    });
     onClose();
   };
 
@@ -138,6 +172,10 @@ const AddressPickerModal = ({ open, onClose, onConfirm, initialValue }) => {
 
   const filteredDistricts = districts.filter((d) =>
     d.name.toLowerCase().includes(search.toLowerCase()),
+  );
+
+  const filteredWards = wards.filter((w) =>
+    w.name.toLowerCase().includes(search.toLowerCase()),
   );
 
   const isConfirmDisabled = !selectedProvince || !selectedDistrict;
@@ -319,6 +357,52 @@ const AddressPickerModal = ({ open, onClose, onConfirm, initialValue }) => {
                   sublabel={district.division_type}
                   isSelected={selectedDistrict?.code === district.code}
                   onClick={() => handleSelectDistrict(district)}
+                />
+              ))
+            )}
+          </>
+        )}
+
+        {step === "ward" && (
+          <>
+            <div style={{ marginBottom: 8 }}>
+              <Text type="secondary" style={{ fontSize: 12 }}>
+                Quận / Huyện:{" "}
+                <Text
+                  strong
+                  style={{
+                    color: "var(--primary-main, #e53935)",
+                    fontSize: 12,
+                  }}
+                >
+                  {selectedDistrict?.name}
+                </Text>
+              </Text>
+            </div>
+
+            {loadingWards ? (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  paddingTop: 60,
+                }}
+              >
+                <Spin tip="Đang tải phường/xã..." />
+              </div>
+            ) : filteredWards.length === 0 ? (
+              <Empty
+                description="Không tìm thấy phường/xã"
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+              />
+            ) : (
+              filteredWards.map((ward) => (
+                <ListItem
+                  key={ward.code}
+                  label={ward.name}
+                  sublabel={ward.division_type}
+                  isSelected={selectedWard?.code === ward.code}
+                  onClick={() => handleSelectWard(ward)}
                 />
               ))
             )}

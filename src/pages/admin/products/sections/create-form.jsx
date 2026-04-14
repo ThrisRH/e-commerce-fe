@@ -141,27 +141,47 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
           };
         });
 
+      // Map products (children) and their variants
+      const mappedChildren = (values.children || []).map((child) => ({
+        name: child.name,
+        attribute_value_id: child.attribute_value_id, // Slug-level identifier
+        variants: (child.variants || []).map((v) => ({
+          price: v.price,
+          stock: v.stock,
+          weight: v.weight,
+          length: v.length,
+          width: v.width,
+          height: v.height,
+          image_url: v.image_url,
+          // Consolidate attributes for this SKU
+          attributes: [
+            // Include the slug-level attribute from group
+            {
+              attribute_id: Number(child.main_attribute_id),
+              attribute_value_id: Number(child.attribute_value_id),
+            },
+            // Include SKU-specific extra attributes
+            ...(v.extra_attrs || []).map((ea) => ({
+              attribute_id: Number(ea.attribute_id),
+              attribute_value_id: Number(ea.attribute_value_id),
+            })),
+          ],
+        })),
+      }));
+
       const data = {
         name: values.name,
         description: values.description,
         image_url: values.image_url,
         brand_id: values.brand_id,
         category_id: values.category_id,
+        main_attribute_id: values.main_attribute_id,
+        weight: values.weight,
+        length: values.length,
+        width: values.width,
+        height: values.height,
         specs: specs,
-        children: (values.children || []).map((child) => ({
-          name: child.name,
-          attributes: (child.attributes || [])
-            .map((attr) => ({
-              attribute_value_id: attr.attribute_value_id,
-            }))
-            .filter((a) => a.attribute_value_id),
-          variants: (child.variants || []).map((v) => ({
-            price: v.price,
-            stock: v.stock,
-            image_url: v.image_url || values.image_url,
-            attribute_value_id: v.attribute_value_id || null,
-          })),
-        })),
+        children: mappedChildren,
       };
 
       if (data.children.length === 0) {
@@ -275,6 +295,7 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
             onAddExtraAttribute={handleAddExtraAttribute}
             attrLoading={attrLoading}
             categoryId={Form.useWatch("category_id", form)}
+            form={form}
           />
 
           <PublicStep display={currentStep === 2 ? "block" : "none"} />

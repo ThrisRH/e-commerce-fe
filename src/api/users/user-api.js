@@ -1,6 +1,6 @@
 import { API_VER } from "@/constants/env";
 import { User } from "@/models/user";
-import { Meta } from "@/models/MetaData/meta";
+import { Meta } from "@/models/meta";
 import axiosClient from "@/config/axios-client";
 
 export const fetchCustomers = async (page = 1, limit = 10) => {

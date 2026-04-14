@@ -1,73 +1,48 @@
-import { Card, CardContent, FormControlLabel, Grid, Switch, TextField, Typography } from "@mui/material";
-import AppInput from "@/components/common/input";
+import { Card, CardContent, Grid, Switch, Typography } from "@mui/material";
+import { Form, Input } from "antd";
+import { TextField } from "@/components/common/input/ant-custom-input";
 
-export default function BasicInfo({ formData, handleChange, setFormData }) {
+export default function BasicInfo() {
   return (
-    <Card sx={{ borderRadius: 3, boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}>
+    <Card
+      sx={{ borderRadius: 3, boxShadow: "0 4px 20px rgba(0,0,0,0.05)", mb: 3 }}
+    >
       <CardContent sx={{ p: 4 }}>
         <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
           Thông Tin Cơ Bản
         </Typography>
         <Grid container spacing={3}>
           <Grid size={{ xs: 12 }}>
-            <AppInput
+            <TextField
               label="Tên danh mục"
               name="name"
-              value={formData.name || ""}
-              onChange={handleChange}
+              rules={[{ required: true, message: "Nhập tên danh mục" }]}
               maxLength={255}
             />
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
-            <AppInput
-              label="Đường dẫn (Slug)"
-              name="slug"
-              value={formData.slug || ""}
-              onChange={handleChange}
-              disabled
-              maxLength={255}
-            />
+            <TextField label="Đường dẫn (Slug)" name="slug" disabled />
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
-            <AppInput
+            <TextField
               label="Thứ tự hiển thị"
               type="number"
               name="sort_order"
-              value={formData.sort_order || 0}
-              onChange={handleChange}
             />
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={formData.is_active == 1}
-                  onChange={(e) =>
-                    setFormData((p) => ({
-                      ...p,
-                      is_active: e.target.checked ? 1 : 0,
-                    }))
-                  }
-                />
-              }
-              label="Đang kích hoạt"
-            />
+            <Form.Item
+              name="is_active"
+              label="Trạng thái"
+              valuePropName="checked"
+            >
+              <Switch />
+            </Form.Item>
           </Grid>
           <Grid size={{ xs: 12 }}>
-            <TextField
-              fullWidth
-              multiline
-              rows={4}
-              label="Mô tả danh mục"
-              name="description"
-              value={formData.description || ""}
-              onChange={handleChange}
-              slotProps={{
-                htmlInput: {
-                  maxLength: 1000,
-                },
-              }}
-            />
+            <Form.Item name="description" label="Mô tả danh mục">
+              <Input.TextArea rows={4} maxLength={1000} />
+            </Form.Item>
           </Grid>
         </Grid>
       </CardContent>

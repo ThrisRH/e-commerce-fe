@@ -11,19 +11,12 @@ import {
   fetchCategories,
 } from "@/api/categories/category-api";
 import { fetchBrands } from "@/api/brands/brand-api";
-import { fetchAttributes, fetchAttributeValues } from "@/api/attributes/attribute-api";
 import {
-  Box,
-  Container,
-  IconButton,
-  Typography,
-  CircularProgress,
-  Grid,
-} from "@mui/material";
-import {
-  ArrowBack as ArrowLeftIcon,
-  Add as AddIcon,
-} from "@mui/icons-material";
+  fetchAttributes,
+  fetchAttributeValues,
+} from "@/api/attributes/attribute-api";
+import { Box, CircularProgress, Grid } from "@mui/material";
+import { Add as AddIcon } from "@mui/icons-material";
 import { Form, Button } from "antd";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState, useCallback } from "react";
@@ -32,10 +25,13 @@ import AppButton from "@/components/common/buttons/button";
 import { sortAttributeValues } from "@/utils/attribute-utils";
 
 // Section Components
-import ProductBase from "./detail-sections/ProductBase";
-import ProductItemInfo from "./detail-sections/ProductItem";
-import VariantList from "./detail-sections/VariantList";
-import AddVariantModal from "./detail-sections/AddVariantModal";
+import ProductBase from "./detail-sections/product-base";
+import ProductItemInfo from "./detail-sections/product-item";
+import VariantList from "./detail-sections/variant-list";
+import AddVariantModal from "./detail-sections/add-variant-modal";
+
+import PageContainer from "@/components/common/page-container";
+import PageHeader from "@/components/common/page-header";
 
 export default function ProductDetail() {
   const { slug } = useParams();
@@ -60,7 +56,7 @@ export default function ProductDetail() {
     if (categoryId) {
       fetchCategoryById(categoryId)
         .then(setCategory)
-        .catch((err) =>
+        .catch(() =>
           enqueueSnackbar("Lỗi tải thông tin danh mục", { variant: "error" }),
         );
     }
@@ -69,13 +65,14 @@ export default function ProductDetail() {
   const loadData = useCallback(async () => {
     try {
       setLoading(true);
-      const [data, brandsData, categoriesData, attrValues, allAttrs] = await Promise.all([
-        fetchAdminProductDetail(slug),
-        fetchBrands(),
-        fetchCategories({ limit: 100 }),
-        fetchAttributeValues(),
-        fetchAttributes(),
-      ]);
+      const [data, brandsData, categoriesData, attrValues, allAttrs] =
+        await Promise.all([
+          fetchAdminProductDetail(slug),
+          fetchBrands(),
+          fetchCategories({ limit: 100 }),
+          fetchAttributeValues(),
+          fetchAttributes(),
+        ]);
 
       setProductData(data);
       setLocalVariants(data.variants || []);
@@ -84,7 +81,6 @@ export default function ProductDetail() {
       setAttributes(Array.isArray(allAttrs) ? allAttrs : []);
       setAttributeValues(sortAttributeValues(attrValues));
 
-      // Initialize master form
       masterForm.setFieldsValue({
         item_name: data.name,
         name: data.product?.name,
@@ -234,45 +230,29 @@ export default function ProductDetail() {
 
   if (!productData) return null;
 
+  const headerActions = (
+    <Box sx={{ display: "flex", gap: 2 }}>
+      <Button icon={<AddIcon />} onClick={() => setIsAddModalOpen(true)}>
+        Thêm Variant
+      </Button>
+      <AppButton
+        disabled={saving}
+        onClick={handleUpdateMaster}
+        label={saving ? "Đang lưu..." : "Lưu Thay Đổi"}
+        width="160px"
+      />
+    </Box>
+  );
+
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      {/* Header */}
-      <Box
-        sx={{
-          mb: 4,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <IconButton
-            onClick={() => navigate(-1)}
-            sx={{ bgcolor: "background.paper", boxShadow: 1 }}
-          >
-            <ArrowLeftIcon />
-          </IconButton>
-          <Box>
-            <Typography variant="h4" sx={{ fontWeight: 700 }}>
-              {productData.name}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              ID Gốc: {productData.product?.id}
-            </Typography>
-          </Box>
-        </Box>
-        <Box sx={{ display: "flex", gap: 2 }}>
-          <Button icon={<AddIcon />} onClick={() => setIsAddModalOpen(true)}>
-            Thêm Variant
-          </Button>
-          <AppButton
-            disabled={saving}
-            onClick={handleUpdateMaster}
-            label={saving ? "Đang lưu..." : "Lưu Thay Đổi"}
-            width="160px"
-          />
-        </Box>
-      </Box>
+    <PageContainer>
+      <PageHeader
+        title={productData.name}
+        subtitle={`ID Gốc: ${productData.product?.id}`}
+        onBack={true}
+        extra={headerActions}
+        breadcrumbItems={undefined}
+      />
 
       <Form form={masterForm} layout="vertical">
         <Grid container spacing={3}>
@@ -310,6 +290,6 @@ export default function ProductDetail() {
         attributes={attributes}
         attributeValues={attributeValues}
       />
-    </Container>
+    </PageContainer>
   );
 }

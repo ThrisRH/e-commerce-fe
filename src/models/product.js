@@ -1,7 +1,7 @@
 import Attribute from "./attribute";
 import Brand from "./brand";
 import Category from "./category";
-import { Meta } from "./MetaData/meta";
+import { Meta } from "./meta";
 
 export class Product {
   constructor(data = {}) {

@@ -8,7 +8,7 @@ import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
 import CreateProductModal from "./sections/create-form";
 import { getProductColumns } from "./sections/grid-columns/setup";
-import { Meta } from "@/models/MetaData/meta";
+import { Meta } from "@/models/meta";
 import AppButton from "@/components/common/buttons/button";
 
 const { Title } = Typography;

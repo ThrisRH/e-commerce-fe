@@ -34,7 +34,8 @@ export default function ProductClassification({
                 setFormData((p) => ({
                   ...p,
                   category:
-                    categories.find((c) => c.id === e.target.value) || p.category,
+                    categories.find((c) => c.id === e.target.value) ||
+                    p.category,
                 }))
               }
             >
@@ -66,7 +67,10 @@ export default function ProductClassification({
             </Select>
           </FormControl>
 
-          <Typography variant="subtitle2" sx={{ mb: 1, color: "text.secondary" }}>
+          <Typography
+            variant="subtitle2"
+            sx={{ mb: 1, color: "text.secondary" }}
+          >
             Hình ảnh sản phẩm
           </Typography>
           <Box

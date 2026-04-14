@@ -40,14 +40,12 @@ const CheckoutForm = ({
           <TextField
             label="Họ"
             placeholder="Nguyễn"
-            style={{ borderRadius: 8 }}
             name="lname"
             rules={[{ required: true, message: "Vui lòng nhập họ" }]}
           />
           <TextField
             label="Tên"
             placeholder="Văn A"
-            style={{ borderRadius: 8 }}
             name="fname"
             rules={[{ required: true, message: "Vui lòng nhập tên" }]}
           />
@@ -55,7 +53,6 @@ const CheckoutForm = ({
         <TextField
           label="Số điện thoại"
           placeholder="0912 345 678"
-          style={{ borderRadius: 8 }}
           name="phone"
           rules={[{ required: true, message: "Vui lòng nhập số điện thoại" }]}
           maxLength={10}
@@ -69,6 +66,9 @@ const CheckoutForm = ({
         <Form.Item name="district" hidden rules={[{ required: true }]}>
           <Input />
         </Form.Item>
+        <Form.Item name="ward" hidden rules={[{ required: true }]}>
+          <Input />
+        </Form.Item>
 
         <div
           onClick={() => setAddressModalOpen(true)}
@@ -76,8 +76,8 @@ const CheckoutForm = ({
             display: "flex",
             alignItems: "center",
             gap: 10,
-            padding: "10px 14px",
-            borderRadius: 8,
+            padding: "10px 12px",
+            borderRadius: 4,
             border: "1px solid var(--neutral-200)",
             cursor: "pointer",
             marginBottom: 16,
@@ -135,7 +135,6 @@ const CheckoutForm = ({
         <TextField
           label="Địa chỉ cụ thể"
           placeholder="Số nhà, tên đường, phường..."
-          style={{ borderRadius: 8 }}
           name="address"
           rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
         />
@@ -143,7 +142,6 @@ const CheckoutForm = ({
         <TextField
           label="Ghi chú (tuỳ chọn)"
           placeholder="Giao giờ hành chính, gọi trước khi giao..."
-          style={{ borderRadius: 8 }}
           name="note"
           rules={[{ required: false, message: "Vui lòng nhập ghi chú" }]}
         />
@@ -172,7 +170,7 @@ const CheckoutForm = ({
                     ? "var(--primary-main)"
                     : "var(--neutral-200)"
                 }`,
-                borderRadius: 10,
+                borderRadius: 4,
                 background:
                   paymentMethod === method.value ? "var(--primary-50)" : "#fff",
                 transition: "all 0.2s ease",

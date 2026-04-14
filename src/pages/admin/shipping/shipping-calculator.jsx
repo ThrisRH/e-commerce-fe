@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   Card,
   Form,
-  InputNumber,
   Button,
   Typography,
   Space,
@@ -10,16 +9,29 @@ import {
   Row,
   Col,
   Statistic,
+  List,
+  Avatar,
+  InputNumber,
 } from "antd";
-import { CalculatorOutlined, EnvironmentOutlined } from "@ant-design/icons";
+import {
+  CalculatorOutlined,
+  EnvironmentOutlined,
+  PlusOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import { TextField } from "@/components/common/input/ant-custom-input";
 import AddressPickerModal from "@/pages/user/checkout/sections/address-picker-modal";
+import ProductSelectionModal from "@/components/common/modal/product-selection-modal";
 
 import { calculateShippingFee } from "@/api/shipping/shipping-api";
 
 const { Title, Text } = Typography;
 
-const ShippingCalculator = () => {
+import PageContainer from "@/components/common/page-container";
+import PageHeader from "@/components/common/page-header";
+import normalizeAddress from "@/utils/normallize-address";
+
+export default function ShippingCalculator() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState({
@@ -31,35 +43,55 @@ const ShippingCalculator = () => {
     total_fee: 0,
   });
 
-  const [modalType, setModalType] = useState(null); // 'pickup' | 'delivery'
+  const [modalType, setModalType] = useState(null);
+  const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+  const [selectedItems, setSelectedItems] = useState([]);
+
   const [addressData, setAddressData] = useState({
     pickup: null,
     delivery: null,
   });
 
-  const onCalculate = async (values) => {
+  const onCalculate = async () => {
+    if (!addressData.delivery) {
+      form.validateFields(["delivery"]);
+      return;
+    }
+
+    if (selectedItems.length === 0) {
+      return;
+    }
+
     setLoading(true);
     try {
       const payload = {
-        from: addressData.pickup ? {
-          province: addressData.pickup.province.name,
-          district: addressData.pickup.district.name,
-          ward: "", // Optional
-        } : {
-          province: "Hồ Chí Minh",
-          district: "Quận 1",
-          ward: "Phường Bến Nghé",
-        },
+        from: addressData.pickup
+          ? {
+              province: normalizeAddress(addressData.pickup.province.name),
+              district: normalizeAddress(addressData.pickup.district.name),
+              ward: normalizeAddress(addressData.pickup.ward?.name || ""),
+            }
+          : {
+              province: "Hồ Chí Minh",
+              district: "Quận 1",
+              ward: "Phường Bến Nghé",
+            },
         to: {
-          province: addressData.delivery.province.name,
-          district: addressData.delivery.district.name,
-          ward: "", // Optional
+          province: normalizeAddress(addressData.delivery.province.name),
+          district: normalizeAddress(addressData.delivery.district.name),
+          ward: normalizeAddress(addressData.delivery.ward?.name || ""),
         },
-        shipping_method_id: 1, // Default method
+        shipping_method_id: 1,
+        items: selectedItems.map((item) => ({
+          sku: item.sku,
+          slug: item.slug,
+          quantity: item.quantity,
+        })),
       };
 
       const result = await calculateShippingFee(payload);
       if (result) {
+        console.log(result);
         setResults({
           time: result.shipping_info.expected_time,
           time_coeff: result.shipping_info.time_coefficient,
@@ -86,14 +118,50 @@ const ShippingCalculator = () => {
     });
   };
 
+  const handleAddProduct = (product) => {
+    setSelectedItems((prev) => {
+      const existing = prev.find((item) => item.sku === product.sku);
+      if (existing) {
+        return prev.map((item) =>
+          item.sku === product.sku
+            ? { ...item, quantity: item.quantity + 1 }
+            : item,
+        );
+      }
+      return [...prev, { ...product, quantity: 1 }];
+    });
+  };
+
+  const handleRemoveProduct = (sku) => {
+    setSelectedItems((prev) => prev.filter((item) => item.sku !== sku));
+  };
+
+  const handleQuantityChange = (sku, value) => {
+    setSelectedItems((prev) =>
+      prev.map((item) =>
+        item.sku === sku ? { ...item, quantity: value } : item,
+      ),
+    );
+  };
+
   return (
-    <div style={{ padding: "24px" }}>
-      <Title level={2}>Công cụ tính phí vận chuyển</Title>
+    <PageContainer>
+      <PageHeader
+        title="Công cụ tính phí vận chuyển"
+        subtitle={undefined}
+        extra={undefined}
+        onBack={undefined}
+        breadcrumbItems={undefined}
+      />
 
       <Row gutter={24}>
         <Col span={10}>
-          <Card title="Thông tin đơn hàng" bordered={false} className="shadow-sm">
-            <Form form={form} layout="vertical" onFinish={onCalculate}>
+          <Card
+            title="Thông tin địa chỉ"
+            bordered={false}
+            style={{ marginBottom: 24 }}
+          >
+            <Form form={form} layout="vertical">
               <div
                 onClick={() => setModalType("pickup")}
                 style={{ cursor: "pointer" }}
@@ -103,8 +171,12 @@ const ShippingCalculator = () => {
                   name="pickup"
                   readOnly
                   placeholder="Để trống để lấy mặc định (HCM, Q1)"
-                  prefix={<EnvironmentOutlined style={{ color: "var(--primary-main)" }} />}
-                  rules={[]}
+                  prefix={
+                    <EnvironmentOutlined
+                      style={{ color: "var(--primary-main)" }}
+                    />
+                  }
+                  rules={undefined}
                 />
               </div>
 
@@ -117,60 +189,94 @@ const ShippingCalculator = () => {
                   name="delivery"
                   readOnly
                   placeholder="Chọn địa chỉ giao hàng"
-                  prefix={<EnvironmentOutlined style={{ color: "var(--primary-main)" }} />}
-                  rules={[{ required: true, message: "Vui lòng chọn điểm giao" }]}
+                  prefix={
+                    <EnvironmentOutlined
+                      style={{ color: "var(--primary-main)" }}
+                    />
+                  }
+                  rules={[
+                    { required: true, message: "Vui lòng chọn điểm giao" },
+                  ]}
                 />
               </div>
+            </Form>
+          </Card>
 
-              <Row gutter={16}>
-                <Col span={12}>
-                  <Form.Item label={<Text className="text-sm font-medium">Khối lượng (kg)</Text>} name="weight" initialValue={1}>
-                    <InputNumber style={{ width: "100%", height: "45px", display: 'flex', alignItems: 'center' }} min={0.1} step={0.1} />
-                  </Form.Item>
-                </Col>
-                <Col span={12}>
-                  <Form.Item label={<Text className="text-sm font-medium">Thể tích (m³)</Text>} name="volume" initialValue={0.01}>
-                    <InputNumber style={{ width: "100%", height: "45px", display: 'flex', alignItems: 'center'  }} min={0.001} step={0.001} />
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Divider style={{ margin: '12px 0' }}>Kích thước đóng gói (cm)</Divider>
-              <Row gutter={16}>
-                <Col span={8}>
-                  <Form.Item label="Dài" name="length">
-                    <InputNumber style={{ width: "100%", height: "45px" }} min={1} />
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item label="Rộng" name="width">
-                    <InputNumber style={{ width: "100%", height: "45px" }} min={1} />
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item label="Cao" name="height">
-                    <InputNumber style={{ width: "100%", height: "45px" }} min={1} />
-                  </Form.Item>
-                </Col>
-              </Row>
-
+          <Card
+            title="Sản phẩm vận chuyển"
+            bordered={false}
+            extra={
               <Button
                 type="primary"
-                block
-                icon={<CalculatorOutlined />}
-                htmlType="submit"
-                size="large"
-                loading={loading}
-                style={{ marginTop: "12px", height: "45px" }}
+                icon={<PlusOutlined />}
+                onClick={() => setIsProductModalOpen(true)}
+                style={{ height: 36, borderRadius: 4 }}
               >
-                Tính toán phí ship
+                Thêm sản phẩm
               </Button>
-            </Form>
+            }
+          >
+            <List
+              dataSource={selectedItems}
+              locale={{ emptyText: "Chưa chọn sản phẩm nào" }}
+              renderItem={(item) => (
+                <List.Item
+                  actions={[
+                    <Button
+                      type="text"
+                      danger
+                      icon={<DeleteOutlined />}
+                      onClick={() => handleRemoveProduct(item.sku)}
+                    />,
+                  ]}
+                >
+                  <List.Item.Meta
+                    avatar={<Avatar src={item.image_url} shape="square" />}
+                    title={item.display_name || item.name}
+                    description={
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 12,
+                        }}
+                      >
+                        <Text type="secondary" style={{ fontSize: 12 }}>
+                          SKU: {item.sku}
+                        </Text>
+                        <InputNumber
+                          min={1}
+                          size="small"
+                          value={item.quantity}
+                          onChange={(val) =>
+                            handleQuantityChange(item.sku, val)
+                          }
+                          style={{ width: 60 }}
+                        />
+                      </div>
+                    }
+                  />
+                </List.Item>
+              )}
+            />
+
+            <Button
+              type="primary"
+              block
+              icon={<CalculatorOutlined />}
+              onClick={onCalculate}
+              size="large"
+              loading={loading}
+              disabled={selectedItems.length === 0}
+              style={{ marginTop: "24px", height: "45px", borderRadius: 8 }}
+            >
+              Tính toán phí ship
+            </Button>
           </Card>
         </Col>
 
         <Col span={14}>
-          <Card title="Kết quả tính toán (Ước tính)" bordered={false} className="shadow-sm">
+          <Card title="Kết quả tính toán (Ước tính)" bordered={false}>
             <Row gutter={[16, 24]}>
               <Col span={12}>
                 <Statistic
@@ -193,6 +299,7 @@ const ShippingCalculator = () => {
                   title="Quãng đường (D)"
                   value={results.distance}
                   suffix="km"
+                  precision={2}
                 />
               </Col>
               <Col span={12}>
@@ -207,30 +314,43 @@ const ShippingCalculator = () => {
 
             <Divider />
 
-            <div style={{ background: "#f5f5f5", padding: "20px", borderRadius: "8px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
-                <Text>Phí cơ bản:</Text>
-                <Text strong>{results.base_fee.toLocaleString()} VNĐ</Text>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
-                <Text>Phí theo quãng đường (D * d):</Text>
-                <Text strong>{(results.distance * results.distance_coeff).toLocaleString()} VNĐ</Text>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
-                <Text>Phí theo thời gian (T * t):</Text>
-                <Text strong>{(results.time * results.time_coeff).toLocaleString()} VNĐ</Text>
-              </div>
-              <Divider style={{ margin: "12px 0" }} />
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <Title level={4} style={{ margin: 0 }}>Tổng phí vận chuyển:</Title>
-                <Title level={4} style={{ margin: 0, color: "#1890ff" }}>
+            <div
+              style={{
+                background: "#f8fafc",
+                padding: "24px",
+                borderRadius: "12px",
+                border: "1px solid #e2e8f0",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ fontSize: 16, fontWeight: 600 }}>
+                  Tổng phí vận chuyển:
+                </Text>
+                <Text
+                  style={{ fontSize: 20, fontWeight: 700, color: "#2563eb" }}
+                >
                   {results.total_fee.toLocaleString()} VNĐ
-                </Title>
+                </Text>
               </div>
             </div>
 
-            <Text type="secondary" style={{ display: "block", marginTop: "16px", fontStyle: "italic" }}>
-              * Lưu ý: Đây là phí ước tính dựa trên các hệ số cấu hình. Phí thực tế có thể thay đổi tùy theo đơn vị vận chuyển.
+            <Text
+              type="secondary"
+              style={{
+                display: "block",
+                marginTop: "16px",
+                fontStyle: "italic",
+                fontSize: 12,
+              }}
+            >
+              * Lưu ý: Đây là phí ước tính dựa trên các hệ số cấu hình. Phí thực
+              tế có thể thay đổi tùy theo đơn vị vận chuyển.
             </Text>
           </Card>
         </Col>
@@ -242,8 +362,12 @@ const ShippingCalculator = () => {
         onConfirm={handleAddressConfirm}
         initialValue={addressData[modalType]}
       />
-    </div>
-  );
-};
 
-export default ShippingCalculator;
+      <ProductSelectionModal
+        visible={isProductModalOpen}
+        onClose={() => setIsProductModalOpen(false)}
+        onSelect={handleAddProduct}
+      />
+    </PageContainer>
+  );
+}

@@ -1,25 +1,25 @@
 import { updateCategory } from "@/api/categories/category-api";
-import { Box, Container, Grid } from "@mui/material";
-
+import { Box, Grid } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AppButton from "@/components/common/buttons/button";
 import useCategoryDetail from "@/hooks/categories/category-detail";
 import Loading from "@/components/ui/state/loading";
+import { Form } from "antd";
 
-import { Breadcrumb, Typography as AntdTypography } from "antd";
+import PageContainer from "@/components/common/page-container";
+import PageHeader from "@/components/common/page-header";
 
 import BasicInfo from "./sections/basic-info";
 import CategoryAttributes from "./sections/category-attributes";
 import CategoryClassification from "./sections/category-classification";
 
-const { Title: AntdTitle } = AntdTypography;
-
 export default function CategoryDetail() {
   const { id } = useParams();
   const [saving, setSaving] = useState(false);
   const navigate = useNavigate();
+  const [form] = Form.useForm();
 
   const {
     loading,
@@ -35,141 +35,83 @@ export default function CategoryDetail() {
     if (id) loadData();
   }, [id, loadData]);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? (checked ? 1 : 0) : value,
-    }));
-  };
+  useEffect(() => {
+    if (formData) {
+      form.setFieldsValue({
+        ...formData,
+        parent_id: formData.parent_category?.id || null,
+      });
+    }
+  }, [formData, form]);
 
-  const getChangedField = (data, curr) => {
-    const changed = {};
-    Object.keys(curr).forEach((key) => {
-      if (JSON.stringify(data[key]) !== JSON.stringify(curr[key])) {
-        changed[key] = curr[key];
-      }
-    });
-    return changed;
-  };
-
-  const handleSubmit = async (e) => {
-    e?.preventDefault?.();
-
+  const handleSubmit = async () => {
     try {
       setSaving(true);
+      const values = await form.validateFields();
 
       const payload = {
-        name: formData.name,
-        slug: formData.slug,
-        description: formData.description,
-        is_active: formData.is_active,
-        image_url: formData.image_url,
-        parent_id: formData.parent_category
-          ? formData.parent_category?.id
-          : null,
-        sort_order: formData.sort_order || 0,
-        attribute_ids: formData.attribute_ids || [],
-        is_required: formData.is_required || false,
+        name: values.name,
+        slug: values.slug,
+        description: values.description,
+        is_active: values.is_active ? 1 : 0,
+        image_url: values.image_url,
+        parent_id: values.parent_id,
+        sort_order: values.sort_order || 0,
+        attribute_ids: values.attribute_ids || [],
+        is_required: values.is_required || false,
       };
 
-      const originPayload = {
-        name: originData.name,
-        slug: originData.slug,
-        description: originData.description,
-        is_active: originData.is_active,
-        image_url: originData.image_url,
-        parent_id: originData.parent_category
-          ? originData.parent_category?.id
-          : null,
-        sort_order: originData.sort_order || 0,
-        attribute_ids: originData.attribute_ids || [],
-        is_required: originData.is_required || false,
-      };
-
-      const changedPayload = getChangedField(originPayload, payload);
-
-      if (Object.keys(changedPayload).length === 0) {
-        enqueueSnackbar("Không có thay đổi nào được thực hiện", {
-          variant: "info",
-        });
-        return;
-      }
-
-      await updateCategory(id, changedPayload);
-
+      await updateCategory(id, payload);
       enqueueSnackbar("Danh mục đã được cập nhật thành công!", {
         variant: "success",
       });
-
-      window.location.reload();
+      loadData();
     } catch (err) {
-      enqueueSnackbar(err.message, { variant: "error" });
+      if (err.name === "ValidationError") return;
+      enqueueSnackbar(err.message || "Lỗi cập nhật", { variant: "error" });
     } finally {
       setSaving(false);
     }
   };
 
-  if (loading) {
-    return <Loading />;
-  }
+  if (loading) return <Loading />;
+
+  const breadcrumbItems = [
+    { title: "Admin", href: "/admin" },
+    { title: "Quản Lý Danh Mục", href: "/admin/categories" },
+    { title: "Chi Tiết" },
+  ];
+
+  const headerExtra = (
+    <Box sx={{ width: 220 }}>
+      <AppButton
+        disabled={saving}
+        onClick={handleSubmit}
+        label={saving ? "Đang lưu..." : "Lưu Thay Đổi"}
+      />
+    </Box>
+  );
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Box
-        sx={{
-          mb: 4,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Box>
-          <Breadcrumb
-            items={[
-              { title: "Admin", href: "/admin" },
-              { title: "Quản Lý Danh Mục", href: "/admin/categories" },
-              { title: "Chi Tiết" },
-            ]}
-          />
-          <AntdTitle level={2} style={{ margin: "8px 0 0" }}>
-            Chi Tiết Danh Mục
-          </AntdTitle>
-        </Box>
-        <Box sx={{ width: 220 }}>
-          <AppButton
-            disabled={
-              saving || JSON.stringify(originData) === JSON.stringify(formData)
-            }
-            onClick={handleSubmit}
-            label={saving ? "Đang lưu..." : "Lưu Thay Đổi"}
-          />
-        </Box>
-      </Box>
+    <PageContainer>
+      <PageHeader
+        title="Chi Tiết Danh Mục"
+        breadcrumbItems={breadcrumbItems}
+        extra={headerExtra}
+      />
 
-      <Grid container spacing={3}>
-        <Grid size={{ xs: 12, md: 8 }}>
-          <BasicInfo
-            formData={formData}
-            handleChange={handleChange}
-            setFormData={setFormData}
-          />
-          <CategoryAttributes
-            formData={formData}
-            setFormData={setFormData}
-            allAttributes={allAttributes}
-          />
-        </Grid>
+      <Form form={form} layout="vertical">
+        <Grid container spacing={3}>
+          <Grid size={{ xs: 12, md: 8 }}>
+            <BasicInfo />
+            <CategoryAttributes allAttributes={allAttributes} />
+          </Grid>
 
-        <Grid size={{ xs: 12, md: 4 }}>
-          <CategoryClassification
-            formData={formData}
-            setFormData={setFormData}
-            parentCategories={parentCategories}
-            handleChange={handleChange}
-          />
+          <Grid size={{ xs: 12, md: 4 }}>
+            <CategoryClassification parentCategories={parentCategories} />
+          </Grid>
         </Grid>
-      </Grid>
-    </Container>
+      </Form>
+    </PageContainer>
   );
 }

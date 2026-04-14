@@ -15,3 +15,13 @@ export const fetchDistricts = async (provinceCode) => {
   }
   return res.json();
 };
+
+export const fetchWards = async (districtCode) => {
+  const res = await fetch(
+    `${import.meta.env.VITE_PROVINCE_API}/d/${districtCode}?depth=2`,
+  );
+  if (!res.ok) {
+    throw new Error("Failed to fetch wards");
+  }
+  return res.json();
+};

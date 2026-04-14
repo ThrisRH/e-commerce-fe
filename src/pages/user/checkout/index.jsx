@@ -19,10 +19,17 @@ import CheckoutSummary from "./sections/checkout-summary";
 import SuccessInvoice from "./sections/invoice";
 
 const { Title } = Typography;
-import { calculateShippingFee } from "@/api/shipping/shipping-api";
+import {
+  calculateShippingFee,
+  fetchShippingRateById,
+  fetchShippingRates,
+} from "@/api/shipping/shipping-api";
 import normalizeAddress from "@/utils/normallize-address";
 
-const CheckoutPage = () => {
+import PageContainer from "@/components/common/page-container";
+import PageHeader from "@/components/common/page-header";
+
+export default function CheckoutPage() {
   const location = useLocation();
   const [form] = Form.useForm();
   const [paymentMethod, setPaymentMethod] = useState("cod");
@@ -35,6 +42,12 @@ const CheckoutPage = () => {
   const [shippingFee, setShippingFee] = useState(0);
 
   const isBuyNow = !!location.state?.buyNowItem;
+
+  const breadcrumbItems = [
+    { title: "Trang chủ", href: "/" },
+    { title: "Giỏ hàng", href: "/cart" },
+    { title: "Thanh toán" },
+  ];
 
   const loadUserInfo = useCallback(async () => {
     const token = localStorage.getItem("access_token");
@@ -65,6 +78,15 @@ const CheckoutPage = () => {
       console.error("Failed to fetch user info", err);
     }
   }, [form]);
+
+  const loadBaseFee = useCallback(async () => {
+    try {
+      const data = await fetchShippingRateById(1);
+      setShippingFee(data.base_fee);
+    } catch (err) {
+      console.error("Failed to fetch base fee", err);
+    }
+  }, []);
 
   const loadCart = useCallback(async () => {
     if (isBuyNow) {
@@ -113,16 +135,16 @@ const CheckoutPage = () => {
 
     try {
       const payload = {
-        from: {
-          province: "Hồ Chí Minh",
-          district: "Quận 1",
-          ward: "Phường Bến Nghé",
-        },
         to: {
           province: normalizeAddress(selectedAddress.province.name),
           district: normalizeAddress(selectedAddress.district.name),
           ward: normalizeAddress(form.getFieldValue("address") || ""),
         },
+        items: items.map((i) => ({
+          sku: i.product.sku,
+          slug: i.product.basic_info?.slug || i.product.slug,
+          quantity: i.quantity,
+        })),
         shipping_method_id: 1,
       };
 
@@ -138,7 +160,8 @@ const CheckoutPage = () => {
   useEffect(() => {
     loadCart();
     loadUserInfo();
-  }, [loadCart, loadUserInfo]);
+    loadBaseFee();
+  }, [loadCart, loadUserInfo, loadBaseFee]);
 
   const subtotal = items.reduce(
     (sum, { product, quantity }) => sum + product.price * quantity,
@@ -146,11 +169,12 @@ const CheckoutPage = () => {
   );
   const total = subtotal + shippingFee;
 
-  const handleAddressConfirm = ({ province, district }) => {
-    setSelectedAddress({ province, district });
+  const handleAddressConfirm = ({ province, district, ward }) => {
+    setSelectedAddress({ province, district, ward });
     form.setFieldsValue({
       city: province.name,
       district: district.name,
+      ward: ward.name,
     });
   };
 
@@ -169,6 +193,7 @@ const CheckoutPage = () => {
   };
 
   const handleSubmit = async () => {
+    console.log(form.getFieldsValue());
     try {
       await form.validateFields();
       const values = form.getFieldsValue();
@@ -181,23 +206,23 @@ const CheckoutPage = () => {
         note: values.note,
         payment_method: paymentMethod,
         distance: 5,
-        items: items.map((i) => {
-          return {
-            slug: i.product.basic_info.slug,
-            sku: i.product.sku,
-            quantity: i.quantity,
-          };
-        }),
+        items: items.map((i) => ({
+          sku: i.product.sku,
+          slug: i.product.basic_info?.slug || i.product.slug,
+          quantity: i.quantity,
+        })),
         to: {
           province: normalizeAddress(values.city),
           district: normalizeAddress(values.district),
-          ward: normalizeAddress(values.address),
+          ward: normalizeAddress(values.ward),
+          address: values.address,
         },
         shipping_method_id: 1,
       };
 
-      const response = await createOrder(payload);
+      console.log(payload);
 
+      const response = await createOrder(payload);
       enqueueSnackbar("Đặt hàng thành công!", { variant: "success" });
       clearCart();
 
@@ -227,19 +252,14 @@ const CheckoutPage = () => {
   }
 
   return (
-    <div style={{ padding: "28px 50px", margin: "0 auto", maxWidth: 1440 }}>
-      <Breadcrumb
-        style={{ marginBottom: 20 }}
-        items={[
-          { title: "Trang chủ", href: "/" },
-          { title: "Giỏ hàng", href: "#" },
-          { title: "Thanh toán" },
-        ]}
+    <PageContainer>
+      <PageHeader
+        title="Thanh toán"
+        breadcrumbItems={breadcrumbItems}
+        subtitle={undefined}
+        extra={undefined}
+        onBack={undefined}
       />
-
-      <Title level={3} style={{ marginBottom: 24 }}>
-        Thanh toán
-      </Title>
 
       <div
         style={{
@@ -283,8 +303,6 @@ const CheckoutPage = () => {
           .checkout-container { flex-direction: column !important; }
         }
       `}</style>
-    </div>
+    </PageContainer>
   );
-};
-
-export default CheckoutPage;
+}

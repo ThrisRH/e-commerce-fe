@@ -17,7 +17,7 @@ const Sidebar = ({ collapsed }) => {
     const parent = menuItems.find(
       (item) =>
         item.children &&
-        item.children.some((child) => location.pathname.startsWith(child.key))
+        item.children.some((child) => location.pathname.startsWith(child.key)),
     );
     if (parent && !openKeys.includes(parent.key)) {
       setOpenKeys([...openKeys, parent.key]);
@@ -26,7 +26,7 @@ const Sidebar = ({ collapsed }) => {
 
   const toggleSubmenu = (key) => {
     setOpenKeys((prev) =>
-      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key],
     );
   };
 
