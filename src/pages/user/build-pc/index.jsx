@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Typography, Space, notification, Divider } from "antd";
 import { BuildOutlined } from "@ant-design/icons";
-import { SelectedParts } from "../../../models/build-pc";
 import PartPicker from "../../../sections/buildpc/part-picker";
 import BuildSummary from "../../../sections/buildpc/build-summary";
 import PartSelectionModal from "../../../sections/buildpc/part-selection-modal";
 import { fetchCategories } from "@/api/categories/category-api";
 import { handleAddToCart } from "@/utils/add-to-cart";
+import { SelectedParts, INITIAL_SELECTED } from "@/models/build-pc";
 
 const { Title, Text } = Typography;
 
@@ -30,8 +30,6 @@ const PART_SECTIONS_BASE = [
   { category: "mouse", title: "Chuột", searchKey: "mouse" },
   { category: "speaker", title: "Loa", searchKey: "speaker" },
 ];
-
-const INITIAL_SELECTED = new SelectedParts();
 
 const BuildPC = () => {
   const [selected, setSelected] = useState(INITIAL_SELECTED);

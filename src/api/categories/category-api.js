@@ -20,7 +20,7 @@ export const fetchCategories = async ({ page = 1, limit = 10 } = {}) => {
 
 export const fetchCategoryById = async (id, page = 1) => {
   const response = await axiosClient.get(
-    `${import.meta.env.VITE_API_URL}/api/${API_VER}/categories/${id}?page=${page}`,
+    `/${API_VER}/categories/${id}?page=${page}`,
   );
   if (!response.data || !response.data.data) {
     throw new Error("Failed to fetch category");

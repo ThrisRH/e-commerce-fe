@@ -81,11 +81,10 @@ const CheckoutSummary = ({
                 <Tooltip
                   title={
                     <div>
-                      <p style={{ margin: 0 }}>• Miễn phí đơn từ 4.000.000đ</p>
-                      <p style={{ margin: 0 }}>
-                        • Phí cơ bản 35k + 6k/mỗi sp thêm
-                      </p>
-                      <p style={{ margin: 0 }}>• Phí tối đa 50k</p>
+                      <p style={{ margin: 0 }}>• Phí vận chuyển được tính tự động dựa trên:</p>
+                      <p style={{ margin: 0 }}>  - Khoảng cách từ kho đến điểm giao</p>
+                      <p style={{ margin: 0 }}>  - Thời gian vận chuyển dự kiến</p>
+                      <p style={{ margin: 0 }}>  - Loại hàng hóa và khu vực giao hàng</p>
                     </div>
                   }
                 >

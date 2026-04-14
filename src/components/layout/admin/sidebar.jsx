@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Layout, Tooltip } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import { menuItems } from "@/constants/menu-items";
+import { DownOutlined, RightOutlined } from "@ant-design/icons";
 import "./style.css";
 
 const { Sider } = Layout;
@@ -9,6 +10,76 @@ const { Sider } = Layout;
 const Sidebar = ({ collapsed }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [openKeys, setOpenKeys] = useState([]);
+
+  // Auto-expand menu that contains current active path
+  useEffect(() => {
+    const parent = menuItems.find(
+      (item) =>
+        item.children &&
+        item.children.some((child) => location.pathname.startsWith(child.key))
+    );
+    if (parent && !openKeys.includes(parent.key)) {
+      setOpenKeys([...openKeys, parent.key]);
+    }
+  }, [location.pathname]);
+
+  const toggleSubmenu = (key) => {
+    setOpenKeys((prev) =>
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+    );
+  };
+
+  const renderMenuItem = (item, isChild = false) => {
+    const hasChildren = item.children && item.children.length > 0;
+    const isExpanded = openKeys.includes(item.key);
+    const isActive = hasChildren
+      ? item.children.some((child) => location.pathname === child.key)
+      : location.pathname === item.key;
+    const isLogout = item.danger;
+
+    return (
+      <div key={item.key} style={{ display: "flex", flexDirection: "column" }}>
+        <Tooltip
+          title={collapsed ? item.label : ""}
+          placement="right"
+          disabled={!collapsed}
+        >
+          <div
+            className={`sidebar-item ${isActive ? "active" : ""} ${isLogout ? "logout" : ""} ${collapsed ? "collapsed" : ""} ${isChild ? "child-item" : ""}`}
+            onClick={() => {
+              if (hasChildren && !collapsed) {
+                toggleSubmenu(item.key);
+              } else {
+                navigate(item.key);
+              }
+            }}
+          >
+            {item.icon}
+
+            {!collapsed && (
+              <>
+                <p className="sidebar-label text-sm" style={{ flex: 1 }}>
+                  {item.label}
+                </p>
+                {hasChildren && (
+                  <span style={{ fontSize: "10px", opacity: 0.6 }}>
+                    {isExpanded ? <DownOutlined /> : <RightOutlined />}
+                  </span>
+                )}
+              </>
+            )}
+          </div>
+        </Tooltip>
+
+        {!collapsed && hasChildren && isExpanded && (
+          <div className="sidebar-submenu">
+            {item.children.map((child) => renderMenuItem(child, true))}
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <Sider
@@ -78,33 +149,11 @@ const Sidebar = ({ collapsed }) => {
           padding: "0 12px",
           display: "flex",
           flexDirection: "column",
-          gap: `12px`,
+          gap: `8px`,
           height: "calc(100vh - 100px)",
         }}
       >
-        {menuItems.map((item) => {
-          const isActive = location.pathname === item.key;
-          const isLogout = item.danger;
-
-          return (
-            <Tooltip
-              key={item.key}
-              title={collapsed ? item.label : ""}
-              placement="right"
-            >
-              <div
-                className={`sidebar-item ${isActive ? "active" : ""} ${isLogout ? "logout" : ""} ${collapsed ? "collapsed" : ""}`}
-                onClick={() => navigate(item.key)}
-              >
-                {item.icon}
-
-                {!collapsed && (
-                  <p className="sidebar-label text-sm">{item.label}</p>
-                )}
-              </div>
-            </Tooltip>
-          );
-        })}
+        {menuItems.map((item) => renderMenuItem(item))}
       </nav>
     </Sider>
   );

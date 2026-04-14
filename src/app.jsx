@@ -29,6 +29,8 @@ import RoleDetail from "./pages/admin/users/role-detail";
 
 const OrdersManagement = lazy(() => import("./pages/admin/orders"));
 const AttributeManagement = lazy(() => import("./pages/admin/attributes"));
+const ShippingConfig = lazy(() => import("./pages/admin/shipping/shipping-config"));
+const ShippingCalculator = lazy(() => import("./pages/admin/shipping/shipping-calculator"));
 
 const LoadingFallback = () => (
   <Box
@@ -119,6 +121,8 @@ function App() {
               <Route path="orders" element={<OrdersManagement />} />
               <Route path="orders/:id" element={<OrderDetail />} />
               <Route path="attributes" element={<AttributeManagement />} />
+              <Route path="shipping/config" element={<ShippingConfig />} />
+              <Route path="shipping/calculator" element={<ShippingCalculator />} />
             </Route>
           </Routes>
         </Suspense>

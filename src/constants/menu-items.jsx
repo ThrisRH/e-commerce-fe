@@ -6,6 +6,7 @@ import {
   ShoppingOutlined,
   TagsOutlined,
   UserOutlined,
+  CarOutlined,
 } from "@ant-design/icons";
 
 export const menuItems = [
@@ -38,6 +39,21 @@ export const menuItems = [
     key: "/admin/orders",
     icon: <OrderedListOutlined />,
     label: "Đơn hàng",
+  },
+  {
+    key: "/admin/shipping",
+    icon: <CarOutlined />,
+    label: "Vận chuyển",
+    children: [
+      {
+        key: "/admin/shipping/config",
+        label: "Cấu hình phí ship",
+      },
+      {
+        key: "/admin/shipping/calculator",
+        label: "Tính phí vận chuyển",
+      },
+    ],
   },
   {
     key: "/",

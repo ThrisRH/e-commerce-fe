@@ -19,7 +19,8 @@ import CheckoutSummary from "./sections/checkout-summary";
 import SuccessInvoice from "./sections/invoice";
 
 const { Title } = Typography;
-import { calculateShippingFee } from "@/utils/shipping-calculator";
+import { calculateShippingFee } from "@/api/shipping/shipping-api";
+import normalizeAddress from "@/utils/normallize-address";
 
 const CheckoutPage = () => {
   const location = useLocation();
@@ -30,6 +31,8 @@ const CheckoutPage = () => {
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [items, setItems] = useState([]);
   const [orderResult, setOrderResult] = useState(null);
+  const [user, setUser] = useState(null);
+  const [shippingFee, setShippingFee] = useState(0);
 
   const isBuyNow = !!location.state?.buyNowItem;
 
@@ -38,9 +41,10 @@ const CheckoutPage = () => {
     if (!token) return;
 
     try {
-      const user = await fetchMe(token);
-      if (user) {
-        const nameParts = user.name.trim().split(" ");
+      const userData = await fetchMe(token);
+      if (userData) {
+        setUser(userData);
+        const nameParts = userData.name.trim().split(" ");
         let fname = "";
         let lname = "";
 
@@ -48,13 +52,13 @@ const CheckoutPage = () => {
           fname = nameParts.pop();
           lname = nameParts.join(" ");
         } else {
-          fname = user.name;
+          fname = userData.name;
         }
 
         form.setFieldsValue({
           lname: lname,
           fname: fname,
-          phone: user.phone,
+          phone: userData.phone,
         });
       }
     } catch (err) {
@@ -101,10 +105,46 @@ const CheckoutPage = () => {
     }
   }, [isBuyNow, location.state]);
 
+  const updateShippingFee = useCallback(async () => {
+    if (!selectedAddress || items.length === 0) {
+      setShippingFee(0);
+      return;
+    }
+
+    try {
+      const payload = {
+        from: {
+          province: "Hồ Chí Minh",
+          district: "Quận 1",
+          ward: "Phường Bến Nghé",
+        },
+        to: {
+          province: normalizeAddress(selectedAddress.province.name),
+          district: normalizeAddress(selectedAddress.district.name),
+          ward: normalizeAddress(form.getFieldValue("address") || ""),
+        },
+        shipping_method_id: 1,
+      };
+
+      const result = await calculateShippingFee(payload);
+      if (result && result.fee) {
+        setShippingFee(result.fee);
+      }
+    } catch (err) {
+      console.error("Failed to calculate shipping fee", err);
+    }
+  }, [selectedAddress, items, form]);
+
   useEffect(() => {
     loadCart();
     loadUserInfo();
   }, [loadCart, loadUserInfo]);
+
+  const subtotal = items.reduce(
+    (sum, { product, quantity }) => sum + product.price * quantity,
+    0,
+  );
+  const total = subtotal + shippingFee;
 
   const handleAddressConfirm = ({ province, district }) => {
     setSelectedAddress({ province, district });
@@ -114,12 +154,13 @@ const CheckoutPage = () => {
     });
   };
 
-  const subtotal = items.reduce(
-    (sum, { product, quantity }) => sum + product.price * quantity,
-    0,
-  );
-  const shippingFee = calculateShippingFee(subtotal, items);
-  const total = subtotal + shippingFee;
+  useEffect(() => {
+    if (subtotal < 4000000) {
+      updateShippingFee();
+    } else {
+      setShippingFee(0);
+    }
+  }, [updateShippingFee, subtotal]);
 
   const clearCart = () => {
     if (isBuyNow) return;
@@ -134,16 +175,25 @@ const CheckoutPage = () => {
       setSubmitting(true);
 
       const payload = {
+        user_id: user?.id || null,
         shipping_name: `${values.lname} ${values.fname}`.trim(),
         shipping_phone: values.phone,
-        shipping_address: `${values.address}, ${values.district}, ${values.city}`,
         note: values.note,
         payment_method: paymentMethod,
-        shipping_fee: shippingFee,
-        items: items.map((i) => ({
-          variant_id: i.product.id,
-          quantity: i.quantity,
-        })),
+        distance: 5,
+        items: items.map((i) => {
+          return {
+            slug: i.product.basic_info.slug,
+            sku: i.product.sku,
+            quantity: i.quantity,
+          };
+        }),
+        to: {
+          province: normalizeAddress(values.city),
+          district: normalizeAddress(values.district),
+          ward: normalizeAddress(values.address),
+        },
+        shipping_method_id: 1,
       };
 
       const response = await createOrder(payload);

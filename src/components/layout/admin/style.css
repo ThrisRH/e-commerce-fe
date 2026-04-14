@@ -67,3 +67,25 @@
 .dashboard-card .ant-card-body {
   padding: 20px;
 }
+
+.sidebar-submenu {
+    padding-left: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 4px 0;
+}
+
+.child-item {
+    font-size: 0.85rem;
+    padding: 8px 12px !important;
+    border-radius: 6px;
+}
+
+.child-item .sidebar-label {
+    font-weight: 400 !important;
+}
+
+.child-item.active .sidebar-label {
+    font-weight: 500 !important;
+}
