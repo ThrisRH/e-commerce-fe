@@ -7,6 +7,7 @@ import {
   TextField,
   PasswordField,
 } from "@/components/common/input/ant-custom-input";
+import Text from "antd/es/typography/Text";
 
 const UserRegister = () => {
   const [loading, setLoading] = useState(false);
@@ -29,8 +30,17 @@ const UserRegister = () => {
         enqueueSnackbar("Đăng ký thành công!", { variant: "success" });
         navigate("/login");
       }
+
+      if (response?.message) {
+        setErrorMessage(response.message);
+      }
     } catch (error) {
-      setErrorMessage(error.message || "Đăng ký thất bại. Vui lòng thử lại!");
+      console.log(error.response);
+      if (error?.response?.status < 500) {
+        setErrorMessage("Email hoặc số điện thoại đã tồn tại!");
+      } else {
+        setErrorMessage("Đăng ký thất bại. Vui lòng thử lại!");
+      }
     } finally {
       setLoading(false);
     }
@@ -49,16 +59,6 @@ const UserRegister = () => {
       <Card title="Tạo tài khoản" style={{ width: 500 }}>
         <Form name="register_form" onFinish={onFinish} layout="vertical">
           <Flex gap={16} vertical>
-            {errorMessage && (
-              <Alert
-                message={errorMessage}
-                type="error"
-                showIcon
-                closable
-                onClose={() => setErrorMessage("")}
-                style={{ borderRadius: 8 }}
-              />
-            )}
             <Flex gap={16}>
               <TextField
                 label="Họ"
@@ -133,6 +133,8 @@ const UserRegister = () => {
                 placeholder="Nhập lại mật khẩu"
               />
             </Flex>
+
+            {errorMessage ? <Text type="danger">{errorMessage}</Text> : null}
 
             <Form.Item>
               <Button

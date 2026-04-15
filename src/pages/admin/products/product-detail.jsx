@@ -5,6 +5,7 @@ import {
   createVariant,
   updateVariant,
   deleteVariant,
+  deleteProduct,
 } from "@/api/products/product-api";
 import {
   fetchCategoryById,
@@ -32,6 +33,7 @@ import AddVariantModal from "./detail-sections/add-variant-modal";
 
 import PageContainer from "@/components/common/page-container";
 import PageHeader from "@/components/common/page-header";
+import BorderButton from "@/components/common/buttons/border-button";
 
 export default function ProductDetail() {
   const { slug } = useParams();
@@ -178,6 +180,19 @@ export default function ProductDetail() {
     }
   };
 
+  const onDeleteMasterProduct = async (id) => {
+    try {
+      setSaving(true);
+      await deleteProduct(id);
+      enqueueSnackbar("Đã xóa sản phẩm thành công!", { variant: "success" });
+      navigate("/admin/products");
+    } catch (err) {
+      enqueueSnackbar(err.message, { variant: "error" });
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleUpdateMaster = async () => {
     try {
       setSaving(true);
@@ -232,9 +247,10 @@ export default function ProductDetail() {
 
   const headerActions = (
     <Box sx={{ display: "flex", gap: 2 }}>
-      <Button icon={<AddIcon />} onClick={() => setIsAddModalOpen(true)}>
-        Thêm Variant
-      </Button>
+      <BorderButton
+        label="Xóa sản phẩm"
+        onClick={() => onDeleteMasterProduct(productData.product.id)}
+      />
       <AppButton
         disabled={saving}
         onClick={handleUpdateMaster}
@@ -269,6 +285,7 @@ export default function ProductDetail() {
             <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
               <ProductItemInfo productData={productData} />
               <VariantList
+                onAddVariant={() => setIsAddModalOpen(true)}
                 variants={localVariants}
                 onUpdateVariant={onUpdateVariant}
                 onDeleteVariant={onDeleteVariant}

@@ -83,23 +83,6 @@ export default function AddVariantModal({
           </Typography>
         </Divider>
 
-        <div style={{ marginBottom: 16 }}>
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            sx={{ display: "block", mb: 1 }}
-          >
-            Thuộc tính gợi ý từ danh mục:
-          </Typography>
-          <Space wrap>
-            {category?.attributes?.map((attr) => (
-              <Tag key={attr.id} color="cyan">
-                ID {attr.id}: {attr.name}
-              </Tag>
-            ))}
-          </Space>
-        </div>
-
         <Form.List name="attributes">
           {(fields, { add, remove }) => (
             <>

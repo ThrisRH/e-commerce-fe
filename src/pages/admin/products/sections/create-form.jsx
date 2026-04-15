@@ -127,7 +127,6 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
   };
 
   const onFinish = async (values) => {
-    console.log("values", values);
     setSubmitting(true);
     try {
       const specs = Object.entries(values.attributes || {})
@@ -141,32 +140,25 @@ const CreateProductModal = ({ visible, onClose, onSuccess }) => {
           };
         });
 
-      // Map products (children) and their variants
       const mappedChildren = (values.children || []).map((child) => ({
         name: child.name,
-        attribute_value_id: child.attribute_value_id, // Slug-level identifier
-        variants: (child.variants || []).map((v) => ({
-          price: v.price,
-          stock: v.stock,
-          weight: v.weight,
-          length: v.length,
-          width: v.width,
-          height: v.height,
-          image_url: v.image_url,
-          // Consolidate attributes for this SKU
-          attributes: [
-            // Include the slug-level attribute from group
-            {
-              attribute_id: Number(child.main_attribute_id),
-              attribute_value_id: Number(child.attribute_value_id),
-            },
-            // Include SKU-specific extra attributes
-            ...(v.extra_attrs || []).map((ea) => ({
-              attribute_id: Number(ea.attribute_id),
-              attribute_value_id: Number(ea.attribute_value_id),
-            })),
-          ],
-        })),
+        attributes: [
+          {
+            attribute_value_id: child.attribute_value_id,
+          },
+        ],
+        variants: (child.variants || []).map((v) => {
+          return {
+            price: v.price,
+            stock: v.stock,
+            weight: v.weight,
+            length: v.length,
+            width: v.width,
+            height: v.height,
+            image_url: v.image_url,
+            attribute_value_id: Number(v.extra_attrs[0]?.attribute_value_id),
+          };
+        }),
       }));
 
       const data = {

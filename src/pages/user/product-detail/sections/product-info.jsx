@@ -79,7 +79,6 @@ const ProductInfo = ({
       }));
   }, [flattenedVariants]);
 
-  // Map of current attribute selections for the active product
   const currentSelections = useMemo(() => {
     const map = {};
     currentAttributes.forEach((attr) => {
@@ -88,11 +87,29 @@ const ProductInfo = ({
     return map;
   }, [currentAttributes]);
 
+  const checkVariantExists = (targetAttrId, targetValue) => {
+    return flattenedVariants.some((v) => {
+      const hasTargetValue = v.attribute_value.some(
+        (a) =>
+          a.attribute_id === targetAttrId &&
+          a.attribute_value_name === targetValue,
+      );
+      if (!hasTargetValue) return false;
+
+      return Object.entries(currentSelections).every(([attrId, value]) => {
+        if (Number(attrId) === targetAttrId) return true;
+        return v.attribute_value.some(
+          (a) =>
+            a.attribute_id === Number(attrId) &&
+            a.attribute_value_name === value,
+        );
+      });
+    });
+  };
+
   const handleVariantChange = (targetAttrId, targetValue) => {
-    // 1. Try to find a variant that matches the target value AND as many other current selections as possible
     const targetVariant =
       flattenedVariants.find((v) => {
-        // Must have the target attribute value
         const hasTargetValue = v.attribute_value.some(
           (a) =>
             a.attribute_id === targetAttrId &&
@@ -100,7 +117,6 @@ const ProductInfo = ({
         );
         if (!hasTargetValue) return false;
 
-        // Check if it matches all other current selections
         return Object.entries(currentSelections).every(([attrId, value]) => {
           if (Number(attrId) === targetAttrId) return true;
           return v.attribute_value.some(
@@ -110,7 +126,6 @@ const ProductInfo = ({
           );
         });
       }) ||
-      // 2. Fallback: Find any variant that has the target attribute value
       flattenedVariants.find((v) =>
         v.attribute_value.some(
           (a) =>
@@ -164,36 +179,43 @@ const ProductInfo = ({
 
       <Divider style={{ margin: "4px 0" }} />
 
-      {/* Dynamic Attribute Selection */}
-      {dynamicAttributes.map((attr) => (
-        <div key={attr.id}>
-          <Text
-            strong
-            style={{
-              fontSize: "14px",
-              display: "block",
-              marginBottom: 8,
-              color: "var(--neutral-600)",
-            }}
-          >
-            {attr.name}
-          </Text>
-          <Space wrap>
-            {attr.values.map((val) => (
-              <Button
-                key={val}
-                type={
-                  currentSelections[attr.id] === val ? "primary" : "default"
-                }
-                onClick={() => handleVariantChange(attr.id, val)}
-                style={{ borderRadius: 4 }}
-              >
-                {val} {attr.unit || ""}
-              </Button>
-            ))}
-          </Space>
-        </div>
-      ))}
+      {dynamicAttributes.map((attr) => {
+        const availableValues = attr.values.filter((val) =>
+          checkVariantExists(attr.id, val),
+        );
+
+        if (availableValues.length === 0) return null;
+
+        return (
+          <div key={attr.id}>
+            <Text
+              strong
+              style={{
+                fontSize: "14px",
+                display: "block",
+                marginBottom: 8,
+                color: "var(--neutral-600)",
+              }}
+            >
+              {attr.name}
+            </Text>
+            <Space wrap>
+              {availableValues.map((val) => (
+                <Button
+                  key={val}
+                  type={
+                    currentSelections[attr.id] === val ? "primary" : "default"
+                  }
+                  onClick={() => handleVariantChange(attr.id, val)}
+                  style={{ borderRadius: 4 }}
+                >
+                  {val} {attr.unit || ""}
+                </Button>
+              ))}
+            </Space>
+          </div>
+        );
+      })}
 
       <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
         <Text style={{ fontWeight: 500 }}>Số lượng:</Text>
@@ -224,7 +246,8 @@ const ProductInfo = ({
             background: product.stock > 0 ? "var(--primary-main)" : "#d9d9d9",
             borderColor: product.stock > 0 ? "var(--primary-main)" : "#d9d9d9",
             fontWeight: 600,
-            boxShadow: product.stock > 0 ? "0 4px 12px rgba(229,57,53,0.4)" : "none",
+            boxShadow:
+              product.stock > 0 ? "0 4px 12px rgba(229,57,53,0.4)" : "none",
           }}
         >
           {product.stock > 0 ? "Mua ngay" : "Hết hàng"}

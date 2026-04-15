@@ -9,16 +9,19 @@ import {
   Divider,
   Popconfirm,
   Button,
+  Flex,
 } from "antd";
 import {
   ExpandMore as ExpandMoreIcon,
   Delete as DeleteIcon,
 } from "@mui/icons-material";
+import BorderButton from "@/components/common/buttons/border-button";
 
 const { Panel } = Collapse;
 
 export default function VariantList({
   variants,
+  onAddVariant,
   onUpdateVariant,
   onDeleteVariant,
   handleVariantFieldChange,
@@ -33,9 +36,22 @@ export default function VariantList({
       }}
     >
       <CardContent sx={{ p: 4 }}>
-        <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
-          Danh Sách Biến Thể (Variants)
-        </Typography>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 24,
+          }}
+        >
+          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            Danh Sách Biến Thể (Variants)
+          </Typography>
+
+          <div style={{ width: "200px", textAlign: "right" }}>
+            <BorderButton label="Thêm biến thể" onClick={onAddVariant} />
+          </div>
+        </div>
 
         <Collapse
           accordion

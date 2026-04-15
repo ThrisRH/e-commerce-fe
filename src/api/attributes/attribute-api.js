@@ -9,7 +9,6 @@ export const fetchAttributes = async () => {
     throw new Error("Failed to fetch attributes");
   }
 
-  // Handle both array and paginated response
   const data = response.data.data.data || response.data.data;
   return Attribute.fromJson(data);
 };
@@ -20,7 +19,10 @@ export const createAttribute = async (data) => {
 };
 
 export const updateAttribute = async (id, data) => {
-  const response = await axiosClient.patch(`/${API_VER}/attributes/${id}`, data);
+  const response = await axiosClient.patch(
+    `/${API_VER}/attributes/${id}`,
+    data,
+  );
   return response.data;
 };
 
@@ -29,9 +31,8 @@ export const deleteAttribute = async (id) => {
   return response.data;
 };
 
-// Attribute Values API
 export const fetchAttributeValues = async (attributeId = null) => {
-  const url = attributeId 
+  const url = attributeId
     ? `/${API_VER}/attribute-values?attribute_id=${attributeId}`
     : `/${API_VER}/attribute-values`;
   const response = await axiosClient.get(url);
@@ -44,11 +45,16 @@ export const createAttributeValue = async (data) => {
 };
 
 export const updateAttributeValue = async (id, data) => {
-  const response = await axiosClient.patch(`/${API_VER}/attribute-values/${id}`, data);
+  const response = await axiosClient.patch(
+    `/${API_VER}/attribute-values/${id}`,
+    data,
+  );
   return response.data;
 };
 
 export const deleteAttributeValue = async (id) => {
-  const response = await axiosClient.delete(`/${API_VER}/attribute-values/${id}`);
+  const response = await axiosClient.delete(
+    `/${API_VER}/attribute-values/${id}`,
+  );
   return response.data;
 };

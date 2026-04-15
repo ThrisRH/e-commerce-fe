@@ -26,7 +26,7 @@ export const register = async (payload) => {
   });
 
   if (!response.data || !response.data.data) {
-    throw new Error("Đăng ký thất bại");
+    throw new Error("Đăng ký thất bại!");
   }
 
   return response.data;

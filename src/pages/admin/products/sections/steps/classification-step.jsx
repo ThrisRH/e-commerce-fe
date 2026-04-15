@@ -316,72 +316,90 @@ export default function ClassificationStep({
                                     { add: addSkuAttr, remove: removeSkuAttr },
                                   ) => (
                                     <>
-                                      {skuAttrFields.map((skuAttrField) => {
-                                        const selectedAttrId =
-                                          form.getFieldValue([
-                                            "children",
-                                            name,
-                                            "variants",
-                                            varField.name,
-                                            "extra_attrs",
-                                            skuAttrField.name,
-                                            "attribute_id",
-                                          ]);
-                                        return (
-                                          <Row
-                                            key={skuAttrField.key}
-                                            gutter={8}
-                                            align="middle"
-                                            style={{ marginBottom: 8 }}
-                                          >
-                                            <Col span={11}>
-                                              <DropdownField
-                                                {...skuAttrField}
-                                                name={[
-                                                  skuAttrField.name,
-                                                  "attribute_id",
-                                                ]}
-                                                placeholder="Thuộc tính"
-                                                options={allAttributes.map(
-                                                  (a) => ({
-                                                    label: a.name,
-                                                    value: a.id,
-                                                  }),
-                                                )}
-                                                size="small"
-                                              />
-                                            </Col>
-                                            <Col span={11}>
-                                              <DropdownField
-                                                {...skuAttrField}
-                                                name={[
-                                                  skuAttrField.name,
-                                                  "attribute_value_id",
-                                                ]}
-                                                placeholder="Giá trị"
-                                                options={getValuesForAttribute(
-                                                  selectedAttrId,
-                                                )}
-                                                disabled={!selectedAttrId}
-                                                size="small"
-                                              />
-                                            </Col>
-                                            <Col span={2}>
-                                              <Button
-                                                type="text"
-                                                size="small"
-                                                danger
-                                                icon={<DeleteOutlined />}
-                                                onClick={() =>
-                                                  removeSkuAttr(
-                                                    skuAttrField.name,
-                                                  )
-                                                }
-                                              />
-                                            </Col>
-                                          </Row>
-                                        );
-                                      })}
+                                      {skuAttrFields.map((skuAttrField) => (
+                                        <Form.Item
+                                          noStyle
+                                          shouldUpdate={(prev, curr) => {
+                                            const prevId = prev?.children?.[name]?.variants?.[varField.name]?.extra_attrs?.[skuAttrField.name]?.attribute_id;
+                                            const currId = curr?.children?.[name]?.variants?.[varField.name]?.extra_attrs?.[skuAttrField.name]?.attribute_id;
+                                            return prevId !== currId;
+                                          }}
+                                          key={skuAttrField.key}
+                                        >
+                                          {() => {
+                                            const selectedAttrId =
+                                              form.getFieldValue([
+                                                "children",
+                                                name,
+                                                "variants",
+                                                varField.name,
+                                                "extra_attrs",
+                                                skuAttrField.name,
+                                                "attribute_id",
+                                              ]);
+                                            return (
+                                              <Row
+                                                gutter={8}
+                                                align="middle"
+                                                style={{ marginBottom: 8 }}
+                                              >
+                                                <Col span={11}>
+                                                  <DropdownField
+                                                    {...skuAttrField}
+                                                    name={[
+                                                      skuAttrField.name,
+                                                      "attribute_id",
+                                                    ]}
+                                                    placeholder="Thuộc tính"
+                                                    options={allAttributes.map(
+                                                      (a) => ({
+                                                        label: a.name,
+                                                        value: a.id,
+                                                      }),
+                                                    )}
+                                                    onChange={() => {
+                                                      const current = form.getFieldValue("children");
+                                                      if (current[name]?.variants?.[varField.name]?.extra_attrs?.[skuAttrField.name]) {
+                                                        current[name].variants[varField.name].extra_attrs[skuAttrField.name].attribute_value_id = undefined;
+                                                        form.setFieldValue("children", current);
+                                                      }
+                                                    }}
+                                                    size="small"
+                                                  />
+                                                </Col>
+                                                <Col span={11}>
+                                                  <DropdownField
+                                                    {...skuAttrField}
+                                                    name={[
+                                                      skuAttrField.name,
+                                                      "attribute_value_id",
+                                                    ]}
+                                                    placeholder="Giá trị"
+                                                    options={getValuesForAttribute(
+                                                      selectedAttrId,
+                                                    )}
+                                                    disabled={!selectedAttrId}
+                                                    size="small"
+                                                  />
+                                                </Col>
+                                                <Col span={2}>
+                                                  <Button
+                                                    type="text"
+                                                    size="small"
+                                                    danger
+                                                    icon={<DeleteOutlined />}
+                                                    onClick={() =>
+                                                      removeSkuAttr(
+                                                        skuAttrField.name,
+                                                      )
+                                                    }
+                                                  />
+                                                </Col>
+                                              </Row>
+                                            );
+                                          }}
+                                        </Form.Item>
+                                      ))}
                                       <Button
                                         type="dashed"
                                         size="small"
