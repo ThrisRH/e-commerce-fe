@@ -1,6 +1,6 @@
 export const formatStatus = (status) => {
   switch (status) {
-    // Case order status
+    
     case "pending":
       return "Chờ xử lý";
     case "confirmed":
@@ -12,7 +12,7 @@ export const formatStatus = (status) => {
     case "cancelled":
       return "Đã hủy";
 
-    // Case payment method
+    
     case "paid":
       return "Đã thanh toán";
     case "failed":

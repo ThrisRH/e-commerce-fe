@@ -1,4 +1,3 @@
-// utils/add-to-cart.js
 import { enqueueSnackbar } from "notistack";
 
 const SESSION_KEY = "cart";

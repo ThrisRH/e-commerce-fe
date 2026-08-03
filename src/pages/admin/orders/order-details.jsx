@@ -8,7 +8,6 @@ import AppButton from "@/components/common/buttons/button";
 import useOrderDetail from "@/hooks/orders/order-detail";
 import Loading from "@/components/ui/state/loading";
 
-// Import sections
 import ShippingInfo from "./sections/shipping-info";
 import OrderItems from "./sections/order-items";
 import OrderStatusPayment from "./sections/order-status-payment";

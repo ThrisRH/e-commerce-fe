@@ -4,7 +4,6 @@ import { trackOrder } from "@/api/orders/order-api";
 import { enqueueSnackbar } from "notistack";
 import Order from "@/models/order";
 
-// Sections
 import SearchOrder from "./sections/search-order";
 import OrderStatus from "./sections/order-status";
 import ReceiverInfo from "./sections/receiver-info";
@@ -14,7 +13,7 @@ import { STATUS_MAP } from "./constants";
 const OrderTracking = () => {
   const [searchValue, setSearchValue] = useState("");
   const [loading, setLoading] = useState(false);
-  /**@type {[Order, function]} */
+  
   const [order, setOrder] = useState(null);
 
   const handleSearch = async () => {

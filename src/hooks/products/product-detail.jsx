@@ -13,14 +13,14 @@ import { useNavigate } from "react-router-dom";
 
 export default function useProductDetail(id) {
   const [loading, setLoading] = useState(true);
-  /** @type {[Product, Function]} */
+  
   const [formData, setFormData] = useState(new Product());
-  /** @type {[Product, Function]} */
+  
   const [originData, setOriginData] = useState(new Product());
   const [attributes, setAttributes] = useState([]);
-  /** @type {[Category[], Function]} */
+  
   const [categories, setCategories] = useState([]);
-  /** @type {[Brand[], Function]} */
+  
   const [brands, setBrands] = useState([]);
 
   const navigate = useNavigate();

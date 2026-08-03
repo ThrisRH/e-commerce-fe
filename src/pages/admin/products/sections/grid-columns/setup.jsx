@@ -5,7 +5,6 @@ import { formatCurrency } from "@/utils/format-currency";
 
 export const getProductColumns = (handleDelete) => [
   { field: "name", headerName: "Tên sản phẩm", width: 300 },
-  { field: "description", headerName: "Mô tả", width: 200 },
   {
     field: "price",
     headerName: "Giá",
@@ -16,12 +15,6 @@ export const getProductColumns = (handleDelete) => [
       }
       return formatCurrency(row.price_min || row.price || 0);
     },
-  },
-  {
-    field: "total_stock",
-    headerName: "Tồn kho",
-    width: 100,
-    valueGetter: (value, row) => row.total_stock ?? row.stock ?? 0,
   },
   {
     field: "category",

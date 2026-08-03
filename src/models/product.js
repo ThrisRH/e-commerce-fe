@@ -56,14 +56,6 @@ export class Product {
     return this.brand?.name || "";
   }
 
-  // get attributeValueUnit() {
-  //   return this.attributes
-  //     .map((attribute) => {
-  //       return `${attribute.value} ${attribute.unit}`;
-  //     })
-  //     .join(" ");
-  // }
-
   static fromJson(json) {
     if (Array.isArray(json)) {
       return json.map((item) => new Product(item));

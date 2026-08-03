@@ -1,8 +1,4 @@
-/**
- * Sorts an array of attribute values alphabetically by attribute name, then by value.
- * @param {Array} values - The list of attribute value objects.
- * @returns {Array} - The sorted list.
- */
+
 export const sortAttributeValues = (values) => {
   if (!Array.isArray(values)) return [];
 
@@ -23,12 +19,7 @@ export const sortAttributeValues = (values) => {
   });
 };
 
-/**
- * Filters attribute values based on a list of allowed attribute IDs.
- * @param {Array} values - All available attribute values.
- * @param {Array} allowedAttributes - List of attributes (or IDs) that are allowed.
- * @returns {Array} - Filtered and sorted list.
- */
+
 export const filterAttributeValuesByAttributes = (
   values,
   allowedAttributes,

@@ -15,16 +15,7 @@ const ProductGallery = ({ product }) => {
         justifyContent: "center",
       }}
     >
-      {/* <Image
-        src={product.image_url}
-        alt={product.name}
-        style={{
-          width: "100%",
-          maxHeight: 380,
-          objectFit: "contain",
-        }}
-        fallback="https://via.placeholder.com/400x400?text=No+Image"
-      /> */}
+      {}
       <img
         src={product.image_url}
         alt={product.name}

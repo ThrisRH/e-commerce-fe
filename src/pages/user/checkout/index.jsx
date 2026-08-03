@@ -3,7 +3,6 @@ import { Breadcrumb, Typography, Form } from "antd";
 import { useLocation } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 
-// API
 import { getCartFromSession } from "@/components/ui/cart/cart-drawer";
 import {
   fetchProductBySlug,
@@ -12,7 +11,6 @@ import {
 import { createOrder } from "@/api/orders/order-api";
 import { fetchMe } from "@/api/auth/auth-api";
 
-// Components
 import AddressPickerModal from "./sections/address-picker-modal";
 import CheckoutForm from "./sections/checkout-form";
 import CheckoutSummary from "./sections/checkout-summary";

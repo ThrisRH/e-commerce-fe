@@ -64,7 +64,7 @@ const BuildSummary = ({ selected, onRemove, onReset, onAddToCart }) => {
         border: "1px solid #f0f0f0",
       }}
     >
-      {/* Header */}
+      {}
       <div
         style={{
           backgroundColor: "#e53935",
@@ -87,7 +87,7 @@ const BuildSummary = ({ selected, onRemove, onReset, onAddToCart }) => {
         />
       </div>
 
-      {/* Parts list */}
+      {}
       <List
         dataSource={parts}
         renderItem={([cat, part]) => (
@@ -159,7 +159,7 @@ const BuildSummary = ({ selected, onRemove, onReset, onAddToCart }) => {
         )}
       />
 
-      {/* Wattage bar */}
+      {}
       {totalWattage > 0 && (
         <div
           style={{
@@ -208,7 +208,7 @@ const BuildSummary = ({ selected, onRemove, onReset, onAddToCart }) => {
         </div>
       )}
 
-      {/* Total + actions */}
+      {}
       <div style={{ padding: "20px", borderTop: "1px solid #f0f0f0" }}>
         <Space direction="vertical" style={{ width: "100%" }} size="large">
           <div

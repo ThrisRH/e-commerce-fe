@@ -36,7 +36,6 @@ const BuildPC = () => {
   const [categories, setCategories] = useState([]);
   const [api, contextHolder] = notification.useNotification();
 
-  // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeSlot, setActiveSlot] = useState(null);
 

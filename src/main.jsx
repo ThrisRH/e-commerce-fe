@@ -14,7 +14,7 @@ const theme = {
     fontSize: 16,
     borderRadius: 8,
 
-    // shadow
+    
     boxShadow: "var(--shadow-sm)",
   },
 };

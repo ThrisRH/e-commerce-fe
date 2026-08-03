@@ -24,7 +24,7 @@ const PartPicker = ({ category, title, selected, onPick, onRemove }) => {
         boxShadow: "0 2px 8px rgba(0,0,0,0.02)",
       }}
     >
-      {/* Category Icon/Title Area */}
+      {}
       <div style={{ width: 180, flexShrink: 0 }}>
         <div
           style={{ fontSize: 15, fontWeight: 700, color: "var(--neutral-900)" }}
@@ -33,7 +33,7 @@ const PartPicker = ({ category, title, selected, onPick, onRemove }) => {
         </div>
       </div>
 
-      {/* Main Content Area */}
+      {}
       <div
         style={{
           flexGrow: 1,
@@ -95,7 +95,7 @@ const PartPicker = ({ category, title, selected, onPick, onRemove }) => {
         )}
       </div>
 
-      {/* Action Area */}
+      {}
       <div
         style={{
           width: 150,

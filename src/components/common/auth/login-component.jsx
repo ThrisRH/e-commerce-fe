@@ -39,13 +39,11 @@ const LoginComponent = ({ isAdmin = false, title = "Sign In" }) => {
         },
       );
 
-      // Simple token handling example
       if (response && response.access_token) {
         localStorage.setItem("access_token", response.access_token);
         localStorage.setItem("user_role", role);
       }
 
-      // Redirect based on role
       if (isAdmin) {
         navigate("/admin");
       } else {
@@ -68,8 +66,8 @@ const LoginComponent = ({ isAdmin = false, title = "Sign In" }) => {
         alignItems: "center",
         justifyContent: "center",
         background: isAdmin
-          ? "linear-gradient(135deg, #1f2937 0%, #111827 100%)" // Dark mode for Admin
-          : "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)", // Light mode for User
+          ? "linear-gradient(135deg, #1f2937 0%, #111827 100%)"
+          : "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
         padding: 3,
       }}
     >

@@ -1,4 +1,4 @@
-// @ts-ignore
+
 import React, { useState, useEffect } from "react";
 import {
   Modal,
@@ -51,7 +51,7 @@ const ProductSelectionModal = ({ visible, onClose, onSelect }) => {
     setLoading(true);
     try {
       const response = await fetchProducts({ page: 1, limit: 20 });
-      // @ts-ignore
+      
       const items = (response.data || []).map((p) => new Product(p));
       setProducts(items);
     } catch (err) {
@@ -72,7 +72,7 @@ const ProductSelectionModal = ({ visible, onClose, onSelect }) => {
     setLoading(true);
     try {
       const response = await searchProducts(value, 1, 20);
-      // @ts-ignore
+      
       const items = (response.data || []).map((p) => new Product(p));
       setProducts(items);
     } catch (err) {
@@ -90,7 +90,7 @@ const ProductSelectionModal = ({ visible, onClose, onSelect }) => {
     } else {
       onSelect({
         ...product,
-        sku: product.sku || product.slug, // Fallback
+        sku: product.sku || product.slug, 
       });
       onClose();
     }

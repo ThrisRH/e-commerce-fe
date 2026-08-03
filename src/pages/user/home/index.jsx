@@ -1,24 +1,24 @@
-// @ts-ignore
+
 import React, { useState, useEffect } from "react";
-// @ts-ignore
+
 import { Typography, Space, Spin } from "antd";
 import AllProductsSection from "../../../sections/home/all-products";
 import { fetchProducts } from "../../../api/products/product-api";
 import { enqueueSnackbar } from "notistack";
 import { Product } from "@/models/product";
-// @ts-ignore
+
 import LatestProInCateSection from "@/sections/home/latest-in-cart";
 import { fetchCateSection } from "@/api/home/cate-section-api";
 import { fetchCategories } from "@/api/categories/category-api";
 import BannerSection from "@/sections/home/banner";
 import CategoryListSection from "@/sections/home/category-list";
 
-// @ts-ignore
+
 const { Title } = Typography;
 
 const Home = () => {
   const [sortOrder, setSortOrder] = useState("latest");
-  /** @type {[Product[], Function]} */
+  
   const [products, setProducts] = useState([]);
 
   const [categories, setCategories] = useState([]);

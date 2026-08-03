@@ -32,7 +32,6 @@ const ProductInfo = ({
 }) => {
   const navigate = useNavigate();
 
-  // Flatten nested others_variant group by slug
   const flattenedVariants = useMemo(() => {
     const results = [];
     (product.others_variant || []).forEach((group) => {
@@ -51,9 +50,8 @@ const ProductInfo = ({
     return currentVariant?.attribute_value || [];
   }, [flattenedVariants, product.sku]);
 
-  // Extract all dynamic attributes (those that have more than one value across the variant group)
   const dynamicAttributes = useMemo(() => {
-    const attributeMap = new Map(); // id -> { id, name, values: Set, unit }
+    const attributeMap = new Map();
 
     flattenedVariants.forEach((v) => {
       (v.attribute_value || []).forEach((attr) => {

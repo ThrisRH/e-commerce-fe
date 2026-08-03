@@ -7,9 +7,7 @@ import {
   EyeOutlined,
 } from "@ant-design/icons";
 
-/**
- * ActionMenu Component for DataGrid tables
- */
+
 const ActionMenu = ({
   onView = null,
   onEdit = null,
@@ -50,7 +48,6 @@ const ActionMenu = ({
           cancelText: "Hủy",
           okButtonProps: { danger: true },
           onOk: () => onDelete(),
-          // Ensure clicking outside confirm doesn't trigger row click
           maskClosable: true,
         });
       },

@@ -19,7 +19,7 @@ const MainLayout = () => {
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: "#e53935", // Match the red theme mentioned in previous conversations
+          colorPrimary: "#e53935",
           borderRadius: 4,
         },
       }}

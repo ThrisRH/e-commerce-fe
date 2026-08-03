@@ -12,7 +12,6 @@ const Sidebar = ({ collapsed }) => {
   const location = useLocation();
   const [openKeys, setOpenKeys] = useState([]);
 
-  // Auto-expand menu that contains current active path
   useEffect(() => {
     const parent = menuItems.find(
       (item) =>
@@ -40,11 +39,7 @@ const Sidebar = ({ collapsed }) => {
 
     return (
       <div key={item.key} style={{ display: "flex", flexDirection: "column" }}>
-        <Tooltip
-          title={collapsed ? item.label : ""}
-          placement="right"
-          disabled={!collapsed}
-        >
+        <Tooltip title={collapsed ? item.label : ""} placement="right">
           <div
             className={`sidebar-item ${isActive ? "active" : ""} ${isLogout ? "logout" : ""} ${collapsed ? "collapsed" : ""} ${isChild ? "child-item" : ""}`}
             onClick={() => {

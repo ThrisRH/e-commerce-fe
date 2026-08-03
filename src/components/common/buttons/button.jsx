@@ -10,7 +10,7 @@ const AppButton = ({
 }) => {
   return (
     <Button
-      // @ts-ignore
+      
       type={type}
       onClick={onClick}
       disabled={disabled}

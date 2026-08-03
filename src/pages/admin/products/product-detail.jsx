@@ -17,15 +17,13 @@ import {
   fetchAttributeValues,
 } from "@/api/attributes/attribute-api";
 import { Box, CircularProgress, Grid } from "@mui/material";
-import { Add as AddIcon } from "@mui/icons-material";
-import { Form, Button } from "antd";
+import { Form } from "antd";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AppButton from "@/components/common/buttons/button";
 import { sortAttributeValues } from "@/utils/attribute-utils";
 
-// Section Components
 import ProductBase from "./detail-sections/product-base";
 import ProductItemInfo from "./detail-sections/product-item";
 import VariantList from "./detail-sections/variant-list";

@@ -14,7 +14,7 @@ const { Search } = Input;
 const OrdersManagement = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
-  /** @type {[Order[] | [], function]} */
+  
   const [orders, setOrders] = useState([]);
   const [meta, setMeta] = useState(new Meta());
   const [paginationModel, setPaginationModel] = useState({

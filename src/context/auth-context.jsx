@@ -3,14 +3,9 @@ import { User } from "@/models/user";
 import { enqueueSnackbar } from "notistack";
 import { createContext, useEffect, useMemo, useState } from "react";
 
-/**
- * @typedef {Object} AuthContextType
- * @property {User|null} user
- * @property {(user: User|null) => void} setUser
- * @property {boolean} loading
- */
 
-/** @type {import('react').Context<AuthContextType>} */
+
+
 export const AuthContext = createContext({
   user: null,
   setUser: () => {},
@@ -18,7 +13,7 @@ export const AuthContext = createContext({
 });
 
 export const AuthProvider = ({ children }) => {
-  /** @type {[User|null, (user: User|null) => void]} */
+  
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 

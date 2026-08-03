@@ -18,8 +18,6 @@ export default class Category {
     this.attribute_ids = data.attribute_ids ?? [];
   }
 
-
-
   static fromJson(json) {
     if (!json) return null;
 

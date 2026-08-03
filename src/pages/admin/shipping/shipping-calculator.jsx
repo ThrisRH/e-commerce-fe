@@ -12,18 +12,23 @@ import {
   List,
   Avatar,
   InputNumber,
+  Tabs,
 } from "antd";
 import {
   CalculatorOutlined,
   EnvironmentOutlined,
   PlusOutlined,
   DeleteOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
 import { TextField } from "@/components/common/input/ant-custom-input";
 import AddressPickerModal from "@/pages/user/checkout/sections/address-picker-modal";
 import ProductSelectionModal from "@/components/common/modal/product-selection-modal";
 
-import { calculateShippingFee } from "@/api/shipping/shipping-api";
+import {
+  calculateShippingFee,
+  findShippingRoute,
+} from "@/api/shipping/shipping-api";
 
 const { Title, Text } = Typography;
 
@@ -42,6 +47,8 @@ export default function ShippingCalculator() {
     base_fee: 0,
     total_fee: 0,
   });
+
+  const [lookupResult, setLookupResult] = useState(null);
 
   const [modalType, setModalType] = useState(null);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
@@ -108,6 +115,38 @@ export default function ShippingCalculator() {
     }
   };
 
+  const onLookup = async () => {
+    setLoading(true);
+    try {
+      const values = form.getFieldsValue();
+      const payload = {
+        from: {
+          city: normalizeAddress(values.from_city) || "HCM",
+          province: normalizeAddress(values.from_province) || null,
+        },
+        to: {
+          city: normalizeAddress(values.to_city),
+          province: normalizeAddress(values.to_province) || null,
+        },
+      };
+
+      if (!payload.to.city) {
+        form.validateFields(["to_city"]);
+        setLoading(false);
+        return;
+      }
+
+      const result = await findShippingRoute(payload);
+      if (result) {
+        setLookupResult(result);
+      }
+    } catch (err) {
+      console.error("Failed to lookup shipping fee", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleAddressConfirm = (data) => {
     setAddressData((prev) => ({
       ...prev,
@@ -144,217 +183,337 @@ export default function ShippingCalculator() {
     );
   };
 
+  const items = [
+    {
+      key: "calculate",
+      label: (
+        <span>
+          <CalculatorOutlined /> Tính theo hàng hóa
+        </span>
+      ),
+      children: (
+        <Row gutter={24}>
+          <Col span={10}>
+            <Card
+              title="Thông tin địa chỉ"
+              bordered={false}
+              style={{ marginBottom: 24 }}
+            >
+              <Form form={form} layout="vertical">
+                <div
+                  onClick={() => setModalType("pickup")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <TextField
+                    label="Điểm nhận (Pickup Point)"
+                    name="pickup"
+                    readOnly
+                    placeholder="Để trống để lấy mặc định (HCM, Q1)"
+                    prefix={
+                      <EnvironmentOutlined
+                        style={{ color: "var(--primary-main)" }}
+                      />
+                    }
+                  />
+                </div>
+
+                <div
+                  onClick={() => setModalType("delivery")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <TextField
+                    label="Điểm giao (Delivery Point)"
+                    name="delivery"
+                    readOnly
+                    placeholder="Chọn địa chỉ giao hàng"
+                    prefix={
+                      <EnvironmentOutlined
+                        style={{ color: "var(--primary-main)" }}
+                      />
+                    }
+                    rules={[
+                      { required: true, message: "Vui lòng chọn điểm giao" },
+                    ]}
+                  />
+                </div>
+              </Form>
+            </Card>
+
+            <Card
+              title="Sản phẩm vận chuyển"
+              bordered={false}
+              extra={
+                <Button
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={() => setIsProductModalOpen(true)}
+                  style={{ height: 36, borderRadius: 4 }}
+                >
+                  Thêm sản phẩm
+                </Button>
+              }
+            >
+              <List
+                dataSource={selectedItems}
+                locale={{ emptyText: "Chưa chọn sản phẩm nào" }}
+                renderItem={(item) => (
+                  <List.Item
+                    actions={[
+                      <Button
+                        type="text"
+                        danger
+                        icon={<DeleteOutlined />}
+                        onClick={() => handleRemoveProduct(item.sku)}
+                      />,
+                    ]}
+                  >
+                    <List.Item.Meta
+                      avatar={<Avatar src={item.image_url} shape="square" />}
+                      title={item.display_name || item.name}
+                      description={
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 12,
+                          }}
+                        >
+                          <Text type="secondary" style={{ fontSize: 12 }}>
+                            SKU: {item.sku}
+                          </Text>
+                          <InputNumber
+                            min={1}
+                            size="small"
+                            value={item.quantity}
+                            onChange={(val) =>
+                              handleQuantityChange(item.sku, val)
+                            }
+                            style={{ width: 60 }}
+                          />
+                        </div>
+                      }
+                    />
+                  </List.Item>
+                )}
+              />
+
+              <Button
+                type="primary"
+                block
+                icon={<CalculatorOutlined />}
+                onClick={onCalculate}
+                size="large"
+                loading={loading}
+                disabled={selectedItems.length === 0}
+                style={{ marginTop: "24px", height: "45px", borderRadius: 8 }}
+              >
+                Tính toán phí ship
+              </Button>
+            </Card>
+          </Col>
+
+          <Col span={14}>
+            <Card title="Kết quả tính toán (Ước tính)" bordered={false}>
+              <Row gutter={[16, 24]}>
+                <Col span={12}>
+                  <Statistic
+                    title="Thời gian ước tính (T)"
+                    value={results.time}
+                    suffix="giờ"
+                    precision={1}
+                  />
+                </Col>
+                <Col span={12}>
+                  <Statistic
+                    title="Hệ số thời gian (t)"
+                    value={results.time_coeff}
+                    suffix="VNĐ/h"
+                    valueStyle={{ color: "#3f8600" }}
+                  />
+                </Col>
+                <Col span={12}>
+                  <Statistic
+                    title="Quãng đường (D)"
+                    value={results.distance}
+                    suffix="km"
+                    precision={2}
+                  />
+                </Col>
+                <Col span={12}>
+                  <Statistic
+                    title="Hệ số quãng đường (d)"
+                    value={results.distance_coeff}
+                    suffix="VNĐ/km"
+                    valueStyle={{ color: "#3f8600" }}
+                  />
+                </Col>
+              </Row>
+
+              <Divider />
+
+              <div
+                style={{
+                  background: "#f8fafc",
+                  padding: "24px",
+                  borderRadius: "12px",
+                  border: "1px solid #e2e8f0",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={{ fontSize: 16, fontWeight: 600 }}>
+                    Tổng phí vận chuyển:
+                  </Text>
+                  <Text
+                    style={{ fontSize: 20, fontWeight: 700, color: "#2563eb" }}
+                  >
+                    {results.total_fee.toLocaleString()} VNĐ
+                  </Text>
+                </div>
+              </div>
+
+              <Text
+                type="secondary"
+                style={{
+                  display: "block",
+                  marginTop: "16px",
+                  fontStyle: "italic",
+                  fontSize: 12,
+                }}
+              >
+                * Lưu ý: Đây là phí ước tính dựa trên các hệ số cấu hình. Phí
+                thực tế có thể thay đổi tùy theo đơn vị vận chuyển.
+              </Text>
+            </Card>
+          </Col>
+        </Row>
+      ),
+    },
+    {
+      key: "lookup",
+      label: (
+        <span>
+          <SearchOutlined /> Tra cứu phí ship
+        </span>
+      ),
+      children: (
+        <Row gutter={24}>
+          <Col span={10}>
+            <Card title="Tra cứu theo khu vực" bordered={false}>
+              <Form form={form} layout="vertical">
+                <Title level={5} style={{ marginBottom: 16 }}>
+                  Điểm đi
+                </Title>
+                <Row gutter={12}>
+                  <Col span={12}>
+                    <TextField
+                      label="Tỉnh/Thành"
+                      name="from_city"
+                      placeholder="VD: HCM"
+                    />
+                  </Col>
+                  <Col span={12}>
+                    <TextField
+                      label="Quận/Huyện"
+                      name="from_province"
+                      placeholder="VD: Q1"
+                    />
+                  </Col>
+                </Row>
+
+                <Divider style={{ margin: "12px 0" }} />
+
+                <Title level={5} style={{ marginBottom: 16 }}>
+                  Điểm đến
+                </Title>
+                <Row gutter={12}>
+                  <Col span={12}>
+                    <TextField
+                      label="Tỉnh/Thành"
+                      name="to_city"
+                      placeholder="VD: HCM"
+                      rules={[{ required: true, message: "Nhập tỉnh/thành" }]}
+                    />
+                  </Col>
+                  <Col span={12}>
+                    <TextField
+                      label="Quận/Huyện"
+                      name="to_province"
+                      placeholder="VD: Nhà Bè"
+                    />
+                  </Col>
+                </Row>
+
+                <Button
+                  type="primary"
+                  block
+                  icon={<SearchOutlined />}
+                  onClick={onLookup}
+                  size="large"
+                  loading={loading}
+                  style={{ marginTop: "24px", height: "45px", borderRadius: 8 }}
+                >
+                  Tra cứu ngay
+                </Button>
+              </Form>
+            </Card>
+          </Col>
+          <Col span={14}>
+            <Card title="Kết quả tra cứu" bordered={false}>
+              {lookupResult ? (
+                <div
+                  style={{
+                    padding: "32px",
+                    borderRadius: "16px",
+                    textAlign: "center",
+                  }}
+                >
+                  <Statistic
+                    title="Phí vận chuyển cố định"
+                    value={lookupResult.cost}
+                    suffix="VNĐ"
+                  />
+                </div>
+              ) : (
+                <div
+                  style={{
+                    padding: "40px",
+                    textAlign: "center",
+                    color: "#94a3b8",
+                  }}
+                >
+                  <SearchOutlined style={{ fontSize: 48, marginBottom: 16 }} />
+                  <p>Nhập địa chỉ và nhấn tra cứu để xem kết quả</p>
+                </div>
+              )}
+            </Card>
+          </Col>
+        </Row>
+      ),
+    },
+  ];
+
   return (
     <PageContainer>
       <PageHeader
         title="Công cụ tính phí vận chuyển"
-        subtitle={undefined}
+        subtitle="Tính toán và tra cứu phí vận chuyển nhanh chóng"
         extra={undefined}
         onBack={undefined}
         breadcrumbItems={undefined}
       />
 
-      <Row gutter={24}>
-        <Col span={10}>
-          <Card
-            title="Thông tin địa chỉ"
-            bordered={false}
-            style={{ marginBottom: 24 }}
-          >
-            <Form form={form} layout="vertical">
-              <div
-                onClick={() => setModalType("pickup")}
-                style={{ cursor: "pointer" }}
-              >
-                <TextField
-                  label="Điểm nhận (Pickup Point)"
-                  name="pickup"
-                  readOnly
-                  placeholder="Để trống để lấy mặc định (HCM, Q1)"
-                  prefix={
-                    <EnvironmentOutlined
-                      style={{ color: "var(--primary-main)" }}
-                    />
-                  }
-                  rules={undefined}
-                />
-              </div>
-
-              <div
-                onClick={() => setModalType("delivery")}
-                style={{ cursor: "pointer" }}
-              >
-                <TextField
-                  label="Điểm giao (Delivery Point)"
-                  name="delivery"
-                  readOnly
-                  placeholder="Chọn địa chỉ giao hàng"
-                  prefix={
-                    <EnvironmentOutlined
-                      style={{ color: "var(--primary-main)" }}
-                    />
-                  }
-                  rules={[
-                    { required: true, message: "Vui lòng chọn điểm giao" },
-                  ]}
-                />
-              </div>
-            </Form>
-          </Card>
-
-          <Card
-            title="Sản phẩm vận chuyển"
-            bordered={false}
-            extra={
-              <Button
-                type="primary"
-                icon={<PlusOutlined />}
-                onClick={() => setIsProductModalOpen(true)}
-                style={{ height: 36, borderRadius: 4 }}
-              >
-                Thêm sản phẩm
-              </Button>
-            }
-          >
-            <List
-              dataSource={selectedItems}
-              locale={{ emptyText: "Chưa chọn sản phẩm nào" }}
-              renderItem={(item) => (
-                <List.Item
-                  actions={[
-                    <Button
-                      type="text"
-                      danger
-                      icon={<DeleteOutlined />}
-                      onClick={() => handleRemoveProduct(item.sku)}
-                    />,
-                  ]}
-                >
-                  <List.Item.Meta
-                    avatar={<Avatar src={item.image_url} shape="square" />}
-                    title={item.display_name || item.name}
-                    description={
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 12,
-                        }}
-                      >
-                        <Text type="secondary" style={{ fontSize: 12 }}>
-                          SKU: {item.sku}
-                        </Text>
-                        <InputNumber
-                          min={1}
-                          size="small"
-                          value={item.quantity}
-                          onChange={(val) =>
-                            handleQuantityChange(item.sku, val)
-                          }
-                          style={{ width: 60 }}
-                        />
-                      </div>
-                    }
-                  />
-                </List.Item>
-              )}
-            />
-
-            <Button
-              type="primary"
-              block
-              icon={<CalculatorOutlined />}
-              onClick={onCalculate}
-              size="large"
-              loading={loading}
-              disabled={selectedItems.length === 0}
-              style={{ marginTop: "24px", height: "45px", borderRadius: 8 }}
-            >
-              Tính toán phí ship
-            </Button>
-          </Card>
-        </Col>
-
-        <Col span={14}>
-          <Card title="Kết quả tính toán (Ước tính)" bordered={false}>
-            <Row gutter={[16, 24]}>
-              <Col span={12}>
-                <Statistic
-                  title="Thời gian ước tính (T)"
-                  value={results.time}
-                  suffix="giờ"
-                  precision={1}
-                />
-              </Col>
-              <Col span={12}>
-                <Statistic
-                  title="Hệ số thời gian (t)"
-                  value={results.time_coeff}
-                  suffix="VNĐ/h"
-                  valueStyle={{ color: "#3f8600" }}
-                />
-              </Col>
-              <Col span={12}>
-                <Statistic
-                  title="Quãng đường (D)"
-                  value={results.distance}
-                  suffix="km"
-                  precision={2}
-                />
-              </Col>
-              <Col span={12}>
-                <Statistic
-                  title="Hệ số quãng đường (d)"
-                  value={results.distance_coeff}
-                  suffix="VNĐ/km"
-                  valueStyle={{ color: "#3f8600" }}
-                />
-              </Col>
-            </Row>
-
-            <Divider />
-
-            <div
-              style={{
-                background: "#f8fafc",
-                padding: "24px",
-                borderRadius: "12px",
-                border: "1px solid #e2e8f0",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Text style={{ fontSize: 16, fontWeight: 600 }}>
-                  Tổng phí vận chuyển:
-                </Text>
-                <Text
-                  style={{ fontSize: 20, fontWeight: 700, color: "#2563eb" }}
-                >
-                  {results.total_fee.toLocaleString()} VNĐ
-                </Text>
-              </div>
-            </div>
-
-            <Text
-              type="secondary"
-              style={{
-                display: "block",
-                marginTop: "16px",
-                fontStyle: "italic",
-                fontSize: 12,
-              }}
-            >
-              * Lưu ý: Đây là phí ước tính dựa trên các hệ số cấu hình. Phí thực
-              tế có thể thay đổi tùy theo đơn vị vận chuyển.
-            </Text>
-          </Card>
-        </Col>
-      </Row>
+      <Tabs
+        defaultActiveKey="calculate"
+        items={items}
+        type="card"
+        style={{ marginBottom: 32 }}
+      />
 
       <AddressPickerModal
         open={modalType !== null}

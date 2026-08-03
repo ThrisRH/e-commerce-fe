@@ -55,7 +55,7 @@ const ProductDetails = ({ order }) => {
       </Title>
       <Table
         dataSource={order.items}
-        // @ts-ignore
+        
         columns={columns}
         pagination={false}
         rowKey="id"

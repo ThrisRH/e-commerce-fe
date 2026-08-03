@@ -5,8 +5,8 @@ import { Meta } from "@/models/meta";
 import axiosClient from "@/config/axios-client";
 
 export const fetchCategories = async ({ page = 1, limit = 10 } = {}) => {
-  const response = await axios.get(
-    `${import.meta.env.VITE_API_URL}/api/${API_VER}/categories?page=${page}&limit=${limit}`,
+  const response = await axiosClient.get(
+    `${API_VER}/categories?page=${page}&limit=${limit}`,
   );
   if (!response.data || !response.data.data) {
     throw new Error("Failed to fetch categories");
@@ -61,13 +61,6 @@ export const deleteCategory = async (id) => {
   return response.data;
 };
 
-/**
- * @param {Object} options
- * @param {string} [options.keyword=""]
- * @param {number} [options.page=1]
- * @param {number} [options.limit=10]
- * @returns {Promise<{data: Category[], meta: Meta}>}
- */
 export const searchCategories = async ({
   keyword = "",
   page = 1,

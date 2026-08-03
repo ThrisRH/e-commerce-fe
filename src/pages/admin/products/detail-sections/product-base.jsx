@@ -72,7 +72,7 @@ export default function ProductBase({
             </Form.Item>
           </Grid>
 
-          {/* Integrated Specifications */}
+          {}
           <Grid size={{ xs: 12 }}>
             <Divider sx={{ my: 2 }}>Thông Số Kỹ Thuật Chung (Specs)</Divider>
             <Form.List name="product_specifications">
@@ -189,7 +189,6 @@ export default function ProductBase({
   );
 }
 
-// Simple internal Divider component since we are using MUI and Antd mix
 const Divider = ({ children, sx }) => (
   <Box sx={{ display: "flex", alignItems: "center", my: 2, ...sx }}>
     <Box sx={{ flex: 1, height: "1px", bgcolor: "divider" }} />

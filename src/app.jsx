@@ -20,7 +20,6 @@ import CategoryPage from "./pages/user/category";
 import OrderTracking from "./pages/user/order-tracking";
 import OrderDetail from "./pages/admin/orders/order-details";
 
-// Lazy load admin pages for better initial bundle size
 const ProductsManagement = lazy(() => import("./pages/admin/products"));
 const CategoriesManagement = lazy(() => import("./pages/admin/categories"));
 const UsersManagement = lazy(() => import("./pages/admin/users/index"));
@@ -63,7 +62,7 @@ function App() {
       <Router>
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
-            {/* Main Store Layout */}
+            {}
             <Route path="/" element={<MainLayout />}>
               <Route index element={<Home />} />
               <Route
@@ -101,7 +100,7 @@ function App() {
               />
             </Route>
 
-            {/* Admin Layout */}
+            {}
             <Route
               path="/admin"
               element={

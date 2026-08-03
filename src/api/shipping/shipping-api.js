@@ -96,3 +96,20 @@ export const identifyShippingRate = async (data) => {
     return null;
   }
 };
+
+export const findShippingRoute = async (data) => {
+  try {
+    const res = await axiosClient.post(
+      `${API_VER}/shipping/routes/find`,
+      data,
+    );
+    if (!res.data || !res.data.data) {
+      throw new Error("Failed to find shipping route");
+    }
+    return res.data.data ?? null;
+  } catch (err) {
+    console.error("Failed to find shipping route", err);
+    return null;
+  }
+};
+

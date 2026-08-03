@@ -8,7 +8,6 @@ const GuestMiddleware = ({ children }) => {
   if (loading) return <div>Loading...</div>;
 
   if (user) {
-    // If user is already logged in, redirect to home page
     return <Navigate to="/" replace />;
   }
 

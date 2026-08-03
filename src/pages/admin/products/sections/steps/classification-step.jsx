@@ -21,7 +21,6 @@ export default function ClassificationStep({
 }) {
   const mergedAttributes = [...categoryAttributes, ...extraAttributes];
 
-  // Helper to get values for a specific attribute
   const getValuesForAttribute = (attributeId) => {
     return attributeValues
       .filter((v) => v.attribute_id === attributeId)
@@ -320,8 +319,18 @@ export default function ClassificationStep({
                                         <Form.Item
                                           noStyle
                                           shouldUpdate={(prev, curr) => {
-                                            const prevId = prev?.children?.[name]?.variants?.[varField.name]?.extra_attrs?.[skuAttrField.name]?.attribute_id;
-                                            const currId = curr?.children?.[name]?.variants?.[varField.name]?.extra_attrs?.[skuAttrField.name]?.attribute_id;
+                                            const prevId =
+                                              prev?.children?.[name]
+                                                ?.variants?.[varField.name]
+                                                ?.extra_attrs?.[
+                                                skuAttrField.name
+                                              ]?.attribute_id;
+                                            const currId =
+                                              curr?.children?.[name]
+                                                ?.variants?.[varField.name]
+                                                ?.extra_attrs?.[
+                                                skuAttrField.name
+                                              ]?.attribute_id;
                                             return prevId !== currId;
                                           }}
                                           key={skuAttrField.key}
@@ -358,10 +367,28 @@ export default function ClassificationStep({
                                                       }),
                                                     )}
                                                     onChange={() => {
-                                                      const current = form.getFieldValue("children");
-                                                      if (current[name]?.variants?.[varField.name]?.extra_attrs?.[skuAttrField.name]) {
-                                                        current[name].variants[varField.name].extra_attrs[skuAttrField.name].attribute_value_id = undefined;
-                                                        form.setFieldValue("children", current);
+                                                      const current =
+                                                        form.getFieldValue(
+                                                          "children",
+                                                        );
+                                                      if (
+                                                        current[name]
+                                                          ?.variants?.[
+                                                          varField.name
+                                                        ]?.extra_attrs?.[
+                                                          skuAttrField.name
+                                                        ]
+                                                      ) {
+                                                        current[name].variants[
+                                                          varField.name
+                                                        ].extra_attrs[
+                                                          skuAttrField.name
+                                                        ].attribute_value_id =
+                                                          undefined;
+                                                        form.setFieldValue(
+                                                          "children",
+                                                          current,
+                                                        );
                                                       }
                                                     }}
                                                     size="small"
